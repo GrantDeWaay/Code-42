@@ -1,1 +1,0 @@
-Verifying git configuration is working, test push
