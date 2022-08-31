@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <group android:checkableBehavior="single">
+    <group
+        android:id="@+id/nav_group_main"
+        android:checkableBehavior="single">
         <item
             android:id="@+id/nav_home"
             android:icon="@drawable/ic_menu_camera"
@@ -16,5 +19,16 @@
             android:id="@+id/nav_slideshow"
             android:icon="@drawable/ic_menu_slideshow"
             android:title="@string/menu_slideshow" />
+        <item
+            android:id="@+id/nav_account"
+            android:title="Item" />
+    </group>
+    <group android:id="@+id/nav_group_global">
+        <item
+            android:id="@+id/nav_about"
+            android:title="About" />
+        <item
+            android:id="@+id/nav_session"
+            android:title="Item" />
     </group>
 </menu>
