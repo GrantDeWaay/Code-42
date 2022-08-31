@@ -19,4 +19,8 @@
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
+
+    <string name="session">"Login/Register"</string>
+    <string name="about">"About"</string>
+    <string name="settings">"Account Settings"</string>
 </resources>
