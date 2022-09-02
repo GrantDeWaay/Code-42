@@ -34,4 +34,5 @@ class WelcomeController {
 
         return test;
     }
+
 }
