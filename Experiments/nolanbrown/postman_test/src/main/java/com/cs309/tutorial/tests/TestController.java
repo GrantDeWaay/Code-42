@@ -13,29 +13,31 @@ public class TestController {
 	
 	
 	@GetMapping("/getTest")
-	public String getTest(@RequestParam(value = "username", defaultValue = "World") String message) {
-		return String.format("Hello, %s! You sent a get request with a parameter!", message);
+	public String getTest(@RequestParam(value = "blah", defaultValue = "silly") String message) {
+		return String.format("Hello, %s! You sent a GET request with a parameter!", message);
 	}
 	
 	@PostMapping("/postTest1")
-	public String postTest1(@RequestParam(value = "username", defaultValue = "World") String message) {
+	public String postTest1(@RequestParam(value = "blah", defaultValue = "weird") String message) {
 		//TODO
-		return String.format("Hello, %s! You sent a post request with a parameter!", message);
+		return String.format("Hello, %s! You sent a POST request with a parameter!" +
+				"\n Its the same thing as GET but with POST instead", message);
 	}
 	
 	@PostMapping("/postTest2")
 	public String postTest2(@RequestBody TestData testData) {
 		//TODO
-		return String.format("Hello, %s! You sent a post request with a requestbody!", testData.getMessage());
+		return String.format("Hello, %s! You sent a post request with a request body!\n JSON is so cool!", testData.getMessage());
 	}
 	
 	@DeleteMapping("/deleteTest")
 	public void deleteTest() {
-		//TODO
+		// This doesn't return anything but is useful
 	}
 	
 	@PutMapping("/putTest")
 	public void putTest() {
-		//TODO
+		// Also doesn't return but can change things
+		// Not all HTTP need to return stuff
 	}
 }

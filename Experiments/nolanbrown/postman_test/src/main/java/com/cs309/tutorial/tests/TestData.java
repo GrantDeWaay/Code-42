@@ -11,6 +11,6 @@ public class TestData {
 	}
 
 	public String getMessage() {
-		return message;
+		return message + "\nFrom,\nNolan\n";
 	}
 }
