@@ -144,10 +144,10 @@ public class TestRepository {
         return true;
     }
 
-    public boolean updateStudentGrade(Integer id, String grade) {
+    public boolean updateStudentGrade(Integer id, Integer grade) {
         if(!studentDatabase.containsKey(id)) return false;
 
-        studentDatabase.get(id).setName(grade);
+        studentDatabase.get(id).setGrade(grade);
 
         return true;
     }

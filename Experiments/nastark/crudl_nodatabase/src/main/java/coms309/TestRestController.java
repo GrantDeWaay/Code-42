@@ -100,4 +100,42 @@ class WelcomeController {
 
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
+
+    @PutMapping("/students/{id}")
+    public @ResponseBody ResponseEntity<Student> updateStudent(@PathVariable Integer id, @RequestBody Student student) {
+        Optional<Student> result = repository.findStudentById(id);
+
+        if(!result.isPresent()) {
+            repository.addStudent(student);
+
+            return new ResponseEntity<>(HttpStatus.ACCEPTED);
+        }
+
+        if(student.getName() != null) {
+            repository.updateStudentName(id, student.getName());
+        }
+
+        if(student.getGrade() != null) {
+            repository.updateStudentGrade(id, student.getGrade());
+        }
+
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+    }
+
+    @PutMapping("/courses/{id}")
+    public @ResponseBody ResponseEntity<Course> updateCourse(@PathVariable Integer id, @RequestBody Course course) {
+        Optional<Course> result = repository.findCourseById(id);
+
+        if(!result.isPresent()) {
+            repository.addCourse(course);
+
+            return new ResponseEntity<>(HttpStatus.ACCEPTED);
+        }
+
+        if(course.getName() != null) {
+            repository.updateCourseName(id, course.getName());
+        }
+
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+    }
 }
