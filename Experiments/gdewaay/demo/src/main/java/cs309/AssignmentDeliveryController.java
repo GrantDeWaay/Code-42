@@ -4,6 +4,7 @@ package cs309;
 import java.util.Arrays;
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,4 +29,23 @@ public class AssignmentDeliveryController {
 		return String.format("Hello, %s! This is your lesson for today:\n%s", username, lessonPlan);
 		//http://localhost:8080/getTest?username=x
 	}
+	@GetMapping("/add/get")
+	public int getNumber() {
+		int x = AssignmentDeliveryData.getAdd();
+		//http://localhost:8080/getTest?username=x
+		return x;
+	}
+	@DeleteMapping("/add/reset")
+	public ResponseEntity resetNumber() {
+		AssignmentDeliveryData.del();
+		//http://localhost:8080/getTest?username=x
+		return ResponseEntity.ok().build(); 
+	}
+	@PutMapping("/add/{number}")
+	public ResponseEntity addNumber(@PathVariable("number") int id) {
+		AssignmentDeliveryData.add(id);
+		//http://localhost:8080/getTest?username=x
+		return ResponseEntity.ok().build(); 
+	}
+	
 }

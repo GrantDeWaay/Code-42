@@ -6,7 +6,7 @@ import java.util.List;
 public class AssignmentDeliveryData {
 	
 	private String message;
-	int id;
+	static int number = 0;
 	public static List<String> list = Arrays.asList("Make python print hello", "Add 1+1 in Python", "deez");
 	public AssignmentDeliveryData() {
 		
@@ -23,5 +23,14 @@ public class AssignmentDeliveryData {
 	
 	public static String getLesson(int id) {
 		return list.get(id);
+	}
+	public static void add(int num) {
+		number += num;
+	}
+	public static void del() {
+		number = 0;
+	}
+	public static int getAdd() {
+		return number;
 	}
 }
