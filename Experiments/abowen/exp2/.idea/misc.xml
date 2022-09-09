@@ -3,7 +3,11 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/College/ComS309/2_an_4/Experiments/abowen/exp2/app/src/main/res/drawable/key_background.xml" value="0.2265" />
+        <entry key="..\:/College/ComS309/2_an_4/Experiments/abowen/exp2/app/src/main/res/drawable/normal.xml" value="0.2265" />
+        <entry key="..\:/College/ComS309/2_an_4/Experiments/abowen/exp2/app/src/main/res/drawable/pressed.xml" value="0.2265" />
         <entry key="..\:/College/ComS309/2_an_4/Experiments/abowen/exp2/app/src/main/res/layout/activity_main.xml" value="0.20471014492753623" />
+        <entry key="..\:/College/ComS309/2_an_4/Experiments/abowen/exp2/app/src/main/res/layout/key_preview.xml" value="0.15437158469945356" />
         <entry key="..\:/College/ComS309/2_an_4/Experiments/abowen/exp2/app/src/main/res/layout/keyboard.xml" value="0.20471014492753623" />
         <entry key="..\:/College/ComS309/2_an_4/Experiments/abowen/exp2/app/src/main/res/xml/method.xml" value="0.20471014492753623" />
         <entry key="..\:/College/ComS309/2_an_4/Experiments/abowen/exp2/app/src/main/res/xml/qwerty.xml" value="0.20471014492753623" />
