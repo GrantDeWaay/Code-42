@@ -5,9 +5,10 @@ app = Flask(__name__)
 
 @app.route('/', methods = ["POST"])
 def execute():
+	cleanCode = request.data #validate(request.data)
 	f = StringIO()
 	with redirect_stdout(f):
-		exec(request.data)
+		exec(cleanCode)
 	s = f.getvalue()
 	return s
 
