@@ -33,4 +33,7 @@ public class AssignmentDeliveryData {
 	public static int getAdd() {
 		return number;
 	}
+	public static int set() {
+		return number;
+	}
 }
