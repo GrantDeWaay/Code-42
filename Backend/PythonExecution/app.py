@@ -1,38 +1,62 @@
 import multiprocessing
 from multiprocessing import Pipe
 from traceback import format_exc
-from flask import Flask, redirect, url_for, request
+from flask import Flask, request
 from io import StringIO
 from contextlib import redirect_stdout
+
 app = Flask(__name__)
 
-def run(clean_code, conn):
+'''
+The Student Code Execution Server or "SCES"
+Written by Grant DeWaay of group 2_AN_4 for CS309
+
+This server is solely made to process, compile, and run Python code
+of the JSON parameters sent via the Spring Boot server.
+
+This may be adjusted as we continue with the project and as we set
+up the MySQL database. We'll discuss this at a later date.
+
+The JSON should be formatted as such:
+
+{
+	"code": "x = 23 + 2\nprint(x)",
+}	
+
+it is pretty straight forward	
+'''
+
+def run(code, conn):
 	f = StringIO()
-	code = "200"
+	resp = "200"
 	with redirect_stdout(f):
 		try:
-			x = compile(clean_code, "user", "exec")
-			exec(x)
-		except Exception as e:
-			code = "422"
+			x = compile(code, '', 'exec')
+			globalsParameter = {'__builtins__': None}
+			localsParameter = {'print': print, 'dir': dir}
+			exec(x, globalsParameter, localsParameter)
+		except Exception:
+			resp = "422"
 			print(format_exc())
 	message = f.getvalue()
-	conn.send([message, code])
+	conn.send([message, resp])
 	conn.close()
 
-@app.route('/', methods = ["POST"])
+
+@app.route('/', methods=["POST"])
 def init_student_run():
-	clean_code = request.data #validate(request.data)
+	json_data = request.get_json()
+	code = json_data.get('code')
 	parent_conn, child_conn = Pipe()
-	p = multiprocessing.Process(target=run, args=(clean_code, child_conn))
+	p = multiprocessing.Process(target=run, args=(code, child_conn))
 	p.start()
 	p.join(10)
 	if p.is_alive():
 		p.kill()
 		p.join()
-		return "Entered code took too long to execute", 508
-	msg, r_code = parent_conn.recv()
-	return msg, r_code
+		return "Entered code took too long to compile and execute", 508
+	msg, resp = parent_conn.recv()
+	return msg, resp
 
 
 if __name__ == '__main__':
