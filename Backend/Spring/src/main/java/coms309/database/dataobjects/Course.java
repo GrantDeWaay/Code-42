@@ -13,7 +13,7 @@ public class Course {
     // unique integer ID for each course
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     // title of course
     private String title;
@@ -32,7 +32,7 @@ public class Course {
     }
 
     // returns the ID of the user
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 

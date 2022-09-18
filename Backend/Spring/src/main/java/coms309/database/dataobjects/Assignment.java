@@ -12,7 +12,7 @@ public class Assignment {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     // title of assignment
     private String title;
@@ -21,7 +21,7 @@ public class Assignment {
     private String description;
 
     // ID of course assigment belongs to
-    private Integer courseId;
+    private Long courseId;
 
     // problem statement for coding challenge
     private String problemStatement;
@@ -37,13 +37,13 @@ public class Assignment {
 
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         // TODO add in code to check IDs for uniqueness
         this.id = id;
     }
 
     // returns the ID of the user
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
@@ -63,11 +63,11 @@ public class Assignment {
         return description;
     }
 
-    public void setCourseId(Integer courseId) {
+    public void setCourseId(Long courseId) {
         this.courseId = courseId;
     }
 
-    public Integer getCourseId() {
+    public Long getCourseId() {
         return courseId;
     }
 

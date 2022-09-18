@@ -15,7 +15,7 @@ public class User {
     // unique integer ID for each user
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     // username associated with user
     private String username;
@@ -42,13 +42,13 @@ public class User {
 
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         // TODO add in code to check IDs for uniqueness
         this.id = id;
     }
 
     // returns the ID of the user
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 

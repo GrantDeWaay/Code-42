@@ -3,15 +3,20 @@ package coms309.database.dataobjects;
 import java.util.Date;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 @Entity
 public class Grade {
     
     // ID of student the grade was issued for
-    private Integer studentId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long studentId;
 
     // ID of the assigment the grade was for
-    private Integer assignmentId;
+    private Long assignmentId;
 
     // TODO see if we just want this as percents or include points as well
 
@@ -25,19 +30,19 @@ public class Grade {
 
     }
     
-    public void setStudentId(Integer studentId) {
+    public void setStudentId(Long studentId) {
         this.studentId = studentId;
     }
 
-    public Integer getStudentId() {
+    public Long getStudentId() {
         return studentId;
     }
 
-    public void setAssigmentId(Integer assignmentId) {
+    public void setAssigmentId(Long assignmentId) {
         this.assignmentId = assignmentId;
     }
 
-    public Integer getAssigmeId() {
+    public Long getAssigmeId() {
         return assignmentId;
     }
 
