@@ -2,14 +2,14 @@ package coms309.database.dataobjects;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationDescription;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
 public class Assignment {
-    
+
     @Id
-    @GeneratedValue(strategy = GenerationDescription.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     // title of assignment
