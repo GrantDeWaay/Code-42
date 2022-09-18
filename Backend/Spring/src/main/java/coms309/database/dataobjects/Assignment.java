@@ -1,15 +1,17 @@
 package coms309.database.dataobjects;
 
+import java.util.Date;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationDescription;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
 public class Assignment {
     
     @Id
-    @GeneratedValue(strategy = GenerationDescription.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     // title of assignment
@@ -18,10 +20,18 @@ public class Assignment {
     // description of assignment
     private String description;
 
-    // date assignment is due
-    private String dueDate;
+    // ID of course assigment belongs to
+    private Integer courseId;
 
-    // TODO add more fields for location of test files for assignment, base code outline, etc.
+    // problem statement for coding challenge
+    private String problemStatement;
+
+    // TODO add in sample code (may end up being in database or stored as a file)
+
+    private Date creationDate;
+
+    // date assignment is due
+    private Date dueDate;
 
     public Assignment() {
 
@@ -53,12 +63,35 @@ public class Assignment {
         return description;
     }
 
-    public void setDueDate(String dueDate) {
-        // TODO add code to check for valid types
+    public void setCourseId(Integer courseId) {
+        this.courseId = courseId;
+    }
+
+    public Integer getCourseId() {
+        return courseId;
+    }
+
+    public void setProblemStatement(String problemStatement) {
+        this.problemStatement = problemStatement;
+    }
+
+    public String getProblemStatement() {
+        return problemStatement;
+    }
+
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
+    public void setDueDate(Date dueDate) {
         this.dueDate = dueDate;
     }
 
-    public String getDueDate() {
+    public Date getDueDate() {
         return dueDate;
     }
 

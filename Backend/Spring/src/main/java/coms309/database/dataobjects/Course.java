@@ -1,5 +1,7 @@
 package coms309.database.dataobjects;
 
+import java.util.Date;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -8,15 +10,22 @@ import javax.persistence.Id;
 @Entity
 public class Course {
     
+    // unique integer ID for each course
     @Id
-    @GeneratedValue(strategy = GenerationDescription.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private String name;
+    // title of course
+    private String title;
 
+    // brief description of course
     private String description;
 
-    // TODO add way to track lists of students in course
+    // programming languages used in the course
+    private String languages;
+
+    // creation date of course
+    private Date creationDate;
 
     public Course() {
 
@@ -27,12 +36,12 @@ public class Course {
         return id;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public String getName() {
-        return name;
+    public String getTitle() {
+        return title;
     }
 
     public void setDescription(String description) {
@@ -41,6 +50,34 @@ public class Course {
 
     public String getDescription() {
         return description;
+    }
+
+    public void setLanguages(String languages) {
+        this.languages = languages;
+    }
+
+    public String getLanguages() {
+        return languages;
+    }
+
+    public boolean usesLanguage(String language) {
+        String[] languageArray = languages.split(",");
+
+        for(String s : languageArray) {
+            if(s.equals(language)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public Date getCreationDate() {
+        return creationDate;
     }
 
 }
