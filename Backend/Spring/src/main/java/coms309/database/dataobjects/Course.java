@@ -1,13 +1,13 @@
 package coms309.database.dataobjects;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
+@Table(name = "courses")
 public class Course {
     
     // unique integer ID for each course
@@ -27,8 +27,19 @@ public class Course {
     // creation date of course
     private Date creationDate;
 
+    @ManyToMany(mappedBy = "courses", fetch = FetchType.LAZY)
+    private Set<User> students = new HashSet<>();
+
     public Course() {
 
+    }
+
+    public Course(Long id, String title, String description, String languages, Date creationDate) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.languages = languages;
+        this.creationDate = creationDate;
     }
 
     // returns the ID of the user
@@ -78,6 +89,10 @@ public class Course {
 
     public Date getCreationDate() {
         return creationDate;
+    }
+
+    public Set<User> getStudents() {
+        return students;
     }
 
 }

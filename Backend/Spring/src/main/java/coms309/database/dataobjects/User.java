@@ -1,15 +1,15 @@
 package coms309.database.dataobjects;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 // TODO see if this can be made abstract?
 // data stored for students will be different than teachers, so making them the same doesn't make a lot of sense
 @Entity
+@Table(name = "users")
 public class User {
 
     // unique integer ID for each user
@@ -38,8 +38,28 @@ public class User {
     // time of user creation
     private Date creationDate;
 
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @JoinTable(name = "user_to_course",
+                joinColumns = {
+                    @JoinColumn(name = "user_id", referencedColumnName = "id",
+                                nullable = false, updatable = false)},
+                inverseJoinColumns = {
+                    @JoinColumn(name = "course_id", referencedColumnName = "id",
+                                nullable = false, updatable = false)})
+    private Set<Course> courses = new HashSet<>();
+
     public User() {
 
+    }
+
+    public User(Long id, String username, String firstName, String lastName, String password, String email, String type) {
+        this.id = id;
+        this.username = username;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.password = password;
+        this.email = email;
+        this.type = type;
     }
 
     public void setId(Long id) {
@@ -107,5 +127,9 @@ public class User {
 
     public Date getCreationDate() {
         return creationDate;
+    }
+
+    public Set<Course> getCourses() {
+        return courses;
     }
 }
