@@ -4,10 +4,18 @@ import coms309.controller.login.StudentLogin;
 import coms309.database.dataobjects.User;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 
 
 @RestController
 public class StudentController {
+
+    HashMap<String, String> sessionTokens = new HashMap<String, String>();
+
+    public String generateSessionToken(User u) {
+        // Obviously not now it's going to work
+        return u.getUsername();
+    }
 
     // TODO
     // When returning do we send session ID?
@@ -28,9 +36,10 @@ public class StudentController {
         // TODO
         // How to get hashed passwords from database in secure way
         if (u.getUsername().equals(sl.getUsername())){
-            return "Login Success";
+            String token = sessionTokens.put(u.getUsername(),generateSessionToken(u));
+            return "Login Success: " + token;
         } else {
-            return "User name is database. Please sign up";
+            return "Username is not in database. Please sign up";
         }
     }
 
