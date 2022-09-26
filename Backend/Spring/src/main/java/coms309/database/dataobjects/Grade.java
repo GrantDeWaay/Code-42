@@ -2,10 +2,7 @@ package coms309.database.dataobjects;
 
 import java.util.Date;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Grade {
@@ -25,6 +22,11 @@ public class Grade {
 
     // date the grade was last updated
     private Date updateDate;
+
+    // assignment the grade belongs to
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "assignment_id", nullable = false)
+    private Assignment assignment;
 
     public Grade() {
 

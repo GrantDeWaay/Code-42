@@ -1,11 +1,9 @@
 package coms309.database.dataobjects;
 
 import java.util.Date;
+import java.util.Set;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Assignment {
@@ -32,6 +30,15 @@ public class Assignment {
 
     // date assignment is due
     private Date dueDate;
+
+    // course this assignment belongs to
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "course_id", nullable = false)
+    private Course course;
+
+    // grades for everyone that did the assignment
+    @OneToMany(mappedBy = "assignment_id", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<Grade> grades;
 
     public Assignment() {
 

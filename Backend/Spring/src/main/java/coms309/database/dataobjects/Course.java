@@ -27,9 +27,14 @@ public class Course {
     // creation date of course
     private Date creationDate;
 
+    // set of all students enrolled in the course
     @ManyToMany(mappedBy = "courses", fetch = FetchType.LAZY)
     private Set<User> students = new HashSet<>();
 
+    // set of all assignments in course
+    @OneToMany(mappedBy = "course_id", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<Assignment> assignments = new HashSet<>();
+    
     public Course() {
 
     }
