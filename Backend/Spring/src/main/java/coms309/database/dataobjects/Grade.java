@@ -12,7 +12,7 @@ public class Grade {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long studentId;
 
-    // ID of the assigment the grade was for
+    // ID of the assignment the grade was for
     private Long assignmentId;
 
     // TODO see if we just want this as percents or include points as well
