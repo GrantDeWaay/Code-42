@@ -1,11 +1,13 @@
 package coms309.database.dataobjects;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.*;
 
 @Entity
+@Table(name = "assignments")
 public class Assignment {
     
     @Id
@@ -19,7 +21,7 @@ public class Assignment {
     private String description;
 
     // ID of course assigment belongs to
-    private Long courseId;
+    // private Long courseId;
 
     // problem statement for coding challenge
     private String problemStatement;
@@ -37,8 +39,8 @@ public class Assignment {
     private Course course;
 
     // grades for everyone that did the assignment
-    @OneToMany(mappedBy = "assignment_id", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<Grade> grades;
+    @OneToMany(mappedBy = "grades", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<Grade> grades = new HashSet<>();
 
     public Assignment() {
 
@@ -70,13 +72,13 @@ public class Assignment {
         return description;
     }
 
-    public void setCourseId(Long courseId) {
-        this.courseId = courseId;
-    }
+    // public void setCourseId(Long courseId) {
+    //     this.courseId = courseId;
+    // }
 
-    public Long getCourseId() {
-        return courseId;
-    }
+    // public Long getCourseId() {
+    //     return courseId;
+    // }
 
     public void setProblemStatement(String problemStatement) {
         this.problemStatement = problemStatement;

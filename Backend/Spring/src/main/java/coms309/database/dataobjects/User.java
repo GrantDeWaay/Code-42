@@ -6,8 +6,6 @@ import java.util.Set;
 
 import javax.persistence.*;
 
-// TODO see if this can be made abstract?
-// data stored for students will be different than teachers, so making them the same doesn't make a lot of sense
 @Entity
 @Table(name = "users")
 public class User {
@@ -47,6 +45,9 @@ public class User {
                     @JoinColumn(name = "course_id", referencedColumnName = "id",
                                 nullable = false, updatable = false)})
     private Set<Course> courses = new HashSet<>();
+
+    @OneToMany(mappedBy = "grades", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<Grade> grades = new HashSet<>();
 
     public User() {
 

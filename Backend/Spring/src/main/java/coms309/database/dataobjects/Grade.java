@@ -5,15 +5,20 @@ import java.util.Date;
 import javax.persistence.*;
 
 @Entity
+@Table(name = "grades")
 public class Grade {
     
-    // ID of student the grade was issued for
+    // ID of the grade
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long studentId;
+    private Long id;
+
+    // ID of the student the grade was for
+    // private Long studentId;
 
     // ID of the assignment the grade was for
-    private Long assignmentId;
+    // @Column(name = "assignment_id")
+    // private Long assignmentId;
 
     // TODO see if we just want this as percents or include points as well
 
@@ -28,25 +33,29 @@ public class Grade {
     @JoinColumn(name = "assignment_id", nullable = false)
     private Assignment assignment;
 
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "student_id", nullable = false)
+    private User user;
+
     public Grade() {
 
     }
     
-    public void setStudentId(Long studentId) {
-        this.studentId = studentId;
-    }
+    // public void setStudentId(Long studentId) {
+    //     this.studentId = studentId;
+    // }
 
-    public Long getStudentId() {
-        return studentId;
-    }
+    // public Long getStudentId() {
+    //     return studentId;
+    // }
 
-    public void setAssigmentId(Long assignmentId) {
-        this.assignmentId = assignmentId;
-    }
+    // public void setAssigmentId(Long assignmentId) {
+    //     this.assignmentId = assignmentId;
+    // }
 
-    public Long getAssigmeId() {
-        return assignmentId;
-    }
+    // public Long getAssigmeId() {
+    //     return assignmentId;
+    // }
 
     public void setGrade(Double grade) {
         this.grade = grade;
