@@ -10,8 +10,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface GradeRepository extends JpaRepository<Grade, Long> {
  
-    Set<Grade> findByAssignmentId(Long assignmentId);
+    // Set<Grade> findByAssignmentId(Long assignmentId);
 
-    Set<Grade> findByStudentId(Long studentId);
+    // Set<Grade> findByStudentId(Long studentId);
 
 }

@@ -46,7 +46,7 @@ public class User {
                                 nullable = false, updatable = false)})
     private Set<Course> courses = new HashSet<>();
 
-    @OneToMany(mappedBy = "grades", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Grade> grades = new HashSet<>();
 
     public User() {
