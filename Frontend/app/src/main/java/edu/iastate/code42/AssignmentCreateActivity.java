@@ -5,8 +5,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -28,6 +30,11 @@ public class AssignmentCreateActivity extends AppCompatActivity {
         btnClick = findViewById(R.id.button);
         textE = findViewById(R.id.enterText);
         textx = findViewById(R.id.textView);
+        Spinner spinner = (Spinner) findViewById(R.id.spinner);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.planets_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
         btnClick.setOnClickListener(v -> {
             makeJsonObjReq();
             Log.i("Click", textE.getText().toString());
