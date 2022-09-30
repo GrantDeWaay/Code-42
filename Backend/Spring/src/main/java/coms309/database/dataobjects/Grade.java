@@ -13,13 +13,6 @@ public class Grade {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // ID of the student the grade was for
-    // private Long studentId;
-
-    // ID of the assignment the grade was for
-    // @Column(name = "assignment_id")
-    // private Long assignmentId;
-
     // TODO see if we just want this as percents or include points as well
 
     // grade as a decimal value
@@ -40,22 +33,6 @@ public class Grade {
     public Grade() {
 
     }
-    
-    // public void setStudentId(Long studentId) {
-    //     this.studentId = studentId;
-    // }
-
-    // public Long getStudentId() {
-    //     return studentId;
-    // }
-
-    // public void setAssigmentId(Long assignmentId) {
-    //     this.assignmentId = assignmentId;
-    // }
-
-    // public Long getAssigmeId() {
-    //     return assignmentId;
-    // }
 
     public void setGrade(Double grade) {
         this.grade = grade;

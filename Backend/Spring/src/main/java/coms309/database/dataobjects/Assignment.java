@@ -20,9 +20,6 @@ public class Assignment {
     // description of assignment
     private String description;
 
-    // ID of course assigment belongs to
-    // private Long courseId;
-
     // problem statement for coding challenge
     private String problemStatement;
 
@@ -71,14 +68,6 @@ public class Assignment {
     public String getDescription() {
         return description;
     }
-
-    // public void setCourseId(Long courseId) {
-    //     this.courseId = courseId;
-    // }
-
-    // public Long getCourseId() {
-    //     return courseId;
-    // }
 
     public void setProblemStatement(String problemStatement) {
         this.problemStatement = problemStatement;
