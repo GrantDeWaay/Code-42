@@ -11,7 +11,7 @@ import java.util.Random;
 
 public class LoginController {
 
-    HashMap<String, String> sessionTokens = new HashMap<String, String>();
+    public static HashMap<String, String> sessionTokens = new HashMap<String, String>();
 
     StringBuilder sb = new StringBuilder();
 
@@ -19,12 +19,15 @@ public class LoginController {
 
     private String generateSessionToken() {
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < 32; i++) {
-            char c = (char) (33 + r.nextInt(93)); //33-126
-            sb.append(c);
+        while (sessionTokens.containsValue(sb.toString()) || sb.toString().equals("")){
+            for (int i = 0; i < 32; i++) {
+                char c = (char) (33 + r.nextInt(93)); //33-126
+                sb.append(c);
+            }
         }
+        String s = sb.toString();
         sb.setLength(0);
-        return sb.toString();
+        return s;
     }
 
     @GetMapping("/login{username}{password}")
