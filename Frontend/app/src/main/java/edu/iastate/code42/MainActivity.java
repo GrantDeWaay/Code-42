@@ -10,14 +10,20 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import edu.iastate.code42.app.AppController;
 import edu.iastate.code42.utils.Const;
 
 public class MainActivity extends AppCompatActivity {
@@ -31,13 +37,47 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        SharedPreferences userSession = getSharedPreferences("user_sessions", MODE_PRIVATE);
-        SharedPreferences appSetting = getSharedPreferences("app_setting", MODE_PRIVATE);
+        SharedPreferences userSession = getSharedPreferences(getString(R.string.session_shared_pref), MODE_PRIVATE);
+        SharedPreferences appSetting = getSharedPreferences(getString(R.string.app_shared_pref), MODE_PRIVATE);
 
         SharedPreferences.Editor userSessionEditor = userSession.edit();
 
         if(userSession.contains("sessionID")){
-            //Session Reauthentication code
+            String url = Const.SOURCE + Const.SESSION + userSession.getString("sessionID", "");
+
+            JsonObjectRequest loginReq = new JsonObjectRequest(Request.Method.GET, url,
+                    null, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.e("Volley Login Auth Error:", error.toString());
+                    Toast.makeText(getApplicationContext(), R.string.login_volley_error,
+                            Toast.LENGTH_LONG).show();
+                }
+            }){
+                /**
+                 * Passing some request headers
+                 * */
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    HashMap<String, String> headers = new HashMap<String, String>();
+                    headers.put("Content-Type", "application/json");
+                    return headers;
+                }
+
+                @Override
+                protected Map<String, String> getParams() {
+                    Map<String, String> params = new HashMap<String, String>();
+
+                    return params;
+                }
+            };
+
+            AppController.getInstance().addToRequestQueue(loginReq, "login_req");
         }
 
         login = findViewById(R.id.loginButton);
@@ -49,13 +89,16 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if(password.getText() != null && !(password.getText().toString().isEmpty()) &&
                         username.getText() != null && !(username.getText().toString().isEmpty())){
-                    String url = Const.SOURCE + Const.LOGIN + username.getText().toString() + "/"
-                            + password.getText().toString();
+                    String url = Const.SOURCE + Const.LOGIN + username.getText().toString() + "/" +
+                            password.getText().toString();
 
-                    JsonObjectRequest loginReq = new JsonObjectRequest(url, new Response.Listener<JSONObject>() {
+
+                    JsonObjectRequest loginReq = new JsonObjectRequest(Request.Method.GET, url,
+                             null,  new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
-
+                            Toast.makeText(getApplicationContext(), response.toString(),
+                                    Toast.LENGTH_LONG).show();
                         }
                     }, new Response.ErrorListener() {
                         @Override
@@ -65,8 +108,25 @@ public class MainActivity extends AppCompatActivity {
                                     Toast.LENGTH_LONG).show();
                         }
                     }){
+                        /**
+                         * Passing some request headers
+                         * */
+                        @Override
+                        public Map<String, String> getHeaders() throws AuthFailureError {
+                            HashMap<String, String> headers = new HashMap<String, String>();
+                            headers.put("Content-Type", "application/json");
+                            return headers;
+                        }
 
+                        @Override
+                        protected Map<String, String> getParams() {
+                            Map<String, String> params = new HashMap<String, String>();
+
+                            return params;
+                        }
                     };
+
+                    AppController.getInstance().addToRequestQueue(loginReq, "login_req");
                 }else{
                     Toast.makeText(getApplicationContext(), R.string.login_missing_field,
                             Toast.LENGTH_LONG).show();

@@ -3,4 +3,6 @@
     <string name="login_missing_field">Please enter username and password before submitting</string>
     <string name="login_volley_error">Error when trying to authenicate login,
         contact developer or retry later</string>
+    <string name="session_shared_pref">userSharedFile</string>
+    <string name="app_shared_pref">appSharedFile</string>
 </resources>
