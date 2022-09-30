@@ -1,5 +1,9 @@
 package coms309.controller.login;
 
+/*
+    Unused right now because login no longer uses JSON...
+    Keeping just in case we switch back
+ */
 public class StudentLogin {
 
     private String username;
