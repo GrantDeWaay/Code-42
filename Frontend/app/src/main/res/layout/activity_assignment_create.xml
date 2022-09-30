@@ -21,17 +21,24 @@
         <EditText
             android:id="@+id/enterText"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="210dp"
             android:ems="10"
+            android:importantForAutofill="no"
             android:inputType="textPersonName"
             android:minHeight="48dp"
-            android:text="@string/name"
-            android:importantForAutofill="no" />
+            android:text="@string/name" />
 
         <Button
             android:id="@+id/button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/button" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="191dp"
+            android:text="TextView" />
+
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
