@@ -6,9 +6,11 @@ import coms309.database.dataobjects.Course;
 import coms309.database.dataobjects.Grade;
 import coms309.database.services.AssignmentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Set;
 import java.util.Optional;
 
 @RestController
@@ -27,7 +29,7 @@ public class AssignmentController {
     public @ResponseBody ResponseEntity<Set<Grade>> getAssignmentGradeList(@PathVariable long id) {
         Optional<Assignment> result = as.findById(id);
 
-        if(!as.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        if(!result.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
         return new ResponseEntity<>(result.get().getGrades(), HttpStatus.OK);
     }
@@ -36,7 +38,7 @@ public class AssignmentController {
     public @ResponseBody ResponseEntity<Course> getAssignmentCourse(@PathVariable long id) {
         Optional<Assignment> result = as.findById(id);
 
-        if(!as.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        if(!result.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
         return new ResponseEntity<>(result.get().getCourse(), HttpStatus.OK);
     }
