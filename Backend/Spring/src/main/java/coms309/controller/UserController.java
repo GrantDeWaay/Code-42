@@ -11,8 +11,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import coms309.api.dataobjects.*;
+
 import java.util.List;
 import java.util.Set;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Optional;
 
 @RestController
@@ -41,16 +45,24 @@ public class UserController {
     }
 
     @GetMapping("/user/{id}/courses")
-    public @ResponseBody ResponseEntity<Set<Course>> getUserCourseList(@PathVariable long id) {
+    public @ResponseBody ResponseEntity<Set<ApiCourse>> getUserCourseList(@PathVariable long id) {
         Optional<User> result = us.findById(id);
 
         if(!result.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
-        return new ResponseEntity<>(result.get().getCourses(), HttpStatus.OK);
+        Set<ApiCourse> courses = new HashSet<>();
+
+        Iterator<Course> iter = result.get().getCourses().iterator();
+
+        while(iter.hasNext()) {
+            courses.add(new ApiCourse(iter.next()));
+        }
+
+        return new ResponseEntity<>(courses, HttpStatus.OK);
     }
 
     @GetMapping("/user/{id}/grades")
-    public @ResponseBody ResponseEntity<Set<Grade>> getUserGradeList(@PathVariable long id) {
+    public @ResponseBody ResponseEntity<Set<ApiGrade>> getUserGradeList(@PathVariable long id) {
         Optional<User> result = us.findById(id);
 
         if(!result.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -58,7 +70,15 @@ public class UserController {
         // Grade[] grades = new Grade[result.get().getGrades().size()];
         // result.get().getGrades().toArray(grades);
 
-        return new ResponseEntity<>(result.get().getGrades(), HttpStatus.OK);
+        Set<ApiGrade> grades = new HashSet<>();
+
+        Iterator<Grade> iter = result.get().getGrades().iterator();
+
+        while(iter.hasNext()) {
+            grades.add(new ApiGrade(iter.next()));
+        }
+
+        return new ResponseEntity<>(grades, HttpStatus.OK);
     }
 
     @PostMapping("/user/create")
