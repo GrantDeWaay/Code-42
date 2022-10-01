@@ -1,11 +1,16 @@
 package coms309.controller.login;
 
 import coms309.database.dataobjects.User;
-import org.springframework.web.bind.annotation.*;
-
+import coms309.database.services.UserService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
+import java.util.Optional;
 import java.util.Random;
 
 @RestController
@@ -16,6 +21,8 @@ public class LoginController {
     StringBuilder sb = new StringBuilder();
 
     Random r = new Random();
+
+    UserService us;
 
     private String generateSessionToken() {
         StringBuilder sb = new StringBuilder();
@@ -31,21 +38,28 @@ public class LoginController {
     }
 
     @GetMapping("/login/{username}/{password}")
-    public @ResponseBody User userLogin(@PathVariable String username, @PathVariable String password) {
-        User u = new User(); // Instead pull user from database
-        if (u.getUsername().equals(username)) {
+    public @ResponseBody
+    ResponseEntity<User> userLogin(@PathVariable String username, @PathVariable String password) {
+        Optional<User> u = us.findByUsername(username);
+        if (u.isPresent()) {
             String token = generateSessionToken();
-            sessionTokens.put(token, u.getId());
-            return u;
+            sessionTokens.put(token, u.get().getId());
+            return new ResponseEntity<User>(u.get(), HttpStatus.OK);
         } else {
-            return null;
+            return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
         }
     }
 
     @GetMapping("/login/token/{token}")
-    public @ResponseBody User userLoginToken(@PathVariable String token) {
-        User u = new User(); // Instead pull user from database
-        return u;
+    public @ResponseBody
+    ResponseEntity<User> userLoginToken(@PathVariable String token) {
+        long id = sessionTokens.get(token);
+        Optional<User> u = us.findById(id);
+        if (u.isPresent()) {
+            return new ResponseEntity<User>(u.get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @GetMapping("/")
