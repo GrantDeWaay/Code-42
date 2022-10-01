@@ -99,5 +99,9 @@ public class Course {
     public Set<User> getStudents() {
         return students;
     }
+    
+    public Set<Assignment> getAssignments() {
+        return assignments;
+    }
 
 }

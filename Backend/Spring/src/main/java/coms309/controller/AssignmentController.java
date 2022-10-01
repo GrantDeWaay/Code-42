@@ -24,15 +24,21 @@ public class AssignmentController {
     }
 
     @GetMapping("/assignment/{id}/grades")
-    public @ResponseBody Grade[] getAssignmentGradeList(@PathVariable long id) {
-        // TODO
-        return null;
+    public @ResponseBody ResponseEntity<Set<Grade>> getAssignmentGradeList(@PathVariable long id) {
+        Optional<Assignment> result = as.findById(id);
+
+        if(!as.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        return new ResponseEntity<>(result.get().getGrades(), HttpStatus.OK);
     }
 
     @GetMapping("/assignment/{id}/course")
-    public @ResponseBody Course getAssignmentCourse(@PathVariable long id) {
-        // TODO
-        return null;
+    public @ResponseBody ResponseEntity<Course> getAssignmentCourse(@PathVariable long id) {
+        Optional<Assignment> result = as.findById(id);
+
+        if(!as.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        return new ResponseEntity<>(result.get().getCourse(), HttpStatus.OK);
     }
 
     @PostMapping("/assignment/create")
@@ -48,7 +54,7 @@ public class AssignmentController {
             as.update(a);
             return HttpStatus.ACCEPTED;
         } else {
-            return HttpStatus.BAD_REQUEST;
+            return HttpStatus.NOT_FOUND;
         }
     }
 
@@ -59,7 +65,7 @@ public class AssignmentController {
             as.delete(id);
             return HttpStatus.ACCEPTED;
         } else {
-            return HttpStatus.BAD_REQUEST;
+            return HttpStatus.NOT_FOUND;
         }
     }
 

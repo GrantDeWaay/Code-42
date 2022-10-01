@@ -29,15 +29,21 @@ public class CourseController {
     }
 
     @GetMapping("/course/{id}/assignments")
-    public @ResponseBody Assignment[] getCourseAssignmentList(@PathVariable long id) {
-        // TODO
-        return null;
+    public @ResponseBody ResponseEntity<Set<Assignment>> getCourseAssignmentList(@PathVariable long id) {
+        Optional<Course> result = cs.findById(id);
+
+        if(!result.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        return new ResponseEntity<>(result.get().getAssignments(), HttpStatus.OK);
     }
 
     @GetMapping("/course/{id}/users")
-    public @ResponseBody User[] getCourseUserList(@PathVariable long id) {
-        // TODO
-        return null;
+    public @ResponseBody ResponseEntity<Set<User>> getCourseUserList(@PathVariable long id) {
+        Optional<Course> result = cs.findById(id);
+
+        if(!result.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        return new ResponseEntity<>(result.get().getStudents(), HttpStatus.OK);
     }
 
     @PostMapping("/course/create")

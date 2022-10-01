@@ -5,11 +5,14 @@ import coms309.database.dataobjects.Course;
 import coms309.database.dataobjects.Grade;
 import coms309.database.dataobjects.User;
 import coms309.database.services.UserService;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 import java.util.Optional;
 
 @RestController
@@ -38,17 +41,24 @@ public class UserController {
     }
 
     @GetMapping("/user/{id}/courses")
-    public @ResponseBody Course[] getUserCourseList(@PathVariable long id) {
-        // TODO
-        return null;
-        // Handle not valid input
+    public @ResponseBody ResponseEntity<Set<Course>> getUserCourseList(@PathVariable long id) {
+        Optional<User> result = us.findById(id);
+
+        if(!result.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        return new ResponseEntity<>(result.get().getCourses(), HttpStatus.OK);
     }
 
     @GetMapping("/user/{id}/grades")
-    public @ResponseBody Grade[] getUserGradeList(@PathVariable long id) {
-        // TODO
-        return null;
-        // Handle not valid input
+    public @ResponseBody ResponseEntity<Set<Grade>> getUserGradeList(@PathVariable long id) {
+        Optional<User> result = us.findById(id);
+
+        if(!result.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        // Grade[] grades = new Grade[result.get().getGrades().size()];
+        // result.get().getGrades().toArray(grades);
+
+        return new ResponseEntity<>(result.get().getGrades(), HttpStatus.OK);
     }
 
     @PostMapping("/user/create")
@@ -64,7 +74,7 @@ public class UserController {
             us.update(u);
             return HttpStatus.ACCEPTED;
         } else {
-            return HttpStatus.BAD_REQUEST;
+            return HttpStatus.NOT_FOUND;
         }
     }
 
@@ -75,7 +85,7 @@ public class UserController {
             us.delete(id);
             return HttpStatus.ACCEPTED;
         } else {
-            return HttpStatus.BAD_REQUEST;
+            return HttpStatus.NOT_FOUND;
         }
     }
 
