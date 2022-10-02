@@ -1,80 +1,35 @@
 package coms309.controller;
 
-import coms309.controller.login.LoginController;
 import coms309.database.dataobjects.Assignment;
 import coms309.database.dataobjects.Course;
 import coms309.database.dataobjects.User;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import static coms309.controller.login.LoginController.sessionTokens;
 
 @RestController
 public class UserController {
 
-    /*
-     *  General API for interacting with database
-     */
+    // Need to handle non valid tokens TODO
 
-    // Get
-
-    @GetMapping("/user/{token}")
-    public @ResponseBody User getUserData(String token) {
-        // Access Database
-        return null;
+    @PutMapping("/user/password/{token}")
+    public @ResponseBody HttpStatus changeUserPassword(@PathVariable String token) {
+        long ID = sessionTokens.get(token);
+        // Change the database
+        return HttpStatus.ACCEPTED;
     }
 
-    @GetMapping("/user/courses/{token}")
-    public @ResponseBody Course[] getUserCourses(String token) {
-        // Access Database
-        return null;
+    @GetMapping("/user")
+    public @ResponseBody User[] getAllStudents() {
+        User[] arr = null; // Get all users from table
+        return arr;
     }
 
-    @GetMapping("/user/assignments/{token}")
-    public @ResponseBody Assignment[] getUserAssignments(String token) {
-        // Access Database
-        return null;
-    }
-
-    // Post
-
-    @PostMapping("/user/update{username}")
-    public @ResponseBody String updateUserData(String username, @RequestBody User u) {
-        // Access Database
-        return "Success";
-    }
-
-    @PostMapping("/user/courses/add{username}")
-    public @ResponseBody String addUserCourse(String username, @RequestBody Course[] c) {
-        // Access Database
-        return "Success";
-    }
-
-    @PostMapping("/user/assignments/add{username}")
-    public @ResponseBody String addUserAssignment(String username, @RequestBody Assignment[] a) {
-        // Access Database
-        return "Success";
-    }
-
-
-    // Put
-
-    // Delete
-
-    @DeleteMapping("/user/delete{username}")
-    public @ResponseBody String deleteUser(String username) {
-        // Access Database
-        LoginController.sessionTokens.remove(username);
-        return "Success";
-    }
-
-    @DeleteMapping("/user/courses/delete{username}")
-    public @ResponseBody String deleteUserCourse(String username, @RequestBody Course[] c) {
-        // Access Database
-        return "Success";
-    }
-
-    @DeleteMapping("/user/assignments/delete{username}")
-    public @ResponseBody String deleteUserAssignment(String username, @RequestBody Assignment[] a) {
-        // Access Database
-        return "Success";
+    @PutMapping("/user/create")
+    public @ResponseBody HttpStatus createUser(@RequestBody User u) {
+        // Add user to database
+        return HttpStatus.ACCEPTED;
     }
 
 }

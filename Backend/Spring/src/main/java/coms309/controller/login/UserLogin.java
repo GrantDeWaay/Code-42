@@ -2,8 +2,8 @@ package coms309.controller.login;
 
 public class UserLogin {
     /*
-        Names of variables copied directly from database
-        However confused on how spaces are handled
+    Names of variables copied directly from database
+    However confused on how spaces are handled
      */
     long ID;
     private String Account_Type;
