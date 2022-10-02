@@ -1,14 +1,13 @@
 package coms309.controller;
 
 import coms309.controller.login.LoginController;
-import coms309.controller.login.StudentLogin;
 import coms309.database.dataobjects.Assignment;
 import coms309.database.dataobjects.Course;
 import coms309.database.dataobjects.User;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-public class StudentController {
+public class UserController {
 
     /*
      *  General API for interacting with database
