@@ -5,11 +5,13 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import coms309.database.dataobjects.User;
 import coms309.database.repository.UserRepository;
 
-public class UserService {
+@Service
+public class UserService implements RepositoryService<User> {
     
     @Autowired
     private UserRepository repository;
@@ -18,6 +20,7 @@ public class UserService {
 
     }
 
+    @Override
     public Optional<User> findById(Long id) {
         return repository.findById(id);
     }
@@ -30,27 +33,33 @@ public class UserService {
         return repository.findByEmail(email);
     }
 
+    @Override
     public List<User> findAll() {
         return repository.findAll();
     }
 
     // these two methods do the same thing, but this might make usage more clear
-    public User createUser(User user) {
-        return repository.save(user);
+    @Override
+    public User create(User t) {
+        return repository.save(t);
     }
 
-    public User updateUser(User user) {
-        return repository.save(user);
+    @Override
+    public User update(User t) {
+        return repository.save(t);
     }
 
-    public void deleteUser(Long id) {
+    @Override
+    public void delete(Long id) {
         repository.deleteById(id);
     }
 
-    public boolean containsUser(Long id) {
+    @Override
+    public boolean contains(Long id) {
         return repository.existsById(id);
     }
 
+    @Override
     public long count() {
         return repository.count();
     }
