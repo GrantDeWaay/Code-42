@@ -2,6 +2,7 @@ package edu.iastate.code42;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,10 +21,12 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
 
 import edu.iastate.code42.app.AppController;
+import edu.iastate.code42.objects.User;
 import edu.iastate.code42.utils.Const;
 
 public class MainActivity extends AppCompatActivity {
@@ -49,14 +52,25 @@ public class MainActivity extends AppCompatActivity {
                     null, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
-
+                    try {
+                        loginSuccess(response);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
                 }
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     Log.e("Volley Login Auth Error:", error.toString());
-                    Toast.makeText(getApplicationContext(), R.string.login_volley_error,
-                            Toast.LENGTH_LONG).show();
+                    if(error.networkResponse.statusCode == 401){
+                        Toast.makeText(getApplicationContext(), R.string.login_volley_session,
+                                Toast.LENGTH_LONG).show();
+                    }else {
+                        Toast.makeText(getApplicationContext(), R.string.login_volley_error,
+                                Toast.LENGTH_LONG).show();
+                    }
                 }
             }){
                 /**
@@ -77,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             };
 
-            AppController.getInstance().addToRequestQueue(loginReq, "login_req");
+            AppController.getInstance().addToRequestQueue(loginReq, "session_req");
         }
 
         login = findViewById(R.id.loginButton);
@@ -99,13 +113,31 @@ public class MainActivity extends AppCompatActivity {
                         public void onResponse(JSONObject response) {
                             Toast.makeText(getApplicationContext(), response.toString(),
                                     Toast.LENGTH_LONG).show();
+                            try {
+                                userSessionEditor.putString("sessionID", response.getString("sessionID"));
+                                userSessionEditor.commit();
+
+                                try {
+                                    loginSuccess(response);
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                         }
                     }, new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
                             Log.e("Volley Login Auth Error:", error.toString());
-                            Toast.makeText(getApplicationContext(), R.string.login_volley_error,
-                                    Toast.LENGTH_LONG).show();
+
+                            if(error.networkResponse.statusCode == 401){
+                                Toast.makeText(getApplicationContext(), R.string.login_volley_incorrect,
+                                        Toast.LENGTH_LONG).show();
+                            }else{
+                                Toast.makeText(getApplicationContext(), R.string.login_volley_error,
+                                        Toast.LENGTH_LONG).show();
+                            }
                         }
                     }){
                         /**
@@ -134,4 +166,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void loginSuccess(JSONObject response) throws JSONException, ParseException {
+        User user = User.get(getApplicationContext());
+        user.fromJson(response);
+
+        Intent dashboard = new Intent(MainActivity.this, DashboardActivity.class);
+        startActivity(dashboard);
+    }
+
 }
