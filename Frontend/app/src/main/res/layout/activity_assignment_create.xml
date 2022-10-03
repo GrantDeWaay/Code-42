@@ -24,7 +24,7 @@
                 android:importantForAutofill="no"
                 android:inputType="textPersonName"
                 android:minHeight="48dp"
-                android:text="@string/name" />
+                android:text="Assignment Name" />
 
             <Spinner
                 android:id="@+id/spinner"
@@ -33,24 +33,32 @@
                 android:minHeight="48dp" />
 
             <EditText
-                android:id="@+id/editTextTextMultiLine"
+                android:id="@+id/editTextTextMultiLine1"
                 android:layout_width="match_parent"
                 android:layout_height="318dp"
                 android:ems="10"
                 android:gravity="start|top"
                 android:inputType="textMultiLine"
-                android:text="temp" />
-
-            <Button
-                android:id="@+id/button"
+                android:text="code" />
+            <EditText
+                android:id="@+id/editTextTextMultiLine2"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Submit" />
+                android:layout_height="318dp"
+                android:ems="10"
+                android:gravity="start|top"
+                android:inputType="textMultiLine"
+                android:text="desc" />
+
             <TextView
                 android:id="@+id/textView"
                 android:layout_width="match_parent"
                 android:layout_height="191dp"
                 android:text="TextView" />
+            <Button
+                android:id="@+id/button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Submit" />
 
         </LinearLayout>
     </ScrollView>

@@ -31,10 +31,11 @@ public class AssignmentCreateActivity extends AppCompatActivity {
         textE = findViewById(R.id.enterText);
         textx = findViewById(R.id.textView);
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.planets_array, android.R.layout.simple_spinner_item);
+
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.lang_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
+        spinner.setSelection(0);
         btnClick.setOnClickListener(v -> {
             makeJsonObjReq();
             Log.i("Click", textE.getText().toString());
