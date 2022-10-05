@@ -1,16 +1,18 @@
 package coms309.database.dataobjects;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationDescription;
-import javax.persistence.Id;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.*;
 
 @Entity
+@Table(name = "assignments")
 public class Assignment {
-    
+
     @Id
-    @GeneratedValue(strategy = GenerationDescription.IDENTITY)
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     // title of assignment
     private String title;
@@ -18,22 +20,36 @@ public class Assignment {
     // description of assignment
     private String description;
 
-    // date assignment is due
-    private String dueDate;
+    // problem statement for coding challenge
+    private String problemStatement;
 
-    // TODO add more fields for location of test files for assignment, base code outline, etc.
+    // TODO add in sample code (may end up being in database or stored as a file)
+
+    private Date creationDate;
+
+    // date assignment is due
+    private Date dueDate;
+
+    // course this assignment belongs to
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "course_id", nullable = false)
+    private Course course;
+
+    // grades for everyone that did the assignment
+    @OneToMany(mappedBy = "assignment", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<Grade> grades = new HashSet<>();
 
     public Assignment() {
 
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         // TODO add in code to check IDs for uniqueness
         this.id = id;
     }
 
     // returns the ID of the user
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
@@ -53,12 +69,27 @@ public class Assignment {
         return description;
     }
 
-    public void setDueDate(String dueDate) {
-        // TODO add code to check for valid types
+    public void setProblemStatement(String problemStatement) {
+        this.problemStatement = problemStatement;
+    }
+
+    public String getProblemStatement() {
+        return problemStatement;
+    }
+
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
+    public void setDueDate(Date dueDate) {
         this.dueDate = dueDate;
     }
 
-    public String getDueDate() {
+    public Date getDueDate() {
         return dueDate;
     }
 
