@@ -15,17 +15,24 @@ import java.util.Optional;
 @RestController
 public class UserController {
 
+    /*
+    Overall TODO
+    Test all requests with Postman then SQL
+    Implement missing methods if required for demo
+    Add feature that handles invalid input
+     */
+
     @Autowired
-    UserService ur;
+    UserService us;
 
     @GetMapping("/user")
     public @ResponseBody List<User> getUserList() {
-        return ur.findAll();
+        return us.findAll();
     }
 
     @GetMapping("/user/{id}")
     public @ResponseBody User getUser(@PathVariable long id) {
-        Optional<User> u = ur.findById(id);
+        Optional<User> u = us.findById(id);
         return u.orElse(null);
         // Handle not valid input
     }
@@ -47,14 +54,14 @@ public class UserController {
     @PostMapping("/user/create")
     public @ResponseBody User createUser(@RequestBody User u) {
         u.setId(LongGen.generateId());
-        ur.create(u);
+        us.create(u);
         return u;
     }
 
     @PutMapping("/user/{id}/update")
     public @ResponseBody HttpStatus updateUser(@PathVariable long id, @RequestBody User u) {
-        if (u.getId() == id){
-            ur.update(u);
+        if (u.getId() == id) {
+            us.update(u);
             return HttpStatus.ACCEPTED;
         } else {
             return HttpStatus.BAD_REQUEST;
@@ -62,8 +69,14 @@ public class UserController {
     }
 
     @DeleteMapping("/user/{id}/delete")
-    public @ResponseBody HttpStatus deleteUser() {
-        return HttpStatus.ACCEPTED;
+    public @ResponseBody HttpStatus deleteUser(@PathVariable long id) {
+        Optional<User> u = us.findById(id);
+        if (u.isPresent()) {
+            us.delete(id);
+            return HttpStatus.ACCEPTED;
+        } else {
+            return HttpStatus.BAD_REQUEST;
+        }
     }
 
 }
