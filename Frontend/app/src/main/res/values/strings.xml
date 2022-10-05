@@ -2,6 +2,7 @@
     <string name="app_name">Code42</string>
     <string name="name">Name</string>
     <string name="button">Button</string>
+    <string name="assignment_name">Assignment Name</string>
     <string-array name="lang_array">
         <item>Select Language</item>
         <item>Python</item>

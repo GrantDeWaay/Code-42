@@ -17,20 +17,21 @@
             android:orientation="vertical">
 
             <EditText
-                android:id="@+id/enterText"
+                android:id="@+id/assignmentNameEnter"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:ems="10"
                 android:importantForAutofill="no"
                 android:inputType="textPersonName"
                 android:minHeight="48dp"
-                android:text="Assignment Name" />
+                android:text="@string/assignment_name" />
 
             <Spinner
                 android:id="@+id/spinner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:minHeight="48dp" />
+                android:minHeight="48dp"
+                tools:ignore="SpeakableTextPresentCheck" />
 
             <EditText
                 android:id="@+id/editTextTextMultiLine1"
@@ -39,7 +40,8 @@
                 android:ems="10"
                 android:gravity="start|top"
                 android:inputType="textMultiLine"
-                android:text="code" />
+                android:text="code"
+                android:importantForAutofill="no" />
             <EditText
                 android:id="@+id/editTextTextMultiLine2"
                 android:layout_width="match_parent"
@@ -50,7 +52,7 @@
                 android:text="desc" />
 
             <TextView
-                android:id="@+id/textView"
+                android:id="@+id/textx"
                 android:layout_width="match_parent"
                 android:layout_height="191dp"
                 android:text="TextView" />
