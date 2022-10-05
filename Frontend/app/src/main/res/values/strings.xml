@@ -1,5 +1,13 @@
 <resources>
     <string name="app_name">Code42</string>
+<<<<<<< Frontend/app/src/main/res/values/strings.xml
+    <string name="name">Name</string>
+    <string name="button">Button</string>
+    <string name="assignment_name">Assignment Name</string>
+    <string-array name="lang_array">
+        <item>Select Language</item>
+        <item>Python</item>
+    </string-array>
     <string name="login_missing_field">Please enter username and password before submitting</string>
     <string name="login_volley_error">Error when trying to authenicate login,
         contact developer or retry later</string>
@@ -7,4 +15,5 @@
     <string name="login_volley_session">Incorrect or expired session, please login normally</string>
     <string name="session_shared_pref">userSharedFile</string>
     <string name="app_shared_pref">appSharedFile</string>
+>>>>>>> Frontend/app/src/main/res/values/strings.xml
 </resources>
