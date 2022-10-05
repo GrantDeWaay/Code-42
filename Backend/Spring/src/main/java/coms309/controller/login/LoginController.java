@@ -20,7 +20,7 @@ public class LoginController {
     private String generateSessionToken() {
         StringBuilder sb = new StringBuilder();
         while (sessionTokens.containsKey(sb.toString()) || sb.toString().equals("")) {
-            for (int i = 0; i < 32; i++) {
+            for (int i = 0; i < 16; i++) {
                 char c = (char) (33 + r.nextInt(93)); //33-126
                 sb.append(c);
             }
@@ -31,11 +31,11 @@ public class LoginController {
     }
 
     @GetMapping("/login/{username}/{password}")
-    public @ResponseBody UserLogin userLogin(@PathVariable String username, @PathVariable String password) {
-        UserLogin u = new UserLogin(); // Instead pull user from database
+    public @ResponseBody User userLogin(@PathVariable String username, @PathVariable String password) {
+        User u = new User(); // Instead pull user from database
         if (u.getUsername().equals(username)) {
             String token = generateSessionToken();
-            sessionTokens.put(token, u.getID());
+            sessionTokens.put(token, u.getId());
             return u;
         } else {
             return null;
