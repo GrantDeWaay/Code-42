@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import coms309.api.dataobjects.*;
 
 import java.util.List;
+import java.util.LinkedList;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -33,8 +34,16 @@ public class UserController {
     UserService us;
 
     @GetMapping("/user")
-    public @ResponseBody List<User> getUserList() {
-        return us.findAll();
+    public @ResponseBody List<ApiUser> getUserList() {
+        List<User> result = us.findAll();
+
+        List<ApiUser> users = new LinkedList<>();
+
+        for(User u : result) {
+            users.add(new ApiUser(u));
+        }
+
+        return users;
     }
 
     @GetMapping("/user/{id}")

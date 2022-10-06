@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Optional;
 
 @RestController
@@ -24,8 +25,16 @@ public class CourseController {
     CourseService cs;
 
     @GetMapping("/course")
-    public @ResponseBody List<Course> getCourseList() {
-        return cs.findAll();
+    public @ResponseBody List<ApiCourse> getCourseList() {
+        List<Course> result = cs.findAll();
+
+        List<ApiCourse> courses = new LinkedList<>();
+
+        for(Course c : result) {
+            courses.add(new ApiCourse(c));
+        }
+
+        return courses;
     }
 
     @GetMapping("/course/{id}")
