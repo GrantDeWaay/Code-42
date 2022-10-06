@@ -38,10 +38,12 @@ public class UserController {
     }
 
     @GetMapping("/user/{id}")
-    public @ResponseBody User getUser(@PathVariable long id) {
+    public @ResponseBody ResponseEntity<ApiUser> getUser(@PathVariable long id) {
         Optional<User> u = us.findById(id);
-        return u.orElse(null);
-        // Handle not valid input
+
+        if(!u.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        return new ResponseEntity<>(new ApiUser(u.get()), HttpStatus.OK);
     }
 
     @GetMapping("/user/{id}/courses")

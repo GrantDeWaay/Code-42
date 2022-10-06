@@ -3,7 +3,6 @@ package coms309.controller;
 import coms309.controller.generator.LongGen;
 
 import coms309.database.dataobjects.Assignment;
-import coms309.database.dataobjects.Course;
 import coms309.database.dataobjects.Grade;
 
 import coms309.api.dataobjects.*;
@@ -27,9 +26,12 @@ public class AssignmentController {
     AssignmentService as;
 
     @GetMapping("/assignment/{id}")
-    public @ResponseBody Assignment getAssignment(@PathVariable long id) {
+    public @ResponseBody ResponseEntity<ApiAssignment> getAssignment(@PathVariable long id) {
         Optional<Assignment> a = as.findById(id);
-        return a.orElse(null);
+
+        if(!a.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        return new ResponseEntity<>(new ApiAssignment(a.get()), HttpStatus.OK);
     }
 
     @GetMapping("/assignment/{id}/grades")

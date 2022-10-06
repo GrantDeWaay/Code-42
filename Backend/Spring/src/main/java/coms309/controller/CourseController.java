@@ -29,10 +29,12 @@ public class CourseController {
     }
 
     @GetMapping("/course/{id}")
-    public @ResponseBody Course getCourse(@PathVariable long id) {
+    public @ResponseBody ResponseEntity<ApiCourse> getCourse(@PathVariable long id) {
         Optional<Course> c = cs.findById(id);
-        return c.orElse(null);
-        // Handle not valid input
+
+        if(!c.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        return new ResponseEntity<>(new ApiCourse(c.get()), HttpStatus.OK);
     }
 
     @GetMapping("/course/{id}/assignments")
