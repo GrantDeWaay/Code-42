@@ -41,6 +41,10 @@ public class ApiCourse {
         this.creationDate = creationDate;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     // returns the ID of the user
     public Long getId() {
         return id;

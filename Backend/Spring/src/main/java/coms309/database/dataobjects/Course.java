@@ -6,6 +6,8 @@ import java.util.Set;
 
 import javax.persistence.*;
 
+import coms309.api.dataobjects.ApiCourse;
+
 @Entity
 @Table(name = "courses")
 public class Course {
@@ -37,6 +39,13 @@ public class Course {
     
     public Course() {
 
+    }
+
+    public Course(ApiCourse ac) {
+        this.id = ac.getId();
+        this.description = ac.getDescription();
+        this.languages = ac.getLanguages();
+        this.creationDate = ac.getCreationDate();
     }
 
     public Course(Long id, String title, String description, String languages, Date creationDate) {

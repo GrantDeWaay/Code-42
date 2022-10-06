@@ -16,6 +16,7 @@ import coms309.api.dataobjects.*;
 import java.util.List;
 import java.util.LinkedList;
 import java.util.Set;
+import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Optional;
@@ -93,12 +94,17 @@ public class UserController {
     }
 
     @PostMapping("/user/create")
-    public @ResponseBody User createUser(@RequestBody User u) {
+    public @ResponseBody ApiUser createUser(@RequestBody ApiUser u) {
         u.setId(LongGen.generateId());
-        us.create(u);
+        u.setCreationDate(Calendar.getInstance().getTime());
+
+        User user = new User(u);
+        us.create(user);
+
         return u;
     }
 
+    // TODO needs to be fixed, do not use
     @PutMapping("/user/{id}/update")
     public @ResponseBody HttpStatus updateUser(@PathVariable long id, @RequestBody User u) {
         if (u.getId() == id) {

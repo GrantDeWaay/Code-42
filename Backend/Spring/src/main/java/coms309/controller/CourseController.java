@@ -10,9 +10,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import coms309.api.dataobjects.*;
+import coms309.controller.generator.LongGen;
 
 import java.util.List;
 import java.util.Set;
+import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -81,11 +83,17 @@ public class CourseController {
     }
 
     @PostMapping("/course/create")
-    public @ResponseBody Course createCourse(@RequestBody Course c) {
-        cs.create(c);
+    public @ResponseBody ApiCourse createCourse(@RequestBody ApiCourse c) {
+        c.setId(LongGen.generateId());
+        c.setCreationDate(Calendar.getInstance().getTime());
+
+        Course course = new Course(c);
+        cs.create(course);
+
         return c;
     }
 
+    // TODO needs to be fixed, do not use
     @PutMapping("/course/{id}/update")
     public @ResponseBody HttpStatus updateCourse(@PathVariable long id, @RequestBody Course c) {
         if (c.getId() == id) {
