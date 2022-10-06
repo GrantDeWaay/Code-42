@@ -93,4 +93,12 @@ public class Assignment {
         return dueDate;
     }
 
+    public Course getCourse() {
+        return course;
+    }
+
+    public Set<Grade> getGrades() {
+        return grades;
+    }
+
 }

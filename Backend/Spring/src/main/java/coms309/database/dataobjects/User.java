@@ -133,4 +133,8 @@ public class User {
     public Set<Course> getCourses() {
         return courses;
     }
+
+    public Set<Grade> getGrades() {
+        return grades;
+    }
 }
