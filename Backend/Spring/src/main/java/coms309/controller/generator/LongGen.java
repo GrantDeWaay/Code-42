@@ -4,7 +4,7 @@ import java.util.Random;
 
 public class LongGen {
 
-    public static Random r;
+    public static Random r = new Random();
 
     public static long generateId() {
         return r.nextLong();
