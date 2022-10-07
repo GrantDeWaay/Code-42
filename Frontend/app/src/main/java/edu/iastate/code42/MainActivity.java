@@ -64,13 +64,15 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     Log.e("Volley Login Auth Error:", error.toString());
-                    if(error.networkResponse.statusCode == 401){
+                    /*if(error.networkResponse.statusCode == 401){
                         Toast.makeText(getApplicationContext(), R.string.login_volley_session,
                                 Toast.LENGTH_LONG).show();
                     }else {
                         Toast.makeText(getApplicationContext(), R.string.login_volley_error,
                                 Toast.LENGTH_LONG).show();
-                    }
+                    }*/
+                    Toast.makeText(getApplicationContext(), R.string.login_volley_error,
+                            Toast.LENGTH_LONG).show();
                 }
             }){
                 /**
@@ -131,13 +133,15 @@ public class MainActivity extends AppCompatActivity {
                         public void onErrorResponse(VolleyError error) {
                             Log.e("Volley Login Auth Error:", error.toString());
 
-                            if(error.networkResponse.statusCode == 401){
+                            /*if(error.networkResponse.statusCode == 401){
                                 Toast.makeText(getApplicationContext(), R.string.login_volley_incorrect,
                                         Toast.LENGTH_LONG).show();
                             }else{
                                 Toast.makeText(getApplicationContext(), R.string.login_volley_error,
                                         Toast.LENGTH_LONG).show();
-                            }
+                            }*/
+                            Toast.makeText(getApplicationContext(), R.string.login_volley_error,
+                                    Toast.LENGTH_LONG).show();
                         }
                     }){
                         /**

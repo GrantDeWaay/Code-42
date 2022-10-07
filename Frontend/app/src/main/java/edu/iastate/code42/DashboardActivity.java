@@ -6,8 +6,9 @@ import android.os.Bundle;
 import android.widget.TextView;
 
 import edu.iastate.code42.objects.User;
+import edu.iastate.code42.utils.BaseDrawer;
 
-public class DashboardActivity extends AppCompatActivity {
+public class DashboardActivity extends BaseDrawer {
 
     TextView helloMessage;
 

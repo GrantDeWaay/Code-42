@@ -7,4 +7,6 @@
     <string name="login_volley_session">Incorrect or expired session, please login normally</string>
     <string name="session_shared_pref">userSharedFile</string>
     <string name="app_shared_pref">appSharedFile</string>
+    <string name="menu_drawer_open">Drawer Open</string>
+    <string name="menu_drawer_close">Drawer Close</string>
 </resources>

@@ -57,7 +57,11 @@ public class User extends Application {
         this.lastName = response.getString("lastName");
         this.email = response.getString("email");
         this.type = response.getString("type");
-        this.creationDate = formatter.parse(response.getString("date"));
+        if(response.getString("creationDate") == null){
+            this.creationDate = null;
+        }else {
+            this.creationDate = formatter.parse(response.getString("creationDate"));
+        }
     }
 
     public Long getId() {
