@@ -68,13 +68,20 @@ public class AssignmentController {
     }
 
     @PutMapping("/assignment/{id}/update")
-    public @ResponseBody HttpStatus updateAssignment(@PathVariable long id, @RequestBody Assignment a) {
-        if (a.getId() == id) {
-            as.update(a);
-            return HttpStatus.ACCEPTED;
-        } else {
-            return HttpStatus.NOT_FOUND;
-        }
+    public @ResponseBody HttpStatus updateAssignment(@PathVariable long id, @RequestBody ApiAssignment a) {
+        Optional<Assignment> optional = as.findById(id);
+
+        if(!optional.isPresent()) return HttpStatus.NOT_FOUND;
+
+        Assignment assignment = optional.get();
+
+        assignment.setTitle(a.getTitle());
+        assignment.setDescription(a.getDescription());
+        assignment.setProblemStatement(a.getProblemStatement());
+
+        as.update(assignment);
+
+        return HttpStatus.ACCEPTED;
     }
 
     @DeleteMapping("/assignment/{id}/delete")

@@ -10,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import coms309.api.dataobjects.*;
-import coms309.controller.generator.LongGen;
 
 import java.util.List;
 import java.util.Set;
@@ -84,7 +83,6 @@ public class CourseController {
 
     @PostMapping("/course/create")
     public @ResponseBody ApiCourse createCourse(@RequestBody ApiCourse c) {
-        c.setId(LongGen.generateId());
         c.setCreationDate(Calendar.getInstance().getTime());
 
         Course course = new Course(c);

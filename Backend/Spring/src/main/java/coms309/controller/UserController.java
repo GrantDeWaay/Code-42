@@ -1,6 +1,5 @@
 package coms309.controller;
 
-import coms309.controller.generator.LongGen;
 import coms309.database.dataobjects.Course;
 import coms309.database.dataobjects.Grade;
 import coms309.database.dataobjects.User;
@@ -79,9 +78,6 @@ public class UserController {
 
         if(!result.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
-        // Grade[] grades = new Grade[result.get().getGrades().size()];
-        // result.get().getGrades().toArray(grades);
-
         Set<ApiGrade> grades = new HashSet<>();
 
         Iterator<Grade> iter = result.get().getGrades().iterator();
@@ -95,7 +91,6 @@ public class UserController {
 
     @PostMapping("/user/create")
     public @ResponseBody ApiUser createUser(@RequestBody ApiUser u) {
-        u.setId(LongGen.generateId());
         u.setCreationDate(Calendar.getInstance().getTime());
 
         User user = new User(u);
