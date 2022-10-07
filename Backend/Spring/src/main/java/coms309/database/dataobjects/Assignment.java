@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import coms309.api.dataobjects.*;
+
 import javax.persistence.*;
 
 @Entity
@@ -41,6 +43,15 @@ public class Assignment {
 
     public Assignment() {
 
+    }
+
+    public Assignment(ApiAssignment a) {
+        this.id = a.getId();
+        this.title = a.getTitle();
+        this.description = a.getDescription();
+        this.problemStatement = a.getProblemStatement();
+        this.creationDate = a.getCreationDate();
+        this.dueDate = a.getDueDate();
     }
 
     public void setId(Long id) {

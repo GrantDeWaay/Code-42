@@ -88,7 +88,7 @@ public class CourseController {
         Course course = new Course(c);
         cs.create(course);
 
-        return c;
+        return new ApiCourse(course);
     }
 
     @PutMapping("/course/{id}/update")
