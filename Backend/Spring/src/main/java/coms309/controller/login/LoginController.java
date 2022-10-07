@@ -1,5 +1,6 @@
 package coms309.controller.login;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import coms309.database.dataobjects.User;
 import coms309.database.services.UserService;
 import org.springframework.http.HttpStatus;
@@ -22,6 +23,7 @@ public class LoginController {
 
     Random r = new Random();
 
+    @Autowired
     UserService us;
 
     private String generateSessionToken() {
