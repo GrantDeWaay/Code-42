@@ -34,22 +34,23 @@
                 tools:ignore="SpeakableTextPresentCheck" />
 
             <EditText
-                android:id="@+id/editTextTextMultiLine1"
-                android:layout_width="match_parent"
-                android:layout_height="318dp"
-                android:ems="10"
-                android:gravity="start|top"
-                android:inputType="textMultiLine"
-                android:text="code"
-                android:importantForAutofill="no" />
-            <EditText
-                android:id="@+id/editTextTextMultiLine2"
+                android:id="@+id/description"
                 android:layout_width="match_parent"
                 android:layout_height="318dp"
                 android:ems="10"
                 android:gravity="start|top"
                 android:inputType="textMultiLine"
                 android:text="desc" />
+
+            <EditText
+                android:id="@+id/problemStatement"
+                android:layout_width="match_parent"
+                android:layout_height="318dp"
+                android:ems="10"
+                android:gravity="start|top"
+                android:importantForAutofill="no"
+                android:inputType="textMultiLine"
+                android:text="statement" />
 
             <TextView
                 android:id="@+id/textx"

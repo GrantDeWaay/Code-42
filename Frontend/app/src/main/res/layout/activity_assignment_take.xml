@@ -18,6 +18,12 @@
             android:autoSizeTextType="uniform"
             android:text="Name of Assignment" />
 
+        <TextView
+            android:id="@+id/descView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="descView" />
+
         <EditText
             android:id="@+id/TypeIDE"
             android:layout_width="match_parent"
@@ -37,5 +43,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Submit" />
+
+        <Button
+            android:id="@+id/button4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Button" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Code42</string>
-<<<<<<< Frontend/app/src/main/res/values/strings.xml
     <string name="name">Name</string>
     <string name="button">Button</string>
     <string name="assignment_name">Assignment Name</string>
@@ -15,5 +14,4 @@
     <string name="login_volley_session">Incorrect or expired session, please login normally</string>
     <string name="session_shared_pref">userSharedFile</string>
     <string name="app_shared_pref">appSharedFile</string>
->>>>>>> Frontend/app/src/main/res/values/strings.xml
 </resources>
