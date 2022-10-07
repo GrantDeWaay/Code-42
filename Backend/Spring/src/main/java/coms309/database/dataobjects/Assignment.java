@@ -34,7 +34,7 @@ public class Assignment {
 
     // course this assignment belongs to
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "course_id", nullable = false)
+    @JoinColumn(name = "course_id", nullable = true)
     private Course course;
 
     // grades for everyone that did the assignment
