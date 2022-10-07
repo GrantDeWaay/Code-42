@@ -6,6 +6,8 @@ import java.util.Set;
 
 import javax.persistence.*;
 
+import coms309.api.dataobjects.ApiUser;
+
 @Entity
 @Table(name = "users")
 public class User {
@@ -51,6 +53,16 @@ public class User {
 
     public User() {
 
+    }
+
+    public User(ApiUser au) {
+        this.id = au.getId();
+        this.username = au.getUsername();
+        this.firstName = au.getFirstName();
+        this.lastName = au.getLastName();
+        this.password = au.getPassword();
+        this.email = au.getEmail();
+        this.type = au.getType();
     }
 
     public User(Long id, String username, String firstName, String lastName, String password, String email, String type) {
@@ -132,5 +144,9 @@ public class User {
 
     public Set<Course> getCourses() {
         return courses;
+    }
+
+    public Set<Grade> getGrades() {
+        return grades;
     }
 }

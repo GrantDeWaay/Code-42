@@ -34,6 +34,14 @@ public class Grade {
 
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
     public void setGrade(Double grade) {
         this.grade = grade;
     }
