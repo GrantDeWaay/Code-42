@@ -14,7 +14,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_weight="1"
-        tools:srcCompat="@tools:sample/avatars" />
+        android:background="@color/headerBackground"
+        app:srcCompat="@drawable/ic_person_foreground" />
 
     <TextView
         android:id="@+id/headerName"

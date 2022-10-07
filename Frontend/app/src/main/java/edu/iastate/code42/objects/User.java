@@ -64,6 +64,17 @@ public class User extends Application {
         }
     }
 
+    public void logout(){
+        sUser = null;
+        this.id = null;
+        this.username = null;
+        this.firstName = null;
+        this.lastName = null;
+        this.email = null;
+        this.type = null;
+        this.creationDate = null;
+    }
+
     public Long getId() {
         return id;
     }
