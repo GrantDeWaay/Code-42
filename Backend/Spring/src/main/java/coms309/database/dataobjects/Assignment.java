@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import coms309.api.dataobjects.*;
+
 import javax.persistence.*;
 
 @Entity
@@ -31,8 +33,8 @@ public class Assignment {
     private Date dueDate;
 
     // course this assignment belongs to
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "course_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "course_id", nullable = true)
     private Course course;
 
     // grades for everyone that did the assignment
@@ -41,6 +43,15 @@ public class Assignment {
 
     public Assignment() {
 
+    }
+
+    public Assignment(ApiAssignment a) {
+        this.id = a.getId();
+        this.title = a.getTitle();
+        this.description = a.getDescription();
+        this.problemStatement = a.getProblemStatement();
+        this.creationDate = a.getCreationDate();
+        this.dueDate = a.getDueDate();
     }
 
     public void setId(Long id) {

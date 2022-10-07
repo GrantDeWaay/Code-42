@@ -96,7 +96,7 @@ public class UserController {
         User user = new User(u);
         us.create(user);
 
-        return u;
+        return new ApiUser(user);
     }
 
     @PutMapping("/user/{id}/update")

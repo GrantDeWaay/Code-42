@@ -61,10 +61,12 @@ public class AssignmentController {
     }
 
     @PostMapping("/assignment/create")
-    public @ResponseBody Assignment createAssignment(@RequestBody Assignment a) {
-        a.setId(LongGen.generateId());
-        as.create(a);
-        return a;
+    public @ResponseBody ApiAssignment createAssignment(@RequestBody ApiAssignment a) {
+
+        Assignment assignment = new Assignment(a);
+        as.create(assignment);
+
+        return new ApiAssignment(assignment);
     }
 
     @PutMapping("/assignment/{id}/update")
