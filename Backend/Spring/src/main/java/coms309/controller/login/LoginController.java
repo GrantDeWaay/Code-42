@@ -3,6 +3,7 @@ package coms309.controller.login;
 import org.springframework.beans.factory.annotation.Autowired;
 import coms309.database.dataobjects.User;
 import coms309.database.services.UserService;
+import coms309.api.dataobjects.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,26 +42,26 @@ public class LoginController {
 
     @GetMapping("/login/{username}/{password}")
     public @ResponseBody
-    ResponseEntity<User> userLogin(@PathVariable String username, @PathVariable String password) {
+    ResponseEntity<ApiUser> userLogin(@PathVariable String username, @PathVariable String password) {
         Optional<User> u = us.findByUsername(username);
         if (u.isPresent()) {
             String token = generateSessionToken();
             sessionTokens.put(token, u.get().getId());
-            return new ResponseEntity<User>(u.get(), HttpStatus.OK);
+            return new ResponseEntity<ApiUser>(new ApiUser(u.get()), HttpStatus.OK);
         } else {
-            return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<ApiUser>(HttpStatus.NOT_FOUND);
         }
     }
 
     @GetMapping("/login/token/{token}")
     public @ResponseBody
-    ResponseEntity<User> userLoginToken(@PathVariable String token) {
+    ResponseEntity<ApiUser> userLoginToken(@PathVariable String token) {
         long id = sessionTokens.get(token);
         Optional<User> u = us.findById(id);
         if (u.isPresent()) {
-            return new ResponseEntity<User>(u.get(), HttpStatus.OK);
+            return new ResponseEntity<ApiUser>(new ApiUser(u.get()), HttpStatus.OK);
         } else {
-            return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<ApiUser>(HttpStatus.NOT_FOUND);
         }
     }
 
