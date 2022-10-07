@@ -43,6 +43,7 @@ public class Course {
 
     public Course(ApiCourse ac) {
         this.id = ac.getId();
+        this.title = ac.getTitle();
         this.description = ac.getDescription();
         this.languages = ac.getLanguages();
         this.creationDate = ac.getCreationDate();
