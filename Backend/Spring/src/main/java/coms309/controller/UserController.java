@@ -104,15 +104,24 @@ public class UserController {
         return u;
     }
 
-    // TODO needs to be fixed, do not use
     @PutMapping("/user/{id}/update")
-    public @ResponseBody HttpStatus updateUser(@PathVariable long id, @RequestBody User u) {
-        if (u.getId() == id) {
-            us.update(u);
-            return HttpStatus.ACCEPTED;
-        } else {
-            return HttpStatus.NOT_FOUND;
-        }
+    public @ResponseBody HttpStatus updateUser(@PathVariable long id, @RequestBody ApiUser u) {
+        Optional<User> optional = us.findById(id);
+
+        if(!optional.isPresent()) return HttpStatus.NOT_FOUND;
+
+        User user = optional.get();
+
+        user.setUsername(u.getUsername());
+        user.setFirstName(u.getFirstName());
+        user.setLastName(u.getLastName());
+        user.setPassword(u.getPassword());
+        user.setEmail(u.getEmail());
+        user.setType(u.getType());
+
+        us.update(user);
+
+        return HttpStatus.ACCEPTED;
     }
 
     @DeleteMapping("/user/{id}/delete")

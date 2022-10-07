@@ -93,15 +93,21 @@ public class CourseController {
         return c;
     }
 
-    // TODO needs to be fixed, do not use
     @PutMapping("/course/{id}/update")
-    public @ResponseBody HttpStatus updateCourse(@PathVariable long id, @RequestBody Course c) {
-        if (c.getId() == id) {
-            cs.update(c);
-            return HttpStatus.ACCEPTED;
-        } else {
-            return HttpStatus.BAD_REQUEST;
-        }
+    public @ResponseBody HttpStatus updateCourse(@PathVariable long id, @RequestBody ApiCourse c) {
+        Optional<Course> optional = cs.findById(id);
+
+        if(!optional.isPresent()) return HttpStatus.NOT_FOUND;
+
+        Course course = optional.get();
+
+        course.setTitle(c.getTitle());
+        course.setDescription(c.getDescription());
+        course.setLanguages(c.getLanguages());
+
+        cs.update(course);
+
+        return HttpStatus.ACCEPTED;
     }
 
     @DeleteMapping("/course/{id}/delete")
