@@ -33,7 +33,7 @@ public class Assignment {
     private Date dueDate;
 
     // course this assignment belongs to
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "course_id", nullable = true)
     private Course course;
 
