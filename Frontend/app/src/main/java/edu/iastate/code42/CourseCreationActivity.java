@@ -19,7 +19,6 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,8 +39,8 @@ public class CourseCreationActivity extends AppCompatActivity implements View.On
 
         create = findViewById(R.id.createCourse);
         title = findViewById(R.id.editCourseTitle);
-        description = findViewById(R.id.editCourseDescription);
-        language = findViewById(R.id.editCourseLanguages);
+        description = findViewById(R.id.courseDescriptionView);
+        language = findViewById(R.id.courseLanguagesView);
 
         create.setOnClickListener(this);
     }

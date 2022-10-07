@@ -5,5 +5,6 @@ public class Const {
 	public static final String LOGIN = "login/";
 	public static final String SESSION = "login/token/";
 	public static final String CREATE_COURSE = "course/create";
+	public static final String GET_COURSE = "course/";
 
 }
