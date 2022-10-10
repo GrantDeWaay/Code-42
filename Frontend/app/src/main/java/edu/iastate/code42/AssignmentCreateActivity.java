@@ -20,6 +20,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 
 import edu.iastate.code42.app.AppController;
+import edu.iastate.code42.utils.Const;
 
 public class AssignmentCreateActivity extends AppCompatActivity {
     private Button btnClick;
@@ -63,7 +64,7 @@ public class AssignmentCreateActivity extends AppCompatActivity {
         obj.put("title", assignmentTitle.getText());
         obj.put("description", desc.getText());
         obj.put("problemStatement", problem.getText());
-        String url = SOURCE;
+        String url = SOURCE + CREATE_ASSIGNMENT;
         JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST, url,obj,
                 response -> {
                     resp = response.toString();
@@ -72,7 +73,7 @@ public class AssignmentCreateActivity extends AppCompatActivity {
         });
         AppController.getInstance().addToRequestQueue(req);
 
-        String urlx = sss + y.getText();
+        String urlx = SOURCE + GET_ASSIGNMENT + y.getText();
         JsonObjectRequest pop = new JsonObjectRequest(Request.Method.GET, urlx, null,
                 response -> {
                     x.setText( response.toString());

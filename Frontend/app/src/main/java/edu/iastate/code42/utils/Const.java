@@ -6,5 +6,8 @@ public class Const {
 	public static final String SESSION = "login/token/";
 	public static final String CREATE_COURSE = "course/create";
 	public static final String GET_COURSE = "course/";
+	public static final String GET_ASSIGNMENT = "assignment/";
+	public static final String CREATE_ASSIGNMENT = "assignment/create";
+	public static final String PYTHON = "http://192.168.56.1:5000/";
 
 }
