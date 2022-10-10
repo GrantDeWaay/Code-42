@@ -34,7 +34,7 @@ public class User extends Application {
 
     private static User sUser;
 
-    private Context mAppContext;
+    private final Context mAppContext;
 
     public User(Context c){
         mAppContext = c.getApplicationContext();
@@ -57,7 +57,17 @@ public class User extends Application {
         this.lastName = response.getString("lastName");
         this.email = response.getString("email");
         this.type = response.getString("type");
-        this.creationDate = formatter.parse(response.getString("date"));
+    }
+
+    public void logout(){
+        sUser = null;
+        this.id = null;
+        this.username = null;
+        this.firstName = null;
+        this.lastName = null;
+        this.email = null;
+        this.type = null;
+        this.creationDate = null;
     }
 
     public Long getId() {

@@ -29,7 +29,7 @@ import edu.iastate.code42.app.AppController;
 import edu.iastate.code42.objects.User;
 import edu.iastate.code42.utils.Const;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     Button login;
     EditText password;
@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
 
         SharedPreferences.Editor userSessionEditor = userSession.edit();
 
-        if(userSession.contains("sessionID")){
+        /*if(userSession.contains("sessionID")){
             String url = Const.SOURCE + Const.SESSION + userSession.getString("sessionID", "");
 
             JsonObjectRequest loginReq = new JsonObjectRequest(Request.Method.GET, url,
@@ -71,11 +71,10 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), R.string.login_volley_error,
                                 Toast.LENGTH_LONG).show();
                     }
+                    Toast.makeText(getApplicationContext(), R.string.login_volley_error,
+                            Toast.LENGTH_LONG).show();
                 }
             }){
-                /**
-                 * Passing some request headers
-                 * */
                 @Override
                 public Map<String, String> getHeaders() throws AuthFailureError {
                     HashMap<String, String> headers = new HashMap<String, String>();
@@ -92,38 +91,44 @@ public class MainActivity extends AppCompatActivity {
             };
 
             AppController.getInstance().addToRequestQueue(loginReq, "session_req");
-        }
+        }*/
 
         login = findViewById(R.id.loginButton);
         password = findViewById(R.id.loginPasswordEntryField);
         username = findViewById(R.id.loginUsernameEntryField);
 
-        login.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        login.setOnClickListener(this);
+    }
+
+    private void loginSuccess(JSONObject response) throws JSONException, ParseException {
+        User user = User.get(getApplicationContext());
+        user.fromJson(response);
+
+        Intent dashboard = new Intent(MainActivity.this, DashboardActivity.class);
+        startActivity(dashboard);
+    }
+
+    @Override
+    public void onClick(View view) {
                 if(password.getText() != null && !(password.getText().toString().isEmpty()) &&
                         username.getText() != null && !(username.getText().toString().isEmpty())){
                     String url = Const.SOURCE + Const.LOGIN + username.getText().toString() + "/" +
                             password.getText().toString();
 
-
                     JsonObjectRequest loginReq = new JsonObjectRequest(Request.Method.GET, url,
-                             null,  new Response.Listener<JSONObject>() {
+                            null,  new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
                             Toast.makeText(getApplicationContext(), response.toString(),
                                     Toast.LENGTH_LONG).show();
                             try {
-                                userSessionEditor.putString("sessionID", response.getString("sessionID"));
-                                userSessionEditor.commit();
-
-                                try {
-                                    loginSuccess(response);
-                                } catch (ParseException e) {
-                                    e.printStackTrace();
-                                }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
+                                //userSessionEditor.putString("sessionID", response.getString("sessionID"));
+                                //userSessionEditor.commit();
+                                loginSuccess(response);
+                            } catch (JSONException jsonException) {
+                                jsonException.printStackTrace();
+                            } catch (ParseException parseException) {
+                                parseException.printStackTrace();
                             }
                         }
                     }, new Response.ErrorListener() {
@@ -131,13 +136,15 @@ public class MainActivity extends AppCompatActivity {
                         public void onErrorResponse(VolleyError error) {
                             Log.e("Volley Login Auth Error:", error.toString());
 
-                            if(error.networkResponse.statusCode == 401){
+                            /*if(error.networkResponse.statusCode == 401){
                                 Toast.makeText(getApplicationContext(), R.string.login_volley_incorrect,
                                         Toast.LENGTH_LONG).show();
                             }else{
                                 Toast.makeText(getApplicationContext(), R.string.login_volley_error,
                                         Toast.LENGTH_LONG).show();
-                            }
+                            }*/
+                            Toast.makeText(getApplicationContext(), R.string.login_volley_error,
+                                    Toast.LENGTH_LONG).show();
                         }
                     }){
                         /**
@@ -163,16 +170,5 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), R.string.login_missing_field,
                             Toast.LENGTH_LONG).show();
                 }
-            }
-        });
     }
-
-    private void loginSuccess(JSONObject response) throws JSONException, ParseException {
-        User user = User.get(getApplicationContext());
-        user.fromJson(response);
-
-        Intent dashboard = new Intent(MainActivity.this, DashboardActivity.class);
-        startActivity(dashboard);
-    }
-
 }
