@@ -1,5 +1,12 @@
 <resources>
     <string name="app_name">Code42</string>
+    <string name="name">Name</string>
+    <string name="button">Button</string>
+    <string name="assignment_name">Assignment Name</string>
+    <string-array name="lang_array">
+        <item>Select Language</item>
+        <item>Python</item>
+    </string-array>
     <string name="login_missing_field">Please enter username and password before submitting</string>
     <string name="login_volley_error">Error when trying to authenicate login,
         contact developer or retry later</string>
