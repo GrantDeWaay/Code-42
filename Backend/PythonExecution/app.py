@@ -26,7 +26,7 @@ The JSON should be formatted as such:
 it is pretty straight forward	
 '''
 
-def run(code, conn):
+def run(code, conn, tests):
 	f = StringIO()
 	resp = "200"
 	with redirect_stdout(f):
@@ -41,7 +41,6 @@ def run(code, conn):
 	message = f.getvalue()
 	conn.send([message, resp])
 	conn.close()
-
 
 @app.route('/', methods=["POST"])
 def init_student_run():
