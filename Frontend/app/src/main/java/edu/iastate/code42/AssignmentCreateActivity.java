@@ -6,6 +6,8 @@ import static edu.iastate.code42.utils.Const.*;
 import androidx.appcompat.app.AppCompatActivity;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ArrayAdapter;
@@ -39,8 +41,6 @@ public class AssignmentCreateActivity extends AppCompatActivity {
         assignmentTitle = findViewById(R.id.assignmentNameEnter);// assignment name
         desc = findViewById(R.id.description);
         problem = findViewById(R.id.problemStatement);
-        x = findViewById(R.id.textx);
-        y = findViewById(R.id.editTextTextPersonName);
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.lang_array, android.R.layout.simple_spinner_item);
@@ -55,6 +55,8 @@ public class AssignmentCreateActivity extends AppCompatActivity {
             }
             Log.i("Click", assignmentTitle.getText().toString());
             Toast.makeText(getApplicationContext(), resp, Toast.LENGTH_LONG).show();
+            Intent i = new Intent(this, AssignmentCodeCreateActivity.class);
+            startActivity(i);
         });
     }
 
@@ -72,14 +74,5 @@ public class AssignmentCreateActivity extends AppCompatActivity {
             resp = error.toString();
         });
         AppController.getInstance().addToRequestQueue(req);
-
-        String urlx = SOURCE + GET_ASSIGNMENT + y.getText();
-        JsonObjectRequest pop = new JsonObjectRequest(Request.Method.GET, urlx, null,
-                response -> {
-                    x.setText( response.toString());
-                }, error -> {
-            x.setText( error.toString());
-        });
-        AppController.getInstance().addToRequestQueue(pop);
     }
 }
