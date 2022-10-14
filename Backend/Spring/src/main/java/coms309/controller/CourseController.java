@@ -3,6 +3,7 @@ package coms309.controller;
 import coms309.database.dataobjects.Assignment;
 import coms309.database.dataobjects.Course;
 import coms309.database.dataobjects.User;
+import coms309.database.services.AssignmentService;
 import coms309.database.services.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +25,9 @@ public class CourseController {
 
     @Autowired
     CourseService cs;
+
+    @Autowired
+    AssignmentService as;
 
     @GetMapping("/course")
     public @ResponseBody List<ApiCourse> getCourseList() {
@@ -109,7 +113,7 @@ public class CourseController {
     }
 
     @DeleteMapping("/course/{id}/delete")
-    public @ResponseBody HttpStatus deleteAssignment(@PathVariable long id) {
+    public @ResponseBody HttpStatus deleteCourse(@PathVariable long id) {
         Optional<Course> c = cs.findById(id);
         if (c.isPresent()) {
             cs.delete(id);
@@ -117,6 +121,22 @@ public class CourseController {
         } else {
             return HttpStatus.BAD_REQUEST;
         }
+    }
+
+    @PutMapping("/course/{courseId}/assignment/{assignmentId}")
+    public @ResponseBody HttpStatus addAssignmentToCourse(@PathVariable long courseId, @PathVariable long assignmentId) {
+        Optional<Course> c = cs.findById(courseId);
+        Optional<Assignment> a = as.findById(assignmentId);
+
+        if(!c.isPresent() || !a.isPresent()) return HttpStatus.NOT_FOUND;
+
+        c.get().getAssignments().add(a.get());
+        cs.update(c.get());
+
+        a.get().setCourse(c.get());
+        as.update(a.get());
+
+        return HttpStatus.ACCEPTED;
     }
 
 }

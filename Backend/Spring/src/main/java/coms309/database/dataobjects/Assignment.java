@@ -104,6 +104,10 @@ public class Assignment {
         return dueDate;
     }
 
+    public void setCourse(Course course) {
+        this.course = course;
+    }
+
     public Course getCourse() {
         return course;
     }

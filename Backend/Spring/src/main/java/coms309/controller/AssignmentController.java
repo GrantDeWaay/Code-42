@@ -1,7 +1,5 @@
 package coms309.controller;
 
-import coms309.controller.generator.LongGen;
-
 import coms309.database.dataobjects.Assignment;
 import coms309.database.dataobjects.Grade;
 
