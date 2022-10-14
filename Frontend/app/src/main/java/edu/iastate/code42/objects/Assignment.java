@@ -15,4 +15,36 @@ public class Assignment {
         Lang = lang;
         Description = description;
     }
+
+    public void setTeacherCode(String teacherCode) {
+        this.teacherCode = teacherCode;
+    }
+
+    public void setStudentCode(String studentCode) {
+        this.studentCode = studentCode;
+    }
+
+    public String getAssignmentName() {
+        return AssignmentName;
+    }
+
+    public String getStatement() {
+        return Statement;
+    }
+
+    public String getLang() {
+        return Lang;
+    }
+
+    public String getDescription() {
+        return Description;
+    }
+
+    public String getTeacherCode() {
+        return teacherCode;
+    }
+
+    public String getStudentCode() {
+        return studentCode;
+    }
 }

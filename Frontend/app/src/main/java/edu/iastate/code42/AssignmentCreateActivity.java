@@ -22,6 +22,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 
 import edu.iastate.code42.app.AppController;
+import edu.iastate.code42.objects.Assignment;
 import edu.iastate.code42.utils.Const;
 
 public class AssignmentCreateActivity extends AppCompatActivity {
@@ -48,15 +49,39 @@ public class AssignmentCreateActivity extends AppCompatActivity {
         spinner.setAdapter(adapter);
         spinner.setSelection(0);
         btnClick.setOnClickListener(v -> {
-            try {
-                makeJsonObjReq();
-            } catch (JSONException e) {
-                e.printStackTrace();
+
+            if (assignmentTitle.getText().length() < 2){
+                Toast.makeText(getApplicationContext(), "Invalid Assignment Name", Toast.LENGTH_LONG).show();
             }
-            Log.i("Click", assignmentTitle.getText().toString());
-            Toast.makeText(getApplicationContext(), resp, Toast.LENGTH_LONG).show();
-            Intent i = new Intent(this, AssignmentCodeCreateActivity.class);
-            startActivity(i);
+            else if (desc.getText().length() < 2){
+                Toast.makeText(getApplicationContext(), "Invalid Description", Toast.LENGTH_LONG).show();
+            }
+            else if (problem.getText().length() < 2){
+                Toast.makeText(getApplicationContext(), "Invalid Problem", Toast.LENGTH_LONG).show();
+            }
+            else if (spinner.getSelectedItemPosition() == 0){
+                Toast.makeText(getApplicationContext(), "Please select a language", Toast.LENGTH_LONG).show();
+            }
+            else{
+                Intent i = new Intent(this, AssignmentCodeCreateActivity.class);
+
+                Assignment cc = new Assignment(assignmentTitle.getText().toString(),
+                                    problem.getText().toString(),
+                                    spinner.getSelectedItem().toString(),
+                                    desc.getText().toString());
+                JSONObject obj = new JSONObject();
+                try {
+                    obj.put("title", assignmentTitle.getText().toString());
+                    obj.put("description", desc.getText().toString());
+                    obj.put("problemStatement", problem.getText().toString());
+                    obj.put("lang", spinner.getSelectedItem().toString());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                i.putExtra("cc", obj.toString());
+                startActivity(i);
+            }
         });
     }
 
