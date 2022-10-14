@@ -5,6 +5,8 @@ import coms309.database.dataobjects.Course;
 import coms309.database.dataobjects.User;
 import coms309.database.services.AssignmentService;
 import coms309.database.services.CourseService;
+import coms309.database.services.UserService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
@@ -28,6 +30,9 @@ public class CourseController {
 
     @Autowired
     AssignmentService as;
+
+    @Autowired
+    UserService us;
 
     @GetMapping("/course")
     public @ResponseBody List<ApiCourse> getCourseList() {
@@ -135,6 +140,22 @@ public class CourseController {
 
         a.get().setCourse(c.get());
         as.update(a.get());
+
+        return HttpStatus.ACCEPTED;
+    }
+
+    @PutMapping("/course/{courseId}/user/{userId}")
+    public @ResponseBody HttpStatus addUserToCourse(@PathVariable long courseId, @PathVariable long userId) {
+        Optional<Course> c = cs.findById(courseId);
+        Optional<User> u = us.findById(userId);
+
+        if(!c.isPresent() || !u.isPresent()) return HttpStatus.NOT_FOUND;
+
+        c.get().getStudents().add(u.get());
+        cs.update(c.get());
+
+        u.get().getCourses().add(c.get());
+        us.update(u.get());
 
         return HttpStatus.ACCEPTED;
     }
