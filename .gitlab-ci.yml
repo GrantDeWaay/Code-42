@@ -2,8 +2,8 @@
 stages:
   - maventry
   - androidtry
-  - android-build
-  - android-test
+  - androidbuild
+  - androidtest
 
 maven-build:   #this is a JOB
   stage: maventry
