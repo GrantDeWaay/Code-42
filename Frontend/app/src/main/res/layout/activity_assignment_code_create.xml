@@ -5,31 +5,54 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <EditText
-        android:id="@+id/teacherBaseCode"
-        android:layout_width="300dp"
-        android:layout_height="150dp"
-        android:ems="10"
-        android:gravity="start|top"
-        android:inputType="textMultiLine"
-        tools:layout_editor_absoluteX="55dp"
-        tools:layout_editor_absoluteY="161dp" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <Button
-        android:id="@+id/goNext"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Button"
-        app:layout_constraintTop_toBottomOf="@+id/studentBaseCode"
-        tools:layout_editor_absoluteX="158dp" />
+        <EditText
+            android:id="@+id/definedVar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="var" />
 
-    <EditText
-        android:id="@+id/studentBaseCode"
-        android:layout_width="300dp"
-        android:layout_height="150dp"
-        android:ems="10"
-        android:gravity="start|top"
-        android:inputType="textMultiLine"
-        app:layout_constraintTop_toBottomOf="@+id/teacherBaseCode"
-        tools:layout_editor_absoluteX="55dp" />
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="equals" />
+
+        <EditText
+            android:id="@+id/expectedOut"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="expectedOut" />
+
+        <EditText
+            android:id="@+id/teacherBaseCode"
+            android:layout_width="300dp"
+            android:layout_height="150dp"
+            android:ems="10"
+            android:gravity="start|top"
+            android:inputType="textMultiLine" />
+
+        <EditText
+            android:id="@+id/studentBaseCode"
+            android:layout_width="300dp"
+            android:layout_height="150dp"
+            android:ems="10"
+            android:gravity="start|top"
+            android:inputType="textMultiLine" />
+
+        <Button
+            android:id="@+id/goNext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="finish" />
+    </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

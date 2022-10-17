@@ -20,7 +20,17 @@ up the MySQL database. We'll discuss this at a later date.
 The JSON should be formatted as such:
 
 {
-	"code": "x = 23 + 2\nprint(x)",
+	"code": "x = 23 + 2\nprint(x)"
+    tests:{
+        "test1":{
+            "x"="1"
+            "exp"="12"
+        }
+        "test2":{
+            "x"="2"
+            "exp"="22"
+        }
+    }
 }	
 
 it is pretty straight forward	
@@ -47,7 +57,7 @@ def init_student_run():
 	json_data = request.get_json()
 	code = json_data.get('code')
 	parent_conn, child_conn = Pipe()
-	p = multiprocessing.Process(target=run, args=(code, child_conn))
+	p = multiprocessing.Process(target=run, args=(code, child_conn, tests))
 	p.start()
 	p.join(10)
 	if p.is_alive():
