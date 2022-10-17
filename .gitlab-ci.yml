@@ -2,6 +2,8 @@
 stages:
   - maventry
   - androidtry
+  - android-build
+  - android-test
 
 maven-build:   #this is a JOB
   stage: maventry
@@ -11,6 +13,7 @@ maven-build:   #this is a JOB
     - cd Backend
     - cd Spring #change directory to where you have your springboot application
     - mvn package
+    
 android-build:
   image: gjandres/android-ci:latest
   stage: androidbuild
