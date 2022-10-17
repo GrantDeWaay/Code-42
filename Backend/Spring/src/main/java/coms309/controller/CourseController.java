@@ -159,6 +159,9 @@ public class CourseController {
         assignment.setCourse(null);
         course.getAssignments().remove(assignment);
 
+        as.update(assignment);
+        cs.update(course);
+
         return HttpStatus.ACCEPTED;
     }
 
@@ -192,6 +195,9 @@ public class CourseController {
 
         course.getStudents().remove(user);
         user.getCourses().remove(course);
+
+        cs.update(course);
+        us.update(user);
 
         return HttpStatus.ACCEPTED;
     }
