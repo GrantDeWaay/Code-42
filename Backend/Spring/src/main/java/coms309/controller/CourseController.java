@@ -144,6 +144,24 @@ public class CourseController {
         return HttpStatus.ACCEPTED;
     }
 
+    @DeleteMapping("/course/{courseId}/assignment/{assignmentId}")
+    public @ResponseBody HttpStatus removeAssignmentFromCourse(@PathVariable long courseId, @PathVariable long assignmentId) {
+        Optional<Course> c = cs.findById(courseId);
+        Optional<Assignment> a = as.findById(assignmentId);
+
+        if(!c.isPresent() || !a.isPresent()) return HttpStatus.NOT_FOUND;
+
+        Course course = c.get();
+        Assignment assignment = a.get();
+
+        if(!course.getAssignments().contains(assignment) || assignment.getCourse() != course) return HttpStatus.NOT_FOUND;
+
+        assignment.setCourse(null);
+        course.getAssignments().remove(assignment);
+
+        return HttpStatus.ACCEPTED;
+    }
+
     @PutMapping("/course/{courseId}/user/{userId}")
     public @ResponseBody HttpStatus addUserToCourse(@PathVariable long courseId, @PathVariable long userId) {
         Optional<Course> c = cs.findById(courseId);
@@ -156,6 +174,24 @@ public class CourseController {
 
         u.get().getCourses().add(c.get());
         us.update(u.get());
+
+        return HttpStatus.ACCEPTED;
+    }
+
+    @DeleteMapping("/course/{courseId}/user/{userId}")
+    public @ResponseBody HttpStatus removeUserFromCourse(@PathVariable long courseId, @PathVariable long userId) {
+        Optional<Course> c = cs.findById(courseId);
+        Optional<User> u = us.findById(userId);
+
+        if(!c.isPresent() || !u.isPresent()) return HttpStatus.NOT_FOUND;
+
+        Course course = c.get();
+        User user = u.get();
+
+        if(!course.getStudents().contains(user) || !user.getCourses().contains(course)) return HttpStatus.NOT_FOUND;
+
+        course.getStudents().remove(user);
+        user.getCourses().remove(course);
 
         return HttpStatus.ACCEPTED;
     }
