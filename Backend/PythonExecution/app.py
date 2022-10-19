@@ -1,3 +1,4 @@
+import json
 import multiprocessing
 from multiprocessing import Pipe
 from traceback import format_exc
@@ -21,25 +22,49 @@ The JSON should be formatted as such:
 
 {
 	"code": "x = 23 + 2\nprint(x)",
+	"tests": [
+		{
+			"var": "x",
+			"value": "1",
+			"expected_out": "12"
+		},
+		{
+			"var": "x",
+			"value": "3",
+			"expected_out": "12"
+		}
+	]
 }	
 
 it is pretty straight forward	
 '''
 
-def run(code, conn):
-	f = StringIO()
+
+def run(code, tests, conn):
+	outputs = []
+	cases = []
+	for i in tests:
+		cases.append(i.get("var") + " = " + i.get("value") + "\n")
 	resp = "200"
-	with redirect_stdout(f):
-		try:
-			x = compile(code, '', 'exec')
-			globalsParameter = {'__builtins__': None}
-			localsParameter = {'print': print, 'dir': dir}
-			exec(x, globalsParameter, localsParameter)
-		except Exception:
-			resp = "422"
-			print(format_exc())
-	message = f.getvalue()
-	conn.send([message, resp])
+	loop = 0
+	for i in cases:
+		expected_out = tests[loop].get("expected_out")
+		f = StringIO()
+		with redirect_stdout(f):
+			try:
+				y = i + code
+				x = compile(y, '', 'exec')
+				globals_parameter = {'__builtins__': None}
+				locals_parameter = {'print': print, 'dir': dir}
+				exec(x, globals_parameter, locals_parameter)
+			except Exception:
+				resp = "422"
+				message = format_exc()
+				break
+		complete = (f.getvalue() == expected_out) | (f.getvalue() == expected_out + "\n")
+		outputs.append({"correct": complete, "actual": f.getvalue(), "expected": expected_out})
+		loop += 1
+	conn.send([outputs, resp])
 	conn.close()
 
 
@@ -47,8 +72,9 @@ def run(code, conn):
 def init_student_run():
 	json_data = request.get_json()
 	code = json_data.get('code')
+	tests = json_data.get('tests')
 	parent_conn, child_conn = Pipe()
-	p = multiprocessing.Process(target=run, args=(code, child_conn))
+	p = multiprocessing.Process(target=run, args=(code, tests, child_conn))
 	p.start()
 	p.join(10)
 	if p.is_alive():
@@ -56,7 +82,8 @@ def init_student_run():
 		p.join()
 		return "Entered code took too long to compile and execute", 508
 	msg, resp = parent_conn.recv()
-	return msg, resp
+	z = json.dumps(msg)
+	return z, resp
 
 
 if __name__ == '__main__':
