@@ -6,7 +6,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.TableLayout;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -37,6 +40,16 @@ public class CourseViewActivity extends BaseDrawer implements View.OnClickListen
     EditText description;
     EditText language;
     FloatingActionButton edit;
+
+    ListView assignmentList;
+    Button addAssignment;
+    Button moreAssigment;
+
+    TableLayout studentLayout;
+    ListView studentList;
+    Button addStudent;
+    Button moreStudent;
+
     boolean viewState;
 
     @Override
@@ -54,14 +67,33 @@ public class CourseViewActivity extends BaseDrawer implements View.OnClickListen
         language = activityBaseDrawerBinding.getRoot().findViewById(R.id.courseLanguagesView);
         edit = activityBaseDrawerBinding.getRoot().findViewById(R.id.floatingEditCourse);
 
+        assignmentList = activityBaseDrawerBinding.getRoot().findViewById(R.id.assignmentList);
+        addAssignment = activityBaseDrawerBinding.getRoot().findViewById(R.id.addAssignmentButton);
+        moreAssigment = activityBaseDrawerBinding.getRoot().findViewById(R.id.moreAssignmentButton);
+
+        studentLayout = activityBaseDrawerBinding.getRoot().findViewById(R.id.studentLayout);
+        studentList = activityBaseDrawerBinding.getRoot().findViewById(R.id.studentList);
+        addStudent = activityBaseDrawerBinding.getRoot().findViewById(R.id.addStudentButton);
+        moreStudent = activityBaseDrawerBinding.getRoot().findViewById(R.id.moreStudentButton);
+
+
         edit.setOnClickListener(this);
+        addAssignment.setOnClickListener(this);
+        moreAssigment.setOnClickListener(this);
+
+        addStudent.setOnClickListener(this);
+        moreStudent.setOnClickListener(this);
 
         if(user.getType().equals("student")){
             edit.setVisibility(View.INVISIBLE);
             edit.setEnabled(false);
+            studentLayout.setVisibility(View.INVISIBLE);
+            addAssignment.setVisibility(View.INVISIBLE);
         }else{
             edit.setVisibility(View.VISIBLE);
             edit.setEnabled(true);
+            studentLayout.setVisibility(View.VISIBLE);
+            addAssignment.setVisibility(View.VISIBLE);
         }
 
 
@@ -121,6 +153,21 @@ public class CourseViewActivity extends BaseDrawer implements View.OnClickListen
 
     @Override
     public void onClick(View view) {
+        switch(view.getId()){
+            case R.id.floatingEditCourse:
+                break;
 
+            case R.id.addAssignmentButton:
+                break;
+
+            case R.id.moreAssignmentButton:
+                break;
+
+            case R.id.addStudentButton:
+                break;
+
+            case R.id.moreStudentButton:
+                break;
+        }
     }
 }
