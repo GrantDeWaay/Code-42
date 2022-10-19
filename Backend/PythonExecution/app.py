@@ -54,9 +54,9 @@ def run(code, tests, conn):
 			try:
 				y = i + code
 				x = compile(y, '', 'exec')
-				globalsParameter = {'__builtins__': None}
-				localsParameter = {'print': print, 'dir': dir}
-				exec(x, globalsParameter, localsParameter)
+				globals_parameter = {'__builtins__': None}
+				locals_parameter = {'print': print, 'dir': dir}
+				exec(x, globals_parameter, locals_parameter)
 			except Exception:
 				resp = "422"
 				message = format_exc()
