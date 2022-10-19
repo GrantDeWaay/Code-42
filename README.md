@@ -22,7 +22,7 @@ git push -uf origin main
 
 ## Integrate with your tools
 
-- [ ] [Set up project integrations](https://git.las.iastate.edu/cs309/fall2022/2_an_4/-/settings/integrations)
+- [x] [Set up project integrations](https://git.las.iastate.edu/cs309/fall2022/2_an_4/-/settings/integrations)
 
 ## Collaborate with your team
 
