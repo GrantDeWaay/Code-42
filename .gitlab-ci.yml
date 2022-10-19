@@ -1,6 +1,7 @@
 # Example  .gitlab-ci.yml file
 stages:
   - maventry
+  - mavendeploy
   - androidtry
   - androidbuild
   - androidtest
@@ -13,6 +14,17 @@ maven-build:   #this is a JOB
     - cd Backend
     - cd Spring #change directory to where you have your springboot application
     - mvn package
+
+maven-deploy:
+  stage: mavendeploy
+  tags:
+    - springboot_tag
+  script:
+    - cd Backend/Spring
+    - mvn package
+    - sudo mv target/*.jar /target/code42.jar
+    - sudo systemctl stop system-code42
+    - sudo systemctl start system-code42
     
 android-build:
   image: gjandres/android-ci:latest
