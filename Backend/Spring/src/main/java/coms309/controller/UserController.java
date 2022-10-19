@@ -42,7 +42,7 @@ public class UserController {
 
             return new ResponseEntity<List<ApiUser>>(users, HttpStatus.OK);
         } else {
-            return new ResponseEntity<List<ApiUser>>(HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
     }
 
@@ -55,7 +55,7 @@ public class UserController {
 
             return new ResponseEntity<>(new ApiUser(u.get()), HttpStatus.OK);
         } else {
-            return new ResponseEntity<ApiUser>(HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
     }
 
@@ -74,9 +74,9 @@ public class UserController {
                 courses.add(new ApiCourse(iter.next()));
             }
 
-            return new ResponseEntity<>(courses, HttpStatus.OK);
+            return new ResponseEntity<Set<ApiCourse>>(courses, HttpStatus.OK);
         } else {
-            return new ResponseEntity<Set<ApiCourse>>(HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
     }
 
@@ -95,23 +95,23 @@ public class UserController {
                 grades.add(new ApiGrade(iter.next()));
             }
 
-            return new ResponseEntity<>(grades, HttpStatus.OK);
+            return new ResponseEntity<Set<ApiGrade>>(grades, HttpStatus.OK);
         } else {
-            return new ResponseEntity<Set<ApiGrade>>(HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
     }
 
     @PostMapping("/user/create")
-    public @ResponseBody ApiUser createUser(@RequestBody ApiUser u, @RequestParam String token) {
+    public @ResponseBody ResponseEntity<ApiUser> createUser(@RequestBody ApiUser u, @RequestParam String token) {
         if (UserTokens.isTeacher(token) || UserTokens.isAdmin(token)) {
             u.setCreationDate(Calendar.getInstance().getTime());
 
             User user = new User(u);
             us.create(user);
 
-            return new ApiUser(user);
+            return new ResponseEntity<ApiUser>(new ApiUser(user), HttpStatus.OK);
         } else {
-            return new ResponseEntity<ApiUser>(HttpStatus.FORBIDDEN).getBody(); // This is needed to compile I guess
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
     }
 

