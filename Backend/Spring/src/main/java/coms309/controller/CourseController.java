@@ -3,7 +3,10 @@ package coms309.controller;
 import coms309.database.dataobjects.Assignment;
 import coms309.database.dataobjects.Course;
 import coms309.database.dataobjects.User;
+import coms309.database.services.AssignmentService;
 import coms309.database.services.CourseService;
+import coms309.database.services.UserService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
@@ -24,6 +27,12 @@ public class CourseController {
 
     @Autowired
     CourseService cs;
+
+    @Autowired
+    AssignmentService as;
+
+    @Autowired
+    UserService us;
 
     @GetMapping("/course")
     public @ResponseBody List<ApiCourse> getCourseList() {
@@ -109,7 +118,7 @@ public class CourseController {
     }
 
     @DeleteMapping("/course/{id}/delete")
-    public @ResponseBody HttpStatus deleteAssignment(@PathVariable long id) {
+    public @ResponseBody HttpStatus deleteCourse(@PathVariable long id) {
         Optional<Course> c = cs.findById(id);
         if (c.isPresent()) {
             cs.delete(id);
@@ -117,6 +126,80 @@ public class CourseController {
         } else {
             return HttpStatus.BAD_REQUEST;
         }
+    }
+
+    @PutMapping("/course/{courseId}/assignment/{assignmentId}")
+    public @ResponseBody HttpStatus addAssignmentToCourse(@PathVariable long courseId, @PathVariable long assignmentId) {
+        Optional<Course> c = cs.findById(courseId);
+        Optional<Assignment> a = as.findById(assignmentId);
+
+        if(!c.isPresent() || !a.isPresent()) return HttpStatus.NOT_FOUND;
+
+        c.get().getAssignments().add(a.get());
+        cs.update(c.get());
+
+        a.get().setCourse(c.get());
+        as.update(a.get());
+
+        return HttpStatus.ACCEPTED;
+    }
+
+    @DeleteMapping("/course/{courseId}/assignment/{assignmentId}")
+    public @ResponseBody HttpStatus removeAssignmentFromCourse(@PathVariable long courseId, @PathVariable long assignmentId) {
+        Optional<Course> c = cs.findById(courseId);
+        Optional<Assignment> a = as.findById(assignmentId);
+
+        if(!c.isPresent() || !a.isPresent()) return HttpStatus.NOT_FOUND;
+
+        Course course = c.get();
+        Assignment assignment = a.get();
+
+        if(!course.getAssignments().contains(assignment) || assignment.getCourse() != course) return HttpStatus.NOT_FOUND;
+
+        assignment.setCourse(null);
+        course.getAssignments().remove(assignment);
+
+        as.update(assignment);
+        cs.update(course);
+
+        return HttpStatus.ACCEPTED;
+    }
+
+    @PutMapping("/course/{courseId}/user/{userId}")
+    public @ResponseBody HttpStatus addUserToCourse(@PathVariable long courseId, @PathVariable long userId) {
+        Optional<Course> c = cs.findById(courseId);
+        Optional<User> u = us.findById(userId);
+
+        if(!c.isPresent() || !u.isPresent()) return HttpStatus.NOT_FOUND;
+
+        c.get().getStudents().add(u.get());
+        cs.update(c.get());
+
+        u.get().getCourses().add(c.get());
+        us.update(u.get());
+
+        return HttpStatus.ACCEPTED;
+    }
+
+    @DeleteMapping("/course/{courseId}/user/{userId}")
+    public @ResponseBody HttpStatus removeUserFromCourse(@PathVariable long courseId, @PathVariable long userId) {
+        Optional<Course> c = cs.findById(courseId);
+        Optional<User> u = us.findById(userId);
+
+        if(!c.isPresent() || !u.isPresent()) return HttpStatus.NOT_FOUND;
+
+        Course course = c.get();
+        User user = u.get();
+
+        if(!course.getStudents().contains(user) || !user.getCourses().contains(course)) return HttpStatus.NOT_FOUND;
+
+        course.getStudents().remove(user);
+        user.getCourses().remove(course);
+
+        cs.update(course);
+        us.update(user);
+
+        return HttpStatus.ACCEPTED;
     }
 
 }
