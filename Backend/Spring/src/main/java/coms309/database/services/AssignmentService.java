@@ -3,17 +3,19 @@ package coms309.database.services;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import coms309.database.dataobjects.Assignment;
-import coms309.database.repository.AssignmentRepository;
 
 @Service
 public class AssignmentService implements RepositoryService<Assignment> {
 
-    @Autowired
-    AssignmentRepository repository;
+    private JpaRepository<Assignment, Long> repository;
+
+    public AssignmentService(JpaRepository<Assignment, Long> repository) {
+        this.repository = repository;
+    }
 
     @Override
     public Optional<Assignment> findById(Long id) {

@@ -3,17 +3,19 @@ package coms309.database.services;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import coms309.database.dataobjects.Course;
-import coms309.database.repository.CourseRepository;
 
 @Service
 public class CourseService implements RepositoryService<Course> {
 
-    @Autowired
-    CourseRepository repository;
+    private JpaRepository<Course, Long> repository;
+
+    public CourseService(JpaRepository<Course, Long> repository) {
+        this.repository = repository;
+    }
 
     @Override
     public Optional<Course> findById(Long id) {

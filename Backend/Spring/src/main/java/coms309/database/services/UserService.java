@@ -4,20 +4,18 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import coms309.database.dataobjects.User;
-import coms309.database.repository.UserRepository;
 
 @Service
 public class UserService implements RepositoryService<User> {
-    
-    @Autowired
-    private UserRepository repository;
 
-    public UserService() {
+    private JpaRepository<User, Long> repository;
 
+    public UserService(JpaRepository<User, Long> repository) {
+        this.repository = repository;
     }
 
     @Override
@@ -25,13 +23,13 @@ public class UserService implements RepositoryService<User> {
         return repository.findById(id);
     }
 
-    public Optional<User> findByUsername(String username) {
-        return repository.findByUsername(username);
-    }
+    // public Optional<User> findByUsername(String username) {
+    //     return repository.findByUsername(username);
+    // }
 
-    public Optional<User> findByEmail(String email) {
-        return repository.findByEmail(email);
-    }
+    // public Optional<User> findByEmail(String email) {
+    //     return repository.findByEmail(email);
+    // }
 
     @Override
     public List<User> findAll() {
