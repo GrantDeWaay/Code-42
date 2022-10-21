@@ -5,6 +5,8 @@ import coms309.database.dataobjects.Grade;
 import coms309.database.dataobjects.User;
 import coms309.database.services.UserService;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
@@ -30,11 +32,15 @@ public class UserController {
     Add feature that handles invalid input
      */
 
+    Logger logger = LoggerFactory.getLogger(this.getClass());
+
     @Autowired
     UserService us;
 
     @GetMapping("/user")
     public @ResponseBody List<ApiUser> getUserList() {
+        logger.info("/user accessed");
+
         List<User> result = us.findAll();
 
         List<ApiUser> users = new LinkedList<>();
@@ -48,6 +54,8 @@ public class UserController {
 
     @GetMapping("/user/{id}")
     public @ResponseBody ResponseEntity<ApiUser> getUser(@PathVariable long id) {
+        logger.info("/user/" + id + " accessed");
+
         Optional<User> u = us.findById(id);
 
         if(!u.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -57,6 +65,8 @@ public class UserController {
 
     @GetMapping("/user/{id}/courses")
     public @ResponseBody ResponseEntity<Set<ApiCourse>> getUserCourseList(@PathVariable long id) {
+        logger.info("/user/" + id + "/courses accessed");
+
         Optional<User> result = us.findById(id);
 
         if(!result.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -74,6 +84,8 @@ public class UserController {
 
     @GetMapping("/user/{id}/grades")
     public @ResponseBody ResponseEntity<Set<ApiGrade>> getUserGradeList(@PathVariable long id) {
+        logger.info("/user/" + id + "/grades accessed");
+
         Optional<User> result = us.findById(id);
 
         if(!result.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -96,11 +108,15 @@ public class UserController {
         User user = new User(u);
         us.create(user);
 
+        logger.info("/user/create accessed, created new user with ID " + user.getId());
+
         return new ApiUser(user);
     }
 
     @PutMapping("/user/{id}/update")
     public @ResponseBody HttpStatus updateUser(@PathVariable long id, @RequestBody ApiUser u) {
+        logger.info("/user/" + id + "/update accessed");
+
         Optional<User> optional = us.findById(id);
 
         if(!optional.isPresent()) return HttpStatus.NOT_FOUND;
@@ -121,6 +137,8 @@ public class UserController {
 
     @DeleteMapping("/user/{id}/delete")
     public @ResponseBody HttpStatus deleteUser(@PathVariable long id) {
+        logger.info("/user/" + id + "/delete accessed");
+
         Optional<User> u = us.findById(id);
         if (u.isPresent()) {
             us.delete(id);

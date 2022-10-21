@@ -1,7 +1,5 @@
 package coms309.controller;
 
-import coms309.controller.generator.LongGen;
-
 import coms309.database.dataobjects.Assignment;
 import coms309.database.dataobjects.Grade;
 
@@ -9,6 +7,8 @@ import coms309.api.dataobjects.*;
 
 import coms309.database.services.AssignmentService;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
@@ -22,11 +22,15 @@ import java.util.Optional;
 @RestController
 public class AssignmentController {
 
+    Logger logger = LoggerFactory.getLogger(this.getClass());
+
     @Autowired
     AssignmentService as;
 
     @GetMapping("/assignment/{id}")
     public @ResponseBody ResponseEntity<ApiAssignment> getAssignment(@PathVariable long id) {
+        logger.info("/assignment/" + id + " accessed");
+
         Optional<Assignment> a = as.findById(id);
 
         if(!a.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -36,6 +40,8 @@ public class AssignmentController {
 
     @GetMapping("/assignment/{id}/grades")
     public @ResponseBody ResponseEntity<Set<ApiGrade>> getAssignmentGradeList(@PathVariable long id) {
+        logger.info("/assignment/" + id + "/grades accessed");
+
         Optional<Assignment> result = as.findById(id);
 
         if(!result.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -53,6 +59,8 @@ public class AssignmentController {
 
     @GetMapping("/assignment/{id}/course")
     public @ResponseBody ResponseEntity<ApiCourse> getAssignmentCourse(@PathVariable long id) {
+        logger.info("/assignment/" + id + "/course accessed");
+
         Optional<Assignment> result = as.findById(id);
 
         if(!result.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -62,15 +70,18 @@ public class AssignmentController {
 
     @PostMapping("/assignment/create")
     public @ResponseBody ApiAssignment createAssignment(@RequestBody ApiAssignment a) {
-
         Assignment assignment = new Assignment(a);
         as.create(assignment);
+
+        logger.info("/assignment/create accessed, created new course with ID " + assignment.getId());
 
         return new ApiAssignment(assignment);
     }
 
     @PutMapping("/assignment/{id}/update")
     public @ResponseBody HttpStatus updateAssignment(@PathVariable long id, @RequestBody ApiAssignment a) {
+        logger.info("/assignment/" + id + "/update accessed");
+
         Optional<Assignment> optional = as.findById(id);
 
         if(!optional.isPresent()) return HttpStatus.NOT_FOUND;
@@ -88,6 +99,8 @@ public class AssignmentController {
 
     @DeleteMapping("/assignment/{id}/delete")
     public @ResponseBody HttpStatus deleteAssignment(@PathVariable long id) {
+        logger.info("/assignment/" + id + "/delete accessed");
+
         Optional<Assignment> a = as.findById(id);
         if (a.isPresent()) {
             as.delete(id);

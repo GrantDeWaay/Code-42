@@ -4,6 +4,9 @@ import coms309.database.dataobjects.Assignment;
 import coms309.database.dataobjects.Course;
 import coms309.database.dataobjects.User;
 import coms309.database.services.CourseService;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
@@ -22,11 +25,15 @@ import java.util.Optional;
 @RestController
 public class CourseController {
 
+    Logger logger = LoggerFactory.getLogger(this.getClass());
+
     @Autowired
     CourseService cs;
 
     @GetMapping("/course")
     public @ResponseBody List<ApiCourse> getCourseList() {
+        logger.info("/course accessed");
+
         List<Course> result = cs.findAll();
 
         List<ApiCourse> courses = new LinkedList<>();
@@ -40,6 +47,8 @@ public class CourseController {
 
     @GetMapping("/course/{id}")
     public @ResponseBody ResponseEntity<ApiCourse> getCourse(@PathVariable long id) {
+        logger.info("/course/" + id + " accessed");
+
         Optional<Course> c = cs.findById(id);
 
         if(!c.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -49,6 +58,8 @@ public class CourseController {
 
     @GetMapping("/course/{id}/assignments")
     public @ResponseBody ResponseEntity<Set<ApiAssignment>> getCourseAssignmentList(@PathVariable long id) {
+        logger.info("/course/" + id + "/assignments accessed");
+
         Optional<Course> result = cs.findById(id);
 
         if(!result.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -66,6 +77,8 @@ public class CourseController {
 
     @GetMapping("/course/{id}/users")
     public @ResponseBody ResponseEntity<Set<ApiUser>> getCourseUserList(@PathVariable long id) {
+        logger.info("/course/" + id + "/users accessed");
+
         Optional<Course> result = cs.findById(id);
 
         if(!result.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -88,11 +101,15 @@ public class CourseController {
         Course course = new Course(c);
         cs.create(course);
 
+        logger.info("/course/create accessed, created new course with ID " + course.getId());
+
         return new ApiCourse(course);
     }
 
     @PutMapping("/course/{id}/update")
     public @ResponseBody HttpStatus updateCourse(@PathVariable long id, @RequestBody ApiCourse c) {
+        logger.info("/course/" + id + "/update accessed");
+
         Optional<Course> optional = cs.findById(id);
 
         if(!optional.isPresent()) return HttpStatus.NOT_FOUND;
@@ -110,6 +127,8 @@ public class CourseController {
 
     @DeleteMapping("/course/{id}/delete")
     public @ResponseBody HttpStatus deleteAssignment(@PathVariable long id) {
+        logger.info("/course/" + id + "/update accessed");
+
         Optional<Course> c = cs.findById(id);
         if (c.isPresent()) {
             cs.delete(id);
