@@ -90,6 +90,66 @@ public class CourseController {
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
+    @GetMapping("/course/{id}/students")
+    public @ResponseBody ResponseEntity<Set<ApiUser>> getCourseStudentList(@PathVariable long id) {
+        Optional<Course> result = cs.findById(id);
+
+        if(!result.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        Set<ApiUser> users = new HashSet<>();
+
+        Iterator<User> iter = result.get().getStudents().iterator();
+
+        while(iter.hasNext()) {
+            User u = iter.next();
+            if(u.getType().equals("student")) {
+                users.add(new ApiUser(u));
+            }
+        }
+
+        return new ResponseEntity<>(users, HttpStatus.OK);
+    }
+
+    @GetMapping("/course/{id}/teachers")
+    public @ResponseBody ResponseEntity<Set<ApiUser>> getCourseTeacherList(@PathVariable long id) {
+        Optional<Course> result = cs.findById(id);
+
+        if(!result.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        Set<ApiUser> users = new HashSet<>();
+
+        Iterator<User> iter = result.get().getStudents().iterator();
+
+        while(iter.hasNext()) {
+            User u = iter.next();
+            if(u.getType().equals("teacher")) {
+                users.add(new ApiUser(u));
+            }
+        }
+
+        return new ResponseEntity<>(users, HttpStatus.OK);
+    }
+
+    @GetMapping("/course/{id}/admins")
+    public @ResponseBody ResponseEntity<Set<ApiUser>> getCourseAdminList(@PathVariable long id) {
+        Optional<Course> result = cs.findById(id);
+
+        if(!result.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        Set<ApiUser> users = new HashSet<>();
+
+        Iterator<User> iter = result.get().getStudents().iterator();
+
+        while(iter.hasNext()) {
+            User u = iter.next();
+            if(u.getType().equals("admin")) {
+                users.add(new ApiUser(u));
+            }
+        }
+
+        return new ResponseEntity<>(users, HttpStatus.OK);
+    }
+
     @PostMapping("/course/create")
     public @ResponseBody ApiCourse createCourse(@RequestBody ApiCourse c) {
         c.setCreationDate(Calendar.getInstance().getTime());
