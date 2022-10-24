@@ -47,7 +47,7 @@ public class CourseCreationActivity extends AppCompatActivity implements View.On
 
     @Override
     public void onClick(View view) {
-        String url = Const.SOURCE + Const.CREATE_COURSE;
+        String url = Const.CREATE_COURSE;
         JSONObject jsonBody = new JSONObject();
         try {
             jsonBody.put("title", title.getText());
@@ -66,7 +66,7 @@ public class CourseCreationActivity extends AppCompatActivity implements View.On
 
                 Intent view = new Intent(CourseCreationActivity.this, CourseViewActivity.class);
                 try {
-                    view.putExtra("id",response.getInt("id"));
+                    view.putExtra("courseId",response.getInt("id"));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

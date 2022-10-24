@@ -40,6 +40,18 @@ public class User extends Application {
         mAppContext = c.getApplicationContext();
     }
 
+    public User(JSONObject response) throws JSONException {
+        mAppContext = null;
+
+        this.id = response.getLong("id");
+        this.username = response.getString("username");
+        this.firstName = response.getString("firstName");
+        this.lastName = response.getString("lastName");
+        this.email = response.getString("email");
+        this.type = response.getString("type");
+    }
+
+
     public static User get(Context c){
         if(sUser == null){
             sUser = new User(c);
@@ -48,7 +60,7 @@ public class User extends Application {
     }
 
 
-    public void fromJson(JSONObject response) throws JSONException, ParseException {
+    public void fromJson(JSONObject response) throws JSONException{
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH);
 
         this.id = response.getLong("id");
@@ -124,5 +136,10 @@ public class User extends Application {
 
     public void setCreationDate(Date creationDate) {
         this.creationDate = creationDate;
+    }
+
+    @Override
+    public String toString() {
+        return this.lastName + ", " + this.firstName + "\t" + this.username + "\t" + this.email;
     }
 }

@@ -112,8 +112,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
                 if(password.getText() != null && !(password.getText().toString().isEmpty()) &&
                         username.getText() != null && !(username.getText().toString().isEmpty())){
-                    String url = Const.SOURCE + Const.LOGIN + username.getText().toString() + "/" +
-                            password.getText().toString();
+                    String url = String.format(Const.LOGIN, username.getText().toString(),
+                            password.getText().toString());
 
                     JsonObjectRequest loginReq = new JsonObjectRequest(Request.Method.GET, url,
                             null,  new Response.Listener<JSONObject>() {

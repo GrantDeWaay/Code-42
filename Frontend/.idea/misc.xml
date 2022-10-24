@@ -5,6 +5,7 @@
       <map>
         <entry key="..\:/College/ComS309/2_an_4/Frontend/app/src/main/res/drawable/ic_person_background.xml" value="0.2545" />
         <entry key="..\:/College/ComS309/2_an_4/Frontend/app/src/main/res/drawable/ic_person_foreground.xml" value="0.2545" />
+        <entry key="..\:/College/ComS309/2_an_4/Frontend/app/src/main/res/layout/activity_assignment_create.xml" value="0.23596014492753623" />
         <entry key="..\:/College/ComS309/2_an_4/Frontend/app/src/main/res/layout/activity_base_drawer.xml" value="0.25416666666666665" />
         <entry key="..\:/College/ComS309/2_an_4/Frontend/app/src/main/res/layout/activity_course_creation.xml" value="0.25416666666666665" />
         <entry key="..\:/College/ComS309/2_an_4/Frontend/app/src/main/res/layout/activity_course_view.xml" value="0.2" />
@@ -17,7 +18,7 @@
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

@@ -73,7 +73,7 @@ public class AssignmentCreateActivity extends AppCompatActivity {
         });
         AppController.getInstance().addToRequestQueue(req);
 
-        String urlx = SOURCE + GET_ASSIGNMENT + y.getText();
+        String urlx = String.format(GET_ASSIGNMENT, y);
         JsonObjectRequest pop = new JsonObjectRequest(Request.Method.GET, urlx, null,
                 response -> {
                     x.setText( response.toString());
