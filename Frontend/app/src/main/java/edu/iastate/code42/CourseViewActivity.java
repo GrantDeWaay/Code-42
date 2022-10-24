@@ -119,8 +119,7 @@ public class CourseViewActivity extends BaseDrawer implements View.OnClickListen
             assignments = new ArrayList<>();
             students = new ArrayList<>();
 
-            String url = String.format(Const.GET_COURSE,
-                    courseId);
+            String url = String.format(Const.GET_COURSE, courseId);
 
             JsonObjectRequest courseDetailReq = new JsonObjectRequest(Request.Method.GET, url,
                     null,  new Response.Listener<JSONObject>() {
@@ -205,7 +204,7 @@ public class CourseViewActivity extends BaseDrawer implements View.OnClickListen
             AppController.getInstance().addToRequestQueue(courseAssignmentsReq, "course_get_assignments");
 
             if(user.getType() != "student") {
-                url = String.format(Const.GET_USERS_FOR_COURSE, courseId);
+                url = String.format(Const.GET_STUDENTS_FOR_COURSE, courseId);
 
                 JsonArrayRequest courseStudentsReq = new JsonArrayRequest(Request.Method.GET, url,
                         null, new Response.Listener<JSONArray>() {
@@ -215,9 +214,7 @@ public class CourseViewActivity extends BaseDrawer implements View.OnClickListen
                             try {
                                 User u = new User(response.getJSONObject(i));
 
-                                if(u.getType().equals("student")){
-                                    students.add(u);
-                                }
+                                students.add(u);
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }

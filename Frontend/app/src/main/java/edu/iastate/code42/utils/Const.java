@@ -13,7 +13,7 @@ public class Const {
 	public static final String CREATE_COURSE = SOURCE + "course/create";
 	public static final String GET_COURSE = SOURCE + "course/%d";
 	public static final String GET_ASSIGNMENTS_FOR_COURSE = SOURCE + "/course/%d/assignments";
-	public static final String GET_USERS_FOR_COURSE = SOURCE + "/course/%d/users";
+	public static final String GET_STUDENTS_FOR_COURSE = SOURCE + "/course/%d/students";
 
 	public static final String GET_ASSIGNMENT = SOURCE + "assignment/%d";
 	public static final String CREATE_ASSIGNMENT = SOURCE + "assignment/create";
