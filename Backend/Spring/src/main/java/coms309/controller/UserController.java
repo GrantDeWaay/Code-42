@@ -1,5 +1,7 @@
 package coms309.controller;
 
+import com.sun.tools.javac.util.DefinedBy;
+import coms309.controller.token.UserTokens;
 import coms309.database.dataobjects.Course;
 import coms309.database.dataobjects.Grade;
 import coms309.database.dataobjects.User;
@@ -23,110 +25,132 @@ import java.util.Optional;
 @RestController
 public class UserController {
 
-    /*
-    Overall TODO
-    Test all requests with Postman then SQL
-    Implement missing methods if required for demo
-    Add feature that handles invalid input
-     */
 
     @Autowired
     UserService us;
 
     @GetMapping("/user")
-    public @ResponseBody List<ApiUser> getUserList() {
-        List<User> result = us.findAll();
+    public @ResponseBody ResponseEntity<List<ApiUser>> getUserList(@RequestParam String token) {
+        if (UserTokens.isTeacher(token) || UserTokens.isAdmin(token)) {
+            List<User> result = us.findAll();
 
-        List<ApiUser> users = new LinkedList<>();
+            List<ApiUser> users = new LinkedList<>();
 
-        for(User u : result) {
-            users.add(new ApiUser(u));
+            for (User u : result) {
+                users.add(new ApiUser(u));
+            }
+
+            return new ResponseEntity<List<ApiUser>>(users, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
-
-        return users;
     }
 
     @GetMapping("/user/{id}")
-    public @ResponseBody ResponseEntity<ApiUser> getUser(@PathVariable long id) {
-        Optional<User> u = us.findById(id);
+    public @ResponseBody ResponseEntity<ApiUser> getUser(@PathVariable long id, @RequestParam String token) {
+        if (UserTokens.isLiveToken(token)) {
+            Optional<User> u = us.findById(id);
 
-        if(!u.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            if (!u.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
-        return new ResponseEntity<>(new ApiUser(u.get()), HttpStatus.OK);
+            return new ResponseEntity<>(new ApiUser(u.get()), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
     }
 
     @GetMapping("/user/{id}/courses")
-    public @ResponseBody ResponseEntity<Set<ApiCourse>> getUserCourseList(@PathVariable long id) {
-        Optional<User> result = us.findById(id);
+    public @ResponseBody ResponseEntity<Set<ApiCourse>> getUserCourseList(@PathVariable long id, @RequestParam String token) {
+        if (UserTokens.isLiveToken(token)) {
+            Optional<User> result = us.findById(id);
 
-        if(!result.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            if (!result.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
-        Set<ApiCourse> courses = new HashSet<>();
+            Set<ApiCourse> courses = new HashSet<>();
 
-        Iterator<Course> iter = result.get().getCourses().iterator();
+            Iterator<Course> iter = result.get().getCourses().iterator();
 
-        while(iter.hasNext()) {
-            courses.add(new ApiCourse(iter.next()));
+            while (iter.hasNext()) {
+                courses.add(new ApiCourse(iter.next()));
+            }
+
+            return new ResponseEntity<Set<ApiCourse>>(courses, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
-
-        return new ResponseEntity<>(courses, HttpStatus.OK);
     }
 
     @GetMapping("/user/{id}/grades")
-    public @ResponseBody ResponseEntity<Set<ApiGrade>> getUserGradeList(@PathVariable long id) {
-        Optional<User> result = us.findById(id);
+    public @ResponseBody ResponseEntity<Set<ApiGrade>> getUserGradeList(@PathVariable long id, @RequestParam String token) {
+        if (UserTokens.isLiveToken(token)) {
+            Optional<User> result = us.findById(id);
 
-        if(!result.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            if (!result.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
-        Set<ApiGrade> grades = new HashSet<>();
+            Set<ApiGrade> grades = new HashSet<>();
 
-        Iterator<Grade> iter = result.get().getGrades().iterator();
+            Iterator<Grade> iter = result.get().getGrades().iterator();
 
-        while(iter.hasNext()) {
-            grades.add(new ApiGrade(iter.next()));
+            while (iter.hasNext()) {
+                grades.add(new ApiGrade(iter.next()));
+            }
+
+            return new ResponseEntity<Set<ApiGrade>>(grades, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
-
-        return new ResponseEntity<>(grades, HttpStatus.OK);
     }
 
     @PostMapping("/user/create")
-    public @ResponseBody ApiUser createUser(@RequestBody ApiUser u) {
-        u.setCreationDate(Calendar.getInstance().getTime());
+    public @ResponseBody ResponseEntity<ApiUser> createUser(@RequestBody ApiUser u, @RequestParam String token) {
+        if (UserTokens.isTeacher(token) || UserTokens.isAdmin(token)) {
+            u.setCreationDate(Calendar.getInstance().getTime());
 
-        User user = new User(u);
-        us.create(user);
+            User user = new User(u);
+            us.create(user);
 
-        return new ApiUser(user);
+            return new ResponseEntity<ApiUser>(new ApiUser(user), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
     }
 
     @PutMapping("/user/{id}/update")
-    public @ResponseBody HttpStatus updateUser(@PathVariable long id, @RequestBody ApiUser u) {
-        Optional<User> optional = us.findById(id);
+    public @ResponseBody HttpStatus updateUser(@PathVariable long id, @RequestBody ApiUser u, @RequestParam String token) {
+        if (UserTokens.isLiveToken(token)) {
+            Optional<User> optional = us.findById(id);
 
-        if(!optional.isPresent()) return HttpStatus.NOT_FOUND;
+            if (!optional.isPresent()) return HttpStatus.NOT_FOUND;
 
-        User user = optional.get();
+            User user = optional.get();
 
-        user.setUsername(u.getUsername());
-        user.setFirstName(u.getFirstName());
-        user.setLastName(u.getLastName());
-        user.setPassword(u.getPassword());
-        user.setEmail(u.getEmail());
-        user.setType(u.getType());
+            user.setUsername(u.getUsername());
+            user.setFirstName(u.getFirstName());
+            user.setLastName(u.getLastName());
+            user.setPassword(u.getPassword());
+            user.setEmail(u.getEmail());
+            user.setType(u.getType());
 
-        us.update(user);
+            us.update(user);
 
-        return HttpStatus.ACCEPTED;
+            return HttpStatus.ACCEPTED;
+        } else {
+            return HttpStatus.FORBIDDEN;
+        }
     }
 
     @DeleteMapping("/user/{id}/delete")
-    public @ResponseBody HttpStatus deleteUser(@PathVariable long id) {
-        Optional<User> u = us.findById(id);
-        if (u.isPresent()) {
-            us.delete(id);
-            return HttpStatus.ACCEPTED;
+    public @ResponseBody HttpStatus deleteUser(@PathVariable long id, @RequestParam String token) {
+        if (UserTokens.isTeacher(token) || UserTokens.isAdmin(token)) {
+            Optional<User> u = us.findById(id);
+            if (u.isPresent()) {
+                us.delete(id);
+                return HttpStatus.ACCEPTED;
+            } else {
+                return HttpStatus.NOT_FOUND;
+            }
         } else {
-            return HttpStatus.NOT_FOUND;
+            return HttpStatus.FORBIDDEN;
         }
     }
 
