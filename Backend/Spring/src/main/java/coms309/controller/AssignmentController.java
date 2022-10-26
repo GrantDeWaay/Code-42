@@ -24,105 +24,93 @@ public class AssignmentController {
     AssignmentService as;
 
     @GetMapping("/assignment/{id}")
-    public @ResponseBody
-    ResponseEntity<ApiAssignment> getAssignment(@PathVariable long id, @RequestParam String token) {
-        if (UserTokens.isLiveToken(token)) {
-            Optional<Assignment> a = as.findById(id);
-
-            if (!a.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-
-            return new ResponseEntity<ApiAssignment>(new ApiAssignment(a.get()), HttpStatus.OK);
-        } else {
+    public @ResponseBody ResponseEntity<ApiAssignment> getAssignment(@PathVariable long id, @RequestParam String token) {
+        if (!UserTokens.isLiveToken(token)) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
+        Optional<Assignment> a = as.findById(id);
+
+        if (!a.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        return new ResponseEntity<ApiAssignment>(new ApiAssignment(a.get()), HttpStatus.OK);
     }
 
     @GetMapping("/assignment/{id}/grades")
-    public @ResponseBody
-    ResponseEntity<Set<ApiGrade>> getAssignmentGradeList(@PathVariable long id, @RequestParam String token) {
-        if (UserTokens.isLiveToken(token)) {
-            Optional<Assignment> result = as.findById(id);
-
-            if (!result.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-
-            Set<ApiGrade> grades = new HashSet<>();
-
-            Iterator<Grade> iter = result.get().getGrades().iterator();
-
-            while (iter.hasNext()) {
-                grades.add(new ApiGrade(iter.next()));
-            }
-
-            return new ResponseEntity<Set<ApiGrade>>(grades, HttpStatus.OK);
-        } else {
+    public @ResponseBody ResponseEntity<Set<ApiGrade>> getAssignmentGradeList(@PathVariable long id, @RequestParam String token) {
+        if (!UserTokens.isLiveToken(token)) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
+        Optional<Assignment> result = as.findById(id);
+
+        if (!result.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        Set<ApiGrade> grades = new HashSet<>();
+
+        Iterator<Grade> iter = result.get().getGrades().iterator();
+
+        while (iter.hasNext()) {
+            grades.add(new ApiGrade(iter.next()));
+        }
+
+        return new ResponseEntity<Set<ApiGrade>>(grades, HttpStatus.OK);
     }
 
     @GetMapping("/assignment/{id}/course")
-    public @ResponseBody
-    ResponseEntity<ApiCourse> getAssignmentCourse(@PathVariable long id, @RequestParam String token) {
-        if (UserTokens.isLiveToken(token)) {
-            Optional<Assignment> result = as.findById(id);
-
-            if (!result.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-
-            return new ResponseEntity<ApiCourse>(new ApiCourse(result.get().getCourse()), HttpStatus.OK);
-        } else {
+    public @ResponseBody ResponseEntity<ApiCourse> getAssignmentCourse(@PathVariable long id, @RequestParam String token) {
+        if (!UserTokens.isLiveToken(token)) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
+        Optional<Assignment> result = as.findById(id);
+
+        if (!result.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        return new ResponseEntity<ApiCourse>(new ApiCourse(result.get().getCourse()), HttpStatus.OK);
+
     }
 
     @PostMapping("/assignment/create")
-    public @ResponseBody
-    ResponseEntity<ApiAssignment> createAssignment(@RequestBody ApiAssignment a, @RequestParam String token) {
-        if (UserTokens.isTeacher(token) || UserTokens.isAdmin(token)) {
-
-
-            Assignment assignment = new Assignment(a);
-            as.create(assignment);
-
-            return new ResponseEntity<ApiAssignment>(new ApiAssignment(assignment), HttpStatus.OK);
-        } else {
+    public @ResponseBody ResponseEntity<ApiAssignment> createAssignment(@RequestBody ApiAssignment a, @RequestParam String token) {
+        if (!UserTokens.isTeacher(token) || !UserTokens.isAdmin(token)) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
+
+        Assignment assignment = new Assignment(a);
+        as.create(assignment);
+
+        return new ResponseEntity<ApiAssignment>(new ApiAssignment(assignment), HttpStatus.OK);
     }
 
     @PutMapping("/assignment/{id}/update")
-    public @ResponseBody
-    HttpStatus updateAssignment(@PathVariable long id, @RequestBody ApiAssignment a, @RequestParam String token) {
-        if (UserTokens.isTeacher(token) || UserTokens.isAdmin(token)) {
-            Optional<Assignment> optional = as.findById(id);
-
-            if (!optional.isPresent()) return HttpStatus.NOT_FOUND;
-
-            Assignment assignment = optional.get();
-
-            assignment.setTitle(a.getTitle());
-            assignment.setDescription(a.getDescription());
-            assignment.setProblemStatement(a.getProblemStatement());
-
-            as.update(assignment);
-
-            return HttpStatus.ACCEPTED;
-        } else {
+    public @ResponseBody HttpStatus updateAssignment(@PathVariable long id, @RequestBody ApiAssignment a, @RequestParam String token) {
+        if (!UserTokens.isTeacher(token) || !UserTokens.isAdmin(token)) {
             return HttpStatus.FORBIDDEN;
         }
+        Optional<Assignment> optional = as.findById(id);
+
+        if (!optional.isPresent()) return HttpStatus.NOT_FOUND;
+
+        Assignment assignment = optional.get();
+
+        assignment.setTitle(a.getTitle());
+        assignment.setDescription(a.getDescription());
+        assignment.setProblemStatement(a.getProblemStatement());
+
+        as.update(assignment);
+
+        return HttpStatus.ACCEPTED;
     }
 
     @DeleteMapping("/assignment/{id}/delete")
-    public @ResponseBody
-    HttpStatus deleteAssignment(@PathVariable long id, @RequestParam String token) {
-        if (UserTokens.isTeacher(token) || UserTokens.isAdmin(token)) {
-            Optional<Assignment> a = as.findById(id);
-            if (a.isPresent()) {
-                as.delete(id);
-                return HttpStatus.ACCEPTED;
-            } else {
-                return HttpStatus.NOT_FOUND;
-            }
-        } else {
+    public @ResponseBody HttpStatus deleteAssignment(@PathVariable long id, @RequestParam String token) {
+        if (!UserTokens.isTeacher(token) || !UserTokens.isAdmin(token)) {
             return HttpStatus.FORBIDDEN;
+        }
+        Optional<Assignment> a = as.findById(id);
+        if (a.isPresent()) {
+            as.delete(id);
+            return HttpStatus.ACCEPTED;
+        } else {
+            return HttpStatus.NOT_FOUND;
         }
     }
 
