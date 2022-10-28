@@ -35,8 +35,10 @@ import edu.iastate.code42.databinding.ActivityCourseViewBinding;
 import edu.iastate.code42.databinding.ActivityCoursesBinding;
 import edu.iastate.code42.objects.Assignment;
 import edu.iastate.code42.objects.User;
+import edu.iastate.code42.utils.AssignmentListAdapter;
 import edu.iastate.code42.utils.BaseDrawer;
 import edu.iastate.code42.utils.Const;
+import edu.iastate.code42.utils.UserListAdapter;
 
 public class CourseViewActivity extends BaseDrawer implements View.OnClickListener {
 
@@ -62,6 +64,9 @@ public class CourseViewActivity extends BaseDrawer implements View.OnClickListen
 
     ArrayList<Assignment> assignments;
     ArrayList<User> students;
+
+    AssignmentListAdapter assignmentAdapter;
+    UserListAdapter userAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -175,6 +180,8 @@ public class CourseViewActivity extends BaseDrawer implements View.OnClickListen
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
+                        assignmentAdapter = new AssignmentListAdapter(getApplicationContext(), assignments);
+                        assignmentList.setAdapter(assignmentAdapter);
                     }
                 }
             }, new Response.ErrorListener() {
@@ -218,6 +225,9 @@ public class CourseViewActivity extends BaseDrawer implements View.OnClickListen
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
+
+                            userAdapter = new UserListAdapter(getApplicationContext(), students);
+                            studentList.setAdapter(userAdapter);
                         }
                     }
                 }, new Response.ErrorListener() {

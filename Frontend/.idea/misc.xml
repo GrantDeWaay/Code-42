@@ -14,6 +14,11 @@
         <entry key="..\:/College/ComS309/2_an_4/Frontend/app/src/main/res/layout/activity_main.xml" value="0.2" />
         <entry key="..\:/College/ComS309/2_an_4/Frontend/app/src/main/res/layout/content_layout.xml" value="0.25416666666666665" />
         <entry key="..\:/College/ComS309/2_an_4/Frontend/app/src/main/res/layout/main_drawer_header.xml" value="0.20471014492753623" />
+        <entry key="..\:/College/ComS309/2_an_4/Frontend/app/src/main/res/layout/row_assignment.xml" value="0.18984375" />
+        <entry key="..\:/College/ComS309/2_an_4/Frontend/app/src/main/res/layout/row_course.xml" value="0.22592592592592592" />
+        <entry key="..\:/College/ComS309/2_an_4/Frontend/app/src/main/res/layout/row_grade.xml" value="0.25416666666666665" />
+        <entry key="..\:/College/ComS309/2_an_4/Frontend/app/src/main/res/layout/row_student.xml" value="0.253125" />
+        <entry key="..\:/College/ComS309/2_an_4/Frontend/app/src/main/res/layout/row_user.xml" value="0.25416666666666665" />
         <entry key="..\:/College/ComS309/2_an_4/Frontend/app/src/main/res/menu/main_drawer_menu.xml" value="0.152" />
       </map>
     </option>
