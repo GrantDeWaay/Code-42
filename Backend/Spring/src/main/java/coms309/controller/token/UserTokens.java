@@ -47,4 +47,17 @@ public class UserTokens {
         return false;
     }
 
+    public static long getID(String token) {
+        if (studentTokens.containsKey(token)) {
+            return studentTokens.get(token);
+        }
+        if (teacherTokens.containsKey(token)) {
+            return teacherTokens.get(token);
+        }
+        if (adminTokens.containsKey(token)) {
+            return adminTokens.get(token);
+        }
+        return -1;
+    }
+
 }
