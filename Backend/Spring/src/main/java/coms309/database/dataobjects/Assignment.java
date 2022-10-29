@@ -41,6 +41,9 @@ public class Assignment {
     @OneToMany(mappedBy = "assignment", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Grade> grades = new HashSet<>();
 
+    @OneToOne(mappedBy = "assignment", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private AssignmentFile assignmentFile;
+
     public Assignment() {
 
     }
@@ -114,6 +117,14 @@ public class Assignment {
 
     public Set<Grade> getGrades() {
         return grades;
+    }
+
+    public void setAssignmentFile(AssignmentFile assignmentFile) {
+        this.assignmentFile = assignmentFile;
+    }
+
+    public AssignmentFile getAssignmentFile() {
+        return assignmentFile;
     }
 
 }
