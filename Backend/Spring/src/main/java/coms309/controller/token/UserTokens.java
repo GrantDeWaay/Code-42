@@ -31,4 +31,33 @@ public class UserTokens {
         return isStudent(token) || isTeacher(token) || isAdmin(token);
     }
 
+    public static boolean removeToken(String token) {
+        if (studentTokens.containsKey(token)) {
+            studentTokens.remove(token);
+            return true;
+        }
+        if (teacherTokens.containsKey(token)) {
+            teacherTokens.remove(token);
+            return true;
+        }
+        if (adminTokens.containsKey(token)) {
+            adminTokens.remove(token);
+            return true;
+        }
+        return false;
+    }
+
+    public static long getID(String token) {
+        if (studentTokens.containsKey(token)) {
+            return studentTokens.get(token);
+        }
+        if (teacherTokens.containsKey(token)) {
+            return teacherTokens.get(token);
+        }
+        if (adminTokens.containsKey(token)) {
+            return adminTokens.get(token);
+        }
+        return -1;
+    }
+
 }
