@@ -27,7 +27,6 @@ public class CodeRunnerController {
     
     @PutMapping("/run/{assignmentId}")
     public HttpStatus runAssignment(@PathVariable long assignmentId, @RequestParam String token) {
-        // TODO add authentication
         if(!UserTokens.isStudent(token)) return HttpStatus.FORBIDDEN;
 
         Long studentId = UserTokens.getID(token);
@@ -42,6 +41,8 @@ public class CodeRunnerController {
         if(af == null) return HttpStatus.NOT_FOUND;
 
         tempFileManager.createAssignmentFolder(studentId, assignmentId);
+
+        // TODO copy over body of this request as a file to be executed
 
         try {
             CRunner runner = new CRunner(af.getCodeFolder(), tempFileManager.getAssignmentFolderPath(studentId, assignmentId));
