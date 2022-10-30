@@ -46,20 +46,33 @@ public class CodeRunnerController {
 
         tempFileManager.createAssignmentFolder(studentId, assignmentId);
 
+        System.out.println("Past folder creation");
+
         try {
+            CRunner runner = new CRunner(af.getCodeFolder(), tempFileManager.getAssignmentFolderPath(studentId, assignmentId), codeSubmission.getName());
+
+            System.out.println("Past runner creation");
+
             // TODO copy over body of this request as a file to be executed
             File codeFile = new File(tempFileManager.getAssignmentFolderPath(studentId, studentId) + "/" + codeSubmission.getName());
 
             FileWriter writer = new FileWriter(codeFile);
 
+            System.out.println("Past writer creation");
+
             writer.write(codeSubmission.getContents());
 
             writer.close();
-    
-            CRunner runner = new CRunner(af.getCodeFolder(), tempFileManager.getAssignmentFolderPath(studentId, assignmentId), codeSubmission.getName());
+
+            System.out.println("Past content copy");
 
             runner.compile();
+
+            System.out.println("Past compilation");
+
             runner.run();
+
+            System.out.println("Past execution");
         // TODO make this better
         } catch (Exception e) {
             e.printStackTrace();
