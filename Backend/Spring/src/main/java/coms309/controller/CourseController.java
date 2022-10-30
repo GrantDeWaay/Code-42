@@ -33,7 +33,7 @@ public class CourseController {
     @GetMapping("/course")
     public @ResponseBody
     ResponseEntity<List<ApiCourse>> getCourseList(@RequestParam String token) {
-        if (!UserTokens.isTeacher(token) || !UserTokens.isAdmin(token)) {
+        if (!UserTokens.isTeacher(token) && !UserTokens.isAdmin(token)) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
 
@@ -155,7 +155,7 @@ public class CourseController {
 
     @PutMapping("/course/{courseId}/assignment/{assignmentId}")
     public @ResponseBody HttpStatus addAssignmentToCourse(@PathVariable long courseId, @PathVariable long assignmentId, @RequestParam String token) {
-        if (!UserTokens.isTeacher(token) || !UserTokens.isAdmin(token)) {
+        if (!UserTokens.isTeacher(token) && !UserTokens.isAdmin(token)) {
             return HttpStatus.FORBIDDEN;
         }
         Optional<Course> c = cs.findById(courseId);
@@ -174,7 +174,7 @@ public class CourseController {
 
     @DeleteMapping("/course/{courseId}/assignment/{assignmentId}")
     public @ResponseBody HttpStatus removeAssignmentFromCourse(@PathVariable long courseId, @PathVariable long assignmentId, @RequestParam String token) {
-        if (!UserTokens.isTeacher(token) || !UserTokens.isAdmin(token)) {
+        if (!UserTokens.isTeacher(token) && !UserTokens.isAdmin(token)) {
             return HttpStatus.FORBIDDEN;
         }
         Optional<Course> c = cs.findById(courseId);
@@ -199,7 +199,7 @@ public class CourseController {
 
     @PutMapping("/course/{courseId}/user/{userId}")
     public @ResponseBody HttpStatus addUserToCourse(@PathVariable long courseId, @PathVariable long userId, @RequestParam String token) {
-        if (!UserTokens.isTeacher(token) || !UserTokens.isAdmin(token)) {
+        if (!UserTokens.isTeacher(token) && !UserTokens.isAdmin(token)) {
             return HttpStatus.FORBIDDEN;
         }
         Optional<Course> c = cs.findById(courseId);
@@ -218,7 +218,7 @@ public class CourseController {
 
     @DeleteMapping("/course/{courseId}/user/{userId}")
     public @ResponseBody HttpStatus removeUserFromCourse(@PathVariable long courseId, @PathVariable long userId, @RequestParam String token) {
-        if (!UserTokens.isTeacher(token) || !UserTokens.isAdmin(token)) {
+        if (!UserTokens.isTeacher(token) && !UserTokens.isAdmin(token)) {
             return HttpStatus.FORBIDDEN;
         }
         Optional<Course> c = cs.findById(courseId);

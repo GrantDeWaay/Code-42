@@ -31,7 +31,7 @@ public class UserController {
 
     @GetMapping("/user")
     public @ResponseBody ResponseEntity<List<ApiUser>> getUserList(@RequestParam String token) {
-        if (!UserTokens.isTeacher(token) || !UserTokens.isAdmin(token)) {
+        if (!UserTokens.isTeacher(token) && !UserTokens.isAdmin(token)) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
         List<User> result = us.findAll();
@@ -99,7 +99,7 @@ public class UserController {
 
     @PostMapping("/user/create")
     public @ResponseBody ResponseEntity<ApiUser> createUser(@RequestBody ApiUser u, @RequestParam String token) {
-        if (!UserTokens.isTeacher(token) || !UserTokens.isAdmin(token)) {
+        if (!UserTokens.isTeacher(token) && !UserTokens.isAdmin(token)) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
         u.setCreationDate(Calendar.getInstance().getTime());
@@ -135,7 +135,7 @@ public class UserController {
 
     @DeleteMapping("/user/{id}/delete")
     public @ResponseBody HttpStatus deleteUser(@PathVariable long id, @RequestParam String token) {
-        if (!UserTokens.isTeacher(token) || !UserTokens.isAdmin(token)) {
+        if (!UserTokens.isTeacher(token) && !UserTokens.isAdmin(token)) {
             return HttpStatus.FORBIDDEN;
         }
         Optional<User> u = us.findById(id);
