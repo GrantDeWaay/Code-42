@@ -1,12 +1,14 @@
 package coms309.coderunner;
 
+import java.io.IOException;
+
 public abstract class CodeRunner {
 
     // path to folder on VM disk that contains skeleton code for assignment
-    private String codeFolder;
+    protected String codeFolder;
 
     // folder that the code will be run in
-    private String testFolder;
+    protected String testFolder;
 
     protected CodeRunner(String codeFolder, String testFolder) {
         this.codeFolder = codeFolder;
@@ -22,6 +24,6 @@ public abstract class CodeRunner {
     }
 
     // run the code
-    public abstract void run();
+    public abstract void run() throws IOException;
 
 }

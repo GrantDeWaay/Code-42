@@ -1,15 +1,19 @@
 package coms309.controller;
 
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import coms309.api.dataobjects.ApiCodeSubmission;
 import coms309.coderunner.CRunner;
 import coms309.coderunner.TempFileManager;
 import coms309.controller.token.UserTokens;
@@ -26,7 +30,7 @@ public class CodeRunnerController {
     private TempFileManager tempFileManager = new TempFileManager("/home/gitlab-runner/tempfiles/users/");
     
     @PutMapping("/run/{assignmentId}")
-    public HttpStatus runAssignment(@PathVariable long assignmentId, @RequestParam String token) {
+    public HttpStatus runAssignment(@PathVariable long assignmentId, @RequestBody ApiCodeSubmission codeSubmission, @RequestParam String token) {
         if(!UserTokens.isStudent(token)) return HttpStatus.FORBIDDEN;
 
         Long studentId = UserTokens.getID(token);
@@ -42,14 +46,22 @@ public class CodeRunnerController {
 
         tempFileManager.createAssignmentFolder(studentId, assignmentId);
 
-        // TODO copy over body of this request as a file to be executed
-
         try {
-            CRunner runner = new CRunner(af.getCodeFolder(), tempFileManager.getAssignmentFolderPath(studentId, assignmentId));
+            // TODO copy over body of this request as a file to be executed
+            File codeFile = new File(tempFileManager.getAssignmentFolderPath(studentId, studentId) + "/" + codeSubmission.getName());
+
+            FileWriter writer = new FileWriter(codeFile);
+
+            writer.write(codeSubmission.getContents());
+
+            writer.close();
+    
+            CRunner runner = new CRunner(af.getCodeFolder(), tempFileManager.getAssignmentFolderPath(studentId, assignmentId), codeSubmission.getName());
 
             runner.compile();
             runner.run();
-        } catch (FileNotFoundException e) {
+        // TODO make this better
+        } catch (Exception e) {
             e.printStackTrace();
             return HttpStatus.INTERNAL_SERVER_ERROR;
         }

@@ -1,5 +1,7 @@
 package coms309.coderunner;
 
+import java.io.IOException;
+
 public abstract class CompiledCodeRunner extends CodeRunner {
     
     public CompiledCodeRunner(String codeFolder, String testFolder) {
@@ -7,6 +9,7 @@ public abstract class CompiledCodeRunner extends CodeRunner {
     }
 
     // compiles the code
-    public abstract void compile();
+    // returns true on compilation success, false on failure
+    public abstract boolean compile() throws IOException;
 
 }
