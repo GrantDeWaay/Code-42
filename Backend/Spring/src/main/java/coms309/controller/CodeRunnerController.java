@@ -54,7 +54,7 @@ public class CodeRunnerController {
             System.out.println("Past runner creation");
 
             // TODO copy over body of this request as a file to be executed
-            File codeFile = new File(tempFileManager.getAssignmentFolderPath(studentId, studentId) + "/" + codeSubmission.getName());
+            File codeFile = new File(tempFileManager.getAssignmentFolderPath(studentId, assignmentId) + "/" + codeSubmission.getName());
 
             FileWriter writer = new FileWriter(codeFile);
 

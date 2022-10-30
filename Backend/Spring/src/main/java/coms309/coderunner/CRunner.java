@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.concurrent.TimeUnit;
 
 public class CRunner extends CompiledCodeRunner {
@@ -59,7 +60,7 @@ public class CRunner extends CompiledCodeRunner {
                 dir.mkdir();
                 copyDirRecursively(f.getAbsolutePath(), dest + "/" + f.getName());
             } else {
-                Files.copy(Paths.get(f.getAbsolutePath()), Paths.get(dest + "/" + f.getName()));
+                Files.copy(Paths.get(f.getAbsolutePath()), Paths.get(dest + "/" + f.getName()), StandardCopyOption.REPLACE_EXISTING);
             }
         }
     }
