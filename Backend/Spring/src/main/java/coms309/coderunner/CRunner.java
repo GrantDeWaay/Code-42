@@ -44,7 +44,7 @@ public class CRunner extends CompiledCodeRunner {
             if(!process.waitFor(5, TimeUnit.SECONDS)) {
                 process.destroyForcibly();
             } else {
-                return true;
+                return process.exitValue() == 0;
             }
         } catch (InterruptedException e) {
             e.printStackTrace();

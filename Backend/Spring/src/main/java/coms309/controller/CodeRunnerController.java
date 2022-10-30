@@ -1,7 +1,6 @@
 package coms309.controller;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.util.Optional;
 
@@ -15,7 +14,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import coms309.api.dataobjects.ApiCodeSubmission;
-import coms309.coderunner.CRunner;
+import coms309.coderunner.CodeRunnerFactory;
+import coms309.coderunner.CompiledCodeRunner;
 import coms309.coderunner.TempFileManager;
 import coms309.controller.token.UserTokens;
 import coms309.database.dataobjects.Assignment;
@@ -49,41 +49,32 @@ public class CodeRunnerController {
         System.out.println("Past folder creation");
 
         try {
-            CRunner runner = new CRunner(af.getCodeFolder(), tempFileManager.getAssignmentFolderPath(studentId, assignmentId), codeSubmission.getName());
+            CodeRunnerFactory factory = new CodeRunnerFactory();
+            // TODO add support for interpreted languages
+            CompiledCodeRunner runner = factory.createCompiledCodeRunner(af.getCodeFolder(), tempFileManager.getAssignmentFolderPath(studentId, assignmentId), codeSubmission.getName(), codeSubmission.getLanguage());
 
-            System.out.println("Past runner creation");
-
-            // TODO copy over body of this request as a file to be executed
             File codeFile = new File(tempFileManager.getAssignmentFolderPath(studentId, assignmentId) + "/" + codeSubmission.getName());
 
             FileWriter writer = new FileWriter(codeFile);
-
-            System.out.println("Past writer creation");
 
             writer.write(codeSubmission.getContents());
 
             writer.close();
 
-            System.out.println("Past content copy");
-
             if(!runner.compile()) {
                 return new ResponseEntity<>("Compilation failed", HttpStatus.ACCEPTED);
             }
 
-            System.out.println("Past compilation");
-
             if(!runner.run()) {
                 return new ResponseEntity<>("Run failed", HttpStatus.ACCEPTED);
             }
-
-            System.out.println("Past execution");
         // TODO make this better
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+        return new ResponseEntity<>("Program run successful", HttpStatus.ACCEPTED);
 
     }
 
