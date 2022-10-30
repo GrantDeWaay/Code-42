@@ -1,5 +1,6 @@
 package coms309.coderunner;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -12,9 +13,9 @@ public class CRunner extends CompiledCodeRunner {
     public CRunner(String codeFolder, String testFolder, String mainName) throws IOException {
         super(codeFolder, testFolder);
 
-        this.mainName = mainName;
-
-        Files.copy(Paths.get(codeFolder), Paths.get(testFolder));
+        this.mainName = mainName;     
+        
+        copyDirRecursively(codeFolder, testFolder);
     }
 
     @Override
@@ -46,6 +47,19 @@ public class CRunner extends CompiledCodeRunner {
             e.printStackTrace();
         }
 
+    }
+
+    // helper function
+    private static void copyDirRecursively(String src, String dest) throws IOException {
+        File srcFile = new File(src);
+
+        for(File f : srcFile.listFiles()) {
+            if(f.isDirectory()) {
+                copyDirRecursively(f.getAbsolutePath(), dest + "/" + f.getName());
+            } else {
+                Files.copy(Paths.get(f.getAbsolutePath()), Paths.get(dest + "/" + f.getName()));
+            }
+        }
     }
 
 }
