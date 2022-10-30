@@ -55,6 +55,8 @@ public class CRunner extends CompiledCodeRunner {
 
         for(File f : srcFile.listFiles()) {
             if(f.isDirectory()) {
+                File dir = new File(dest + "/" + f.getName());
+                dir.mkdir();
                 copyDirRecursively(f.getAbsolutePath(), dest + "/" + f.getName());
             } else {
                 Files.copy(Paths.get(f.getAbsolutePath()), Paths.get(dest + "/" + f.getName()));
