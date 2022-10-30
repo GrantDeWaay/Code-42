@@ -35,7 +35,7 @@ public class CRunner extends CompiledCodeRunner {
     }
 
     @Override
-    public void run() throws IOException {
+    public boolean run() throws IOException {
         String executableName = mainName.substring(0, mainName.indexOf('.'));
 
         Process process = Runtime.getRuntime().exec("./" + testFolder + "/out/" + executableName);
@@ -43,10 +43,14 @@ public class CRunner extends CompiledCodeRunner {
         try {
             if(!process.waitFor(5, TimeUnit.SECONDS)) {
                 process.destroyForcibly();
+            } else {
+                return true;
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
+        return false;
 
     }
 

@@ -24,6 +24,6 @@ public abstract class CodeRunner {
     }
 
     // run the code
-    public abstract void run() throws IOException;
+    public abstract boolean run() throws IOException;
 
 }

@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,19 +31,18 @@ public class CodeRunnerController {
     private TempFileManager tempFileManager = new TempFileManager("/home/gitlab-runner/tempfiles/users/");
     
     @PutMapping("/run/{assignmentId}")
-    public HttpStatus runAssignment(@PathVariable long assignmentId, @RequestBody ApiCodeSubmission codeSubmission, @RequestParam String token) {
-        if(!UserTokens.isStudent(token)) return HttpStatus.FORBIDDEN;
+    public ResponseEntity<String> runAssignment(@PathVariable long assignmentId, @RequestBody ApiCodeSubmission codeSubmission, @RequestParam String token) {
+        if(!UserTokens.isStudent(token)) return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 
         Long studentId = UserTokens.getID(token);
 
         Optional<Assignment> a = as.findById(assignmentId);
 
-        if(!a.isPresent()) return HttpStatus.NOT_FOUND;
+        if(!a.isPresent()) return new ResponseEntity<>("Assignment not found", HttpStatus.NOT_FOUND);
 
         AssignmentFile af = a.get().getAssignmentFile();
 
-        // TODO this probably needs to be changed, since frontend should be able to distinguish bad assignment ids from files not existing (due to teacher issue)
-        if(af == null) return HttpStatus.NOT_FOUND;
+        if(af == null) return new ResponseEntity<>("No file mapping found for assignment", HttpStatus.NOT_FOUND);
 
         tempFileManager.createAssignmentFolder(studentId, assignmentId);
 
@@ -66,20 +66,24 @@ public class CodeRunnerController {
 
             System.out.println("Past content copy");
 
-            runner.compile();
+            if(!runner.compile()) {
+                return new ResponseEntity<>("Compilation failed", HttpStatus.ACCEPTED);
+            }
 
             System.out.println("Past compilation");
 
-            runner.run();
+            if(!runner.run()) {
+                return new ResponseEntity<>("Run failed", HttpStatus.ACCEPTED);
+            }
 
             System.out.println("Past execution");
         // TODO make this better
         } catch (Exception e) {
             e.printStackTrace();
-            return HttpStatus.INTERNAL_SERVER_ERROR;
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        return HttpStatus.ACCEPTED;
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
 
     }
 
