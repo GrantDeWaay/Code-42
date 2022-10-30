@@ -35,17 +35,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     EditText password;
     EditText username;
 
+    SharedPreferences userSession;
+    SharedPreferences appSetting;
+    SharedPreferences.Editor userSessionEditor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        SharedPreferences userSession = getSharedPreferences(getString(R.string.session_shared_pref), MODE_PRIVATE);
-        SharedPreferences appSetting = getSharedPreferences(getString(R.string.app_shared_pref), MODE_PRIVATE);
+        userSession = getSharedPreferences(getString(R.string.session_shared_pref), MODE_PRIVATE);
+        appSetting = getSharedPreferences(getString(R.string.app_shared_pref), MODE_PRIVATE);
 
-        SharedPreferences.Editor userSessionEditor = userSession.edit();
+        userSessionEditor = userSession.edit();
 
-        /*if(userSession.contains("sessionID")){
+        /*if(userSession.contains("token")){
             String url = Const.SOURCE + Const.SESSION + userSession.getString("sessionID", "");
 
             JsonObjectRequest loginReq = new JsonObjectRequest(Request.Method.GET, url,
@@ -122,8 +126,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             Toast.makeText(getApplicationContext(), response.toString(),
                                     Toast.LENGTH_LONG).show();
                             try {
-                                //userSessionEditor.putString("sessionID", response.getString("sessionID"));
-                                //userSessionEditor.commit();
+                                userSessionEditor.putString("token", response.getString("token"));
+                                userSessionEditor.commit();
                                 loginSuccess(response);
                             } catch (JSONException jsonException) {
                                 jsonException.printStackTrace();

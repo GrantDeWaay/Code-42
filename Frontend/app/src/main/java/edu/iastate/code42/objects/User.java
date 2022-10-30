@@ -82,6 +82,10 @@ public class User extends Application {
         this.creationDate = null;
     }
 
+    public String getFullName(){
+        return firstName + " " + lastName;
+    }
+
     public Long getId() {
         return id;
     }

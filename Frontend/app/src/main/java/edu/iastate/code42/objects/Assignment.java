@@ -16,7 +16,7 @@ public class Assignment {
         this.problemStatement = problemStatement;
     }
 
-    public Assignment(JSONObject object){
+    public Assignment(JSONObject response){
 
     }
 

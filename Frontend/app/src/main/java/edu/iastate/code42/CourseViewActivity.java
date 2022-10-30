@@ -3,6 +3,7 @@ package edu.iastate.code42;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -58,6 +59,7 @@ public class CourseViewActivity extends BaseDrawer implements View.OnClickListen
     Button moreStudent;
 
     User user;
+    SharedPreferences userSession;
 
     boolean viewState;
     int courseId;
@@ -77,6 +79,12 @@ public class CourseViewActivity extends BaseDrawer implements View.OnClickListen
         allocateActivityTitle("");
 
         user = User.get(getApplicationContext());
+        userSession = getSharedPreferences(getString(R.string.session_shared_pref), MODE_PRIVATE);
+
+        if(!userSession.contains("token")){
+            Intent login = new Intent(CourseViewActivity.this, MainActivity.class);
+            startActivity(login);
+        }
 
         title = activityBaseDrawerBinding.getRoot().findViewById(R.id.courseTitleHeader);
         description = activityBaseDrawerBinding.getRoot().findViewById(R.id.courseDescriptionView);
@@ -160,6 +168,7 @@ public class CourseViewActivity extends BaseDrawer implements View.OnClickListen
                 @Override
                 protected Map<String, String> getParams() {
                     Map<String, String> params = new HashMap<String, String>();
+                    params.put("token", userSession.getString("token", ""));
 
                     return params;
                 }
