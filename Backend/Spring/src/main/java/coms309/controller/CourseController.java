@@ -153,6 +153,29 @@ public class CourseController {
         }
     }
 
+    @GetMapping("/course/{id}/upcoming")
+    public @ResponseBody ResponseEntity<Set<ApiAssignment>> getUpcomingAssignments(@PathVariable long id, @RequestParam String token) {
+        if(!UserTokens.isLiveToken(token)) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+
+        Optional<Course> course = cs.findById(id);
+
+        if(!course.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        Date now = new Date();
+
+        Set<ApiAssignment> upcomingAssignments = new HashSet<>();
+
+        for(Assignment a : course.get().getAssignments()) {
+            if(a.getDueDate().compareTo(now) < 0) {
+                upcomingAssignments.add(new ApiAssignment(a));
+            }
+        }
+
+        return new ResponseEntity<>(upcomingAssignments, HttpStatus.OK);
+    }
+
     @PutMapping("/course/{courseId}/assignment/{assignmentId}")
     public @ResponseBody HttpStatus addAssignmentToCourse(@PathVariable long courseId, @PathVariable long assignmentId, @RequestParam String token) {
         if (!UserTokens.isTeacher(token) || !UserTokens.isAdmin(token)) {
