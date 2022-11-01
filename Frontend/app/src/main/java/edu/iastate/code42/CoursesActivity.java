@@ -76,8 +76,14 @@ public class CoursesActivity extends BaseDrawer implements AdapterView.OnItemCli
         }
 
         courses = new ArrayList<>();
+        String url;
 
-        String url = String.format(Const.GET_COURSES_FOR_USER, user.getId(), userSession.getString("token", ""));
+        if(user.getType().equals("admin")){
+            url = String.format(Const.GET_COURSES, userSession.getString("token", ""));
+        }else{
+           url = String.format(Const.GET_COURSES_FOR_USER, user.getId(), userSession.getString("token", ""));
+        }
+
 
         JsonArrayRequest courseListReq = new JsonArrayRequest(Request.Method.GET, url,
                 null, new Response.Listener<JSONArray>() {

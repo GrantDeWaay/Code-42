@@ -59,7 +59,6 @@ public class User extends Application {
         return sUser;
     }
 
-
     public void fromJson(JSONObject response) throws JSONException{
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH);
 

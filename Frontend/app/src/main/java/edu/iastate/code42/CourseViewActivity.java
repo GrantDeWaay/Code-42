@@ -58,6 +58,11 @@ public class CourseViewActivity extends BaseDrawer implements View.OnClickListen
     Button addStudent;
     Button moreStudent;
 
+    TableLayout teacherLayout;
+    ListView teacherList;
+    Button addTeacher;
+    Button moreTeacher;
+
     User user;
     SharedPreferences userSession;
 
@@ -66,9 +71,11 @@ public class CourseViewActivity extends BaseDrawer implements View.OnClickListen
 
     ArrayList<Assignment> assignments;
     ArrayList<User> students;
+    ArrayList<User> teachers;
 
     AssignmentListAdapter assignmentAdapter;
-    UserListAdapter userAdapter;
+    UserListAdapter studentAdapter;
+    UserListAdapter teacherAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,6 +107,11 @@ public class CourseViewActivity extends BaseDrawer implements View.OnClickListen
         addStudent = activityBaseDrawerBinding.getRoot().findViewById(R.id.addStudentButton);
         moreStudent = activityBaseDrawerBinding.getRoot().findViewById(R.id.moreStudentButton);
 
+        teacherLayout = activityBaseDrawerBinding.getRoot().findViewById(R.id.teacherLayout);
+        teacherList = activityBaseDrawerBinding.getRoot().findViewById(R.id.teacherList);
+        addTeacher = activityBaseDrawerBinding.getRoot().findViewById(R.id.addTeacherButton);
+        moreTeacher = activityBaseDrawerBinding.getRoot().findViewById(R.id.moreTeacherButton);
+
 
         edit.setOnClickListener(this);
         addAssignment.setOnClickListener(this);
@@ -112,12 +124,18 @@ public class CourseViewActivity extends BaseDrawer implements View.OnClickListen
             edit.setVisibility(View.INVISIBLE);
             edit.setEnabled(false);
             studentLayout.setVisibility(View.INVISIBLE);
+            teacherLayout.setVisibility(View.INVISIBLE);
             addAssignment.setVisibility(View.INVISIBLE);
         }else{
             edit.setVisibility(View.VISIBLE);
             edit.setEnabled(true);
             studentLayout.setVisibility(View.VISIBLE);
             addAssignment.setVisibility(View.VISIBLE);
+            if(user.getType().equals("admin")){
+                teacherLayout.setVisibility(View.VISIBLE);
+            }else{
+                teacherLayout.setVisibility(View.INVISIBLE);
+            }
         }
 
 
@@ -188,6 +206,9 @@ public class CourseViewActivity extends BaseDrawer implements View.OnClickListen
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
+                    }
+
+                    if(assignments.size() > 0){
                         assignmentAdapter = new AssignmentListAdapter(getApplicationContext(), assignments);
                         assignmentList.setAdapter(assignmentAdapter);
                     }
@@ -218,7 +239,7 @@ public class CourseViewActivity extends BaseDrawer implements View.OnClickListen
 
             AppController.getInstance().addToRequestQueue(courseAssignmentsReq, "course_get_assignments");
 
-            if(user.getType() != "student") {
+            if(!user.getType().equals("student")) {
                 url = String.format(Const.GET_STUDENTS_FOR_COURSE, courseId, userSession.getString("token", ""));
 
                 JsonArrayRequest courseStudentsReq = new JsonArrayRequest(Request.Method.GET, url,
@@ -233,9 +254,11 @@ public class CourseViewActivity extends BaseDrawer implements View.OnClickListen
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
+                        }
 
-                            userAdapter = new UserListAdapter(getApplicationContext(), students);
-                            studentList.setAdapter(userAdapter);
+                        if(students.size() > 0){
+                            studentAdapter = new UserListAdapter(getApplicationContext(), students);
+                            studentList.setAdapter(studentAdapter);
                         }
                     }
                 }, new Response.ErrorListener() {
@@ -263,6 +286,55 @@ public class CourseViewActivity extends BaseDrawer implements View.OnClickListen
                 };
 
                 AppController.getInstance().addToRequestQueue(courseStudentsReq, "course_get_students");
+
+                if(user.getType().equals("admin")) {
+                    url = String.format(Const.GET_TEACHERS_FOR_COURSE, courseId, userSession.getString("token", ""));
+
+                    JsonArrayRequest courseTeacherReq = new JsonArrayRequest(Request.Method.GET, url,
+                            null, new Response.Listener<JSONArray>() {
+                        @Override
+                        public void onResponse(JSONArray response) {
+                            for(int i = 0; i < response.length(); i++){
+                                try {
+                                    User u = new User(response.getJSONObject(i));
+
+                                    teachers.add(u);
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+
+                            if(teachers.size() > 0){
+                                teacherAdapter = new UserListAdapter(getApplicationContext(), teachers);
+                                teacherList.setAdapter(teacherAdapter);
+                            }
+                        }
+                    }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Log.e("Volley Login Auth Error:", error.toString());
+
+                            Toast.makeText(getApplicationContext(), R.string.login_volley_error,
+                                    Toast.LENGTH_LONG).show();
+                        }
+                    }) {
+                        @Override
+                        public Map<String, String> getHeaders() throws AuthFailureError {
+                            HashMap<String, String> headers = new HashMap<String, String>();
+                            headers.put("Content-Type", "application/json");
+                            return headers;
+                        }
+
+                        @Override
+                        protected Map<String, String> getParams() {
+                            Map<String, String> params = new HashMap<String, String>();
+
+                            return params;
+                        }
+                    };
+
+                    AppController.getInstance().addToRequestQueue(courseTeacherReq, "course_get_teachers");
+                }
             }
         }else{
             Intent courseList = new Intent(this, CoursesActivity.class);

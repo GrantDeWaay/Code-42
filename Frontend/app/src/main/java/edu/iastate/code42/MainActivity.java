@@ -123,8 +123,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             null,  new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
-                            Toast.makeText(getApplicationContext(), response.toString(),
-                                    Toast.LENGTH_LONG).show();
+                            /*Toast.makeText(getApplicationContext(), response.toString(),
+                                    Toast.LENGTH_LONG).show();*/
                             try {
                                 userSessionEditor.putString("token", response.getString("token"));
                                 userSessionEditor.commit();
