@@ -17,7 +17,9 @@ public class ApiAssignment {
     // problem statement for coding challenge
     private String problemStatement;
 
-    // TODO add in sample code (may end up being in database or stored as a file)
+    private String template;
+
+    private String expectedOutput;
 
     private Date creationDate;
 
@@ -35,6 +37,8 @@ public class ApiAssignment {
         this.problemStatement = a.getProblemStatement();
         this.creationDate = a.getCreationDate();
         this.dueDate = a.getDueDate();
+        this.template = a.getTemplate();
+        this.expectedOutput = a.getExpectedOutput();
     }
 
     public void setId(Long id) {
@@ -69,6 +73,22 @@ public class ApiAssignment {
 
     public String getProblemStatement() {
         return problemStatement;
+    }
+
+    public void setTemplate(String template) {
+        this.template = template;
+    }
+
+    public String getTemplate() {
+        return template;
+    }
+
+    public void setExpectedOutput(String expectedOutput) {
+        this.expectedOutput = expectedOutput;
+    }
+
+    public String getExpectedOutput() {
+        return expectedOutput;
     }
 
     public void setCreationDate(Date creationDate) {
