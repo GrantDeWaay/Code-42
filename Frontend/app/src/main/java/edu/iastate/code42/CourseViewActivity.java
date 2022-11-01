@@ -132,7 +132,7 @@ public class CourseViewActivity extends BaseDrawer implements View.OnClickListen
             assignments = new ArrayList<>();
             students = new ArrayList<>();
 
-            String url = String.format(Const.GET_COURSE, courseId);
+            String url = String.format(Const.GET_COURSE, courseId, userSession.getString("token", ""));
 
             JsonObjectRequest courseDetailReq = new JsonObjectRequest(Request.Method.GET, url,
                     null,  new Response.Listener<JSONObject>() {
@@ -168,7 +168,6 @@ public class CourseViewActivity extends BaseDrawer implements View.OnClickListen
                 @Override
                 protected Map<String, String> getParams() {
                     Map<String, String> params = new HashMap<String, String>();
-                    params.put("token", userSession.getString("token", ""));
 
                     return params;
                 }
@@ -176,7 +175,7 @@ public class CourseViewActivity extends BaseDrawer implements View.OnClickListen
 
             AppController.getInstance().addToRequestQueue(courseDetailReq, "course_get_req");
 
-            url = String.format(Const.GET_ASSIGNMENTS_FOR_COURSE, courseId);
+            url = String.format(Const.GET_ASSIGNMENTS_FOR_COURSE, courseId, userSession.getString("token", ""));
 
             JsonArrayRequest courseAssignmentsReq = new JsonArrayRequest(Request.Method.GET, url,
                     null, new Response.Listener<JSONArray>() {
@@ -220,7 +219,7 @@ public class CourseViewActivity extends BaseDrawer implements View.OnClickListen
             AppController.getInstance().addToRequestQueue(courseAssignmentsReq, "course_get_assignments");
 
             if(user.getType() != "student") {
-                url = String.format(Const.GET_STUDENTS_FOR_COURSE, courseId);
+                url = String.format(Const.GET_STUDENTS_FOR_COURSE, courseId, userSession.getString("token", ""));
 
                 JsonArrayRequest courseStudentsReq = new JsonArrayRequest(Request.Method.GET, url,
                         null, new Response.Listener<JSONArray>() {

@@ -69,12 +69,21 @@ public class CoursesActivity extends BaseDrawer implements AdapterView.OnItemCli
         add = activityBaseDrawerBinding.getRoot().findViewById(R.id.addCourse);
         add.setOnClickListener(this);
 
-        String url = String.format(Const.GET_COURSES_FOR_USER, user.getId());
+        if(user.getType().equals("student")){
+            add.setVisibility(View.INVISIBLE);
+        }else{
+            add.setVisibility(View.VISIBLE);
+        }
+
+        courses = new ArrayList<>();
+
+        String url = String.format(Const.GET_COURSES_FOR_USER, user.getId(), userSession.getString("token", ""));
 
         JsonArrayRequest courseListReq = new JsonArrayRequest(Request.Method.GET, url,
                 null, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
+
                 for(int i = 0; i < response.length(); i++){
                     try {
                         Course c = new Course(response.getJSONObject(i));
@@ -91,10 +100,13 @@ public class CoursesActivity extends BaseDrawer implements AdapterView.OnItemCli
             public void onErrorResponse(VolleyError error) {
                 Log.e("Volley Login Auth Error:", error.toString());
 
-                Toast.makeText(getApplicationContext(), R.string.login_volley_error,
+                Toast.makeText(getApplicationContext(), url,
                         Toast.LENGTH_LONG).show();
             }
         }){
+            /**
+             * Passing some request headers
+             **/
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String, String> headers = new HashMap<String, String>();
@@ -105,7 +117,6 @@ public class CoursesActivity extends BaseDrawer implements AdapterView.OnItemCli
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<String, String>();
-                params.put("token", userSession.getString("token", ""));
 
                 return params;
             }
@@ -116,7 +127,10 @@ public class CoursesActivity extends BaseDrawer implements AdapterView.OnItemCli
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        Intent viewCourse = new Intent(CoursesActivity.this, CourseViewActivity.class);
+        viewCourse.putExtra("courseId", courses.get(i).getId());
 
+        startActivity(viewCourse);
     }
 
     @Override

@@ -18,8 +18,7 @@ public class UserListAdapter extends ArrayAdapter<User> {
     Context mContext;
 
     private static class ViewHolder{
-        TextView firstName;
-        TextView lastName;
+        TextView fullName;
         TextView username;
         TextView email;
     }

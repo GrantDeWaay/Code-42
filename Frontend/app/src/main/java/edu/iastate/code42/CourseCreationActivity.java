@@ -3,6 +3,7 @@ package edu.iastate.code42;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -23,6 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import edu.iastate.code42.app.AppController;
+import edu.iastate.code42.objects.User;
 import edu.iastate.code42.utils.Const;
 
 public class CourseCreationActivity extends AppCompatActivity implements View.OnClickListener {
@@ -31,6 +33,9 @@ public class CourseCreationActivity extends AppCompatActivity implements View.On
     EditText title;
     EditText description;
     EditText language;
+
+    User user;
+    SharedPreferences userSession;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +46,14 @@ public class CourseCreationActivity extends AppCompatActivity implements View.On
         title = findViewById(R.id.editCourseTitle);
         description = findViewById(R.id.courseDescriptionView);
         language = findViewById(R.id.courseLanguagesView);
+
+        user = User.get(getApplicationContext());
+        userSession = getSharedPreferences(getString(R.string.session_shared_pref), MODE_PRIVATE);
+
+        if(!userSession.contains("token")){
+            Intent login = new Intent(CourseCreationActivity.this, MainActivity.class);
+            startActivity(login);
+        }
 
         create.setOnClickListener(this);
     }

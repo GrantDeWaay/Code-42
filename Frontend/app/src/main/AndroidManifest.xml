@@ -15,7 +15,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Code42"
         android:usesCleartextTraffic="true"
-
         tools:targetApi="31">
         <activity
             android:name=".CourseViewActivity"
