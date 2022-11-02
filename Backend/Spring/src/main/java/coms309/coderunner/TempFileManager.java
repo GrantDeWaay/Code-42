@@ -21,6 +21,10 @@ public class TempFileManager {
         this.assignmentId = assignmentId;
     }
 
+    
+    /** 
+     * @return boolean
+     */
     // check if user has a folder already made in the directory
     public boolean userFolderExists() {
         File[] contents = baseDir.listFiles();
@@ -34,6 +38,10 @@ public class TempFileManager {
         return found;
     }
 
+    
+    /** 
+     * @return boolean
+     */
     public boolean assignmentFolderExists() {
         File userDir = new File(baseDir.getAbsolutePath() + "/" + userId.toString() + "/assignments/");
 
@@ -60,18 +68,32 @@ public class TempFileManager {
         assignmentDir.mkdirs();
     }
 
+    
+    /** 
+     * @return String
+     * @throws FileNotFoundException
+     */
     public String getUserFolderPath() throws FileNotFoundException {
         if(!userFolderExists()) throw new FileNotFoundException("User directory does not exist");
 
         return baseDir.getAbsolutePath() + "/" + userId.toString();
     }
 
+    
+    /** 
+     * @return String
+     * @throws FileNotFoundException
+     */
     public String getAssignmentFolderPath() throws FileNotFoundException {
         if(!assignmentFolderExists()) throw new FileNotFoundException("Assignment directory does not exist");
 
         return baseDir.getAbsolutePath() + "/" + userId.toString() + "/assignments/" + assignmentId.toString();
     }
 
+    
+    /** 
+     * @return String
+     */
     public String getBaseDirPath() {
         return baseDir.getAbsolutePath();
     }

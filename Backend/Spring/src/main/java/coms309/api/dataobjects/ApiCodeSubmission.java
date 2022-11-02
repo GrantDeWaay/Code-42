@@ -18,26 +18,50 @@ public class ApiCodeSubmission {
         this.language = language;
     }
 
+    
+    /** 
+     * @param name
+     */
     public void setName(String name) {
         this.name = name;
     }
 
+    
+    /** 
+     * @return String
+     */
     public String getName() {
         return name;
     }
 
+    
+    /** 
+     * @param contents
+     */
     public void setContents(String contents) {
         this.contents = contents;
     }
 
+    
+    /** 
+     * @return String
+     */
     public String getContents() {
         return contents;
     }
     
+    
+    /** 
+     * @param language
+     */
     public void setLanguage(String language) {
         this.language = language;
     }
 
+    
+    /** 
+     * @return String
+     */
     public String getLanguage() {
         return language;
     }

@@ -7,7 +7,14 @@ import coms309.database.dataobjects.AssignmentFile;
 
 public class CodeRunnerFactory {
     
-    public CompiledCodeRunner createCompiledCodeRunner(AssignmentFile af, ApiCodeSubmission acs, TempFileManager tfm) {
+    
+    /** 
+     * @param af
+     * @param acs
+     * @param tfm
+     * @return CompiledCodeRunner
+     */
+    public CodeRunner createCodeRunner(AssignmentFile af, ApiCodeSubmission acs, TempFileManager tfm) {
         if(acs.getLanguage() == null || acs.getLanguage() == "") return null;
 
         try {

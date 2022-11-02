@@ -27,34 +27,66 @@ public class AssignmentFile {
         this.assignment = null;
     }
 
+    
+    /** 
+     * @param id
+     */
     public void setId(Long id) {
         this.id = id;
     }
 
+    
+    /** 
+     * @return Long
+     */
     public Long getId() {
         return id;
     }
 
+    
+    /** 
+     * @param codeFolder
+     */
     public void setCodeFolder(String codeFolder) {
         this.codeFolder = codeFolder;
     }
 
+    
+    /** 
+     * @return String
+     */
     public String getCodeFolder() {
         return codeFolder;
     }
 
+    
+    /** 
+     * @param mainFile
+     */
     public void setMainFile(String mainFile) {
         this.mainFile = mainFile;
     }
 
+    
+    /** 
+     * @return String
+     */
     public String getMainFile() {
         return mainFile;
     }
 
+    
+    /** 
+     * @param assignment
+     */
     public void setAssignment(Assignment assignment) {
         this.assignment = assignment;
     }
 
+    
+    /** 
+     * @return Assignment
+     */
     public Assignment getAssignment() {
         return assignment;
     }

@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import coms309.api.dataobjects.ApiCodeRunResult;
 import coms309.api.dataobjects.ApiCodeSubmission;
+import coms309.coderunner.CodeRunner;
 import coms309.coderunner.CodeRunnerFactory;
-import coms309.coderunner.CompiledCodeRunner;
 import coms309.coderunner.TempFileManager;
 import coms309.controller.token.UserTokens;
 import coms309.database.dataobjects.Assignment;
@@ -43,13 +43,13 @@ public class CodeRunnerController {
 
         if(af == null) af = new AssignmentFile(); // initialize to empty
 
+        // TODO move this stuff to a service of some kind??
         TempFileManager tempFileManager = new TempFileManager("/home/gitlab-runner/tempfiles/users/", studentId, a.get().getId());
         tempFileManager.createAssignmentFolder();
 
         try {
             CodeRunnerFactory factory = new CodeRunnerFactory();
-            // TODO add support for interpreted languages
-            CompiledCodeRunner runner = factory.createCompiledCodeRunner(af, codeSubmission, tempFileManager);
+            CodeRunner runner = factory.createCodeRunner(af, codeSubmission, tempFileManager);
 
             File codeFile = new File(tempFileManager.getAssignmentFolderPath() + "/" + codeSubmission.getName());
 
@@ -59,8 +59,10 @@ public class CodeRunnerController {
 
             writer.close();
 
-            if(!runner.compile()) {
-                return new ResponseEntity<>(new ApiCodeRunResult(false, "Compilation failed", "", ""), HttpStatus.ACCEPTED);
+            if(runner.isCompiledRunner()) {
+                if(!runner.compile()) {
+                    return new ResponseEntity<>(new ApiCodeRunResult(false, "Compilation failed", "", ""), HttpStatus.ACCEPTED);
+                }
             }
 
             if(!runner.run()) {

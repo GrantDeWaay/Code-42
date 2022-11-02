@@ -41,39 +41,76 @@ public class ApiCourse {
         this.creationDate = creationDate;
     }
 
+    
+    /** 
+     * @param id
+     */
     public void setId(Long id) {
         this.id = id;
     }
 
+    
+    /** 
+     * @return Long
+     */
     // returns the ID of the user
     public Long getId() {
         return id;
     }
 
+    
+    /** 
+     * @param title
+     */
     public void setTitle(String title) {
         this.title = title;
     }
 
+    
+    /** 
+     * @return String
+     */
     public String getTitle() {
         return title;
     }
 
+    
+    /** 
+     * @param description
+     */
     public void setDescription(String description) {
         this.description = description;
     }
 
+    
+    /** 
+     * @return String
+     */
     public String getDescription() {
         return description;
     }
 
+    
+    /** 
+     * @param languages
+     */
     public void setLanguages(String languages) {
         this.languages = languages;
     }
 
+    
+    /** 
+     * @return String
+     */
     public String getLanguages() {
         return languages;
     }
 
+    
+    /** 
+     * @param language
+     * @return boolean
+     */
     public boolean usesLanguage(String language) {
         String[] languageArray = languages.split(",");
 
@@ -86,10 +123,18 @@ public class ApiCourse {
         return false;
     }
 
+    
+    /** 
+     * @param creationDate
+     */
     public void setCreationDate(Date creationDate) {
         this.creationDate = creationDate;
     }
 
+    
+    /** 
+     * @return Date
+     */
     public Date getCreationDate() {
         return creationDate;
     }

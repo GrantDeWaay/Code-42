@@ -21,34 +21,66 @@ public class ApiCodeRunResult {
         this.actualOutput = actualOutput;
     }
 
+    
+    /** 
+     * @param pass
+     */
     public void setPass(boolean pass) {
         this.pass = pass;
     }
 
+    
+    /** 
+     * @return boolean
+     */
     public boolean getPass() {
         return pass;
     }
     
+    
+    /** 
+     * @param message
+     */
     public void setMessage(String message) {
         this.message = message;
     }
 
+    
+    /** 
+     * @return String
+     */
     public String getMessage() {
         return message;
     }
 
+    
+    /** 
+     * @param expectedOutput
+     */
     public void setExpectedOutput(String expectedOutput) {
         this.expectedOutput = expectedOutput;
     }
 
+    
+    /** 
+     * @return String
+     */
     public String getExpectedOutput() {
         return expectedOutput;
     }
 
+    
+    /** 
+     * @param actualOutput
+     */
     public void setActualOutput(String actualOutput) {
         this.actualOutput = actualOutput;
     }
 
+    
+    /** 
+     * @return String
+     */
     public String getActualOutput() {
         return actualOutput;
     }
