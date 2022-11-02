@@ -76,9 +76,10 @@ public class CRunner extends CompiledCodeRunner {
 
         if(process.isAlive()){
             process.destroyForcibly();
+            return false;
         }
 
-        return false;
+        return true;
 
     }
 
