@@ -40,7 +40,7 @@ public class CodeRunnerController {
 
         AssignmentFile af = a.get().getAssignmentFile();
 
-        if(af == null) return new ResponseEntity<>("No file mapping found for assignment", HttpStatus.NOT_FOUND);
+        if(af == null) af = new AssignmentFile(); // initialize to empty
 
         TempFileManager tempFileManager = new TempFileManager("/home/gitlab-runner/tempfiles/users/", studentId, a.get().getId());
         tempFileManager.createAssignmentFolder();
