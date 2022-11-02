@@ -64,13 +64,13 @@ public class CRunner extends CompiledCodeRunner {
         // run while process is alive and we have not hit a timeout
         while(process.isAlive() && System.currentTimeMillis() - startTime < 5000) {
             while(stdout.available() > 0) {
-                stdout.read(buff);
-                stdOutData = stdOutData.concat(new String(buff));
+                int n = stdout.read(buff);
+                stdOutData = stdOutData.concat(new String(buff, 0, n));
             }
 
             while(stderr.available() > 0) {
-                stderr.read(buff);
-                stdErrData = stdErrData.concat(new String(buff));
+                int n = stderr.read(buff);
+                stdErrData = stdErrData.concat(new String(buff, 0, n));
             }
         }
 
