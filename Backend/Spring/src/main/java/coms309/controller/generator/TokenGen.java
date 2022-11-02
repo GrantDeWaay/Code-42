@@ -12,7 +12,7 @@ public class TokenGen {
         StringBuilder sb = new StringBuilder();
         while (UserTokens.isLiveToken(String.valueOf(sb)) || sb.toString().equals("")) {
             for (int i = 0; i < 16; i++) {
-                char c = (char) (65 + r.nextInt(26)); //temporary stop-gap until this gets fixed
+                char c = (char) (65 + r.nextInt(26)); //65-90
                 sb.append(c);
             }
         }

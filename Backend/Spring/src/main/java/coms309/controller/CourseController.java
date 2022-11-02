@@ -33,7 +33,7 @@ public class CourseController {
     @GetMapping("/course")
     public @ResponseBody
     ResponseEntity<List<ApiCourse>> getCourseList(@RequestParam String token) {
-        if (!UserTokens.isTeacher(token) || !UserTokens.isAdmin(token)) {
+        if (!UserTokens.isTeacher(token) && !UserTokens.isAdmin(token)) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
 
@@ -101,6 +101,66 @@ public class CourseController {
         }
 
         return new ResponseEntity<Set<ApiUser>>(users, HttpStatus.OK);
+    }
+
+    @GetMapping("/course/{id}/students")
+    public @ResponseBody ResponseEntity<Set<ApiUser>> getCourseStudentList(@PathVariable long id) {
+        Optional<Course> result = cs.findById(id);
+
+        if(!result.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        Set<ApiUser> users = new HashSet<>();
+
+        Iterator<User> iter = result.get().getStudents().iterator();
+
+        while(iter.hasNext()) {
+            User u = iter.next();
+            if(u.getType().equals("student")) {
+                users.add(new ApiUser(u));
+            }
+        }
+
+        return new ResponseEntity<>(users, HttpStatus.OK);
+    }
+
+    @GetMapping("/course/{id}/teachers")
+    public @ResponseBody ResponseEntity<Set<ApiUser>> getCourseTeacherList(@PathVariable long id) {
+        Optional<Course> result = cs.findById(id);
+
+        if(!result.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        Set<ApiUser> users = new HashSet<>();
+
+        Iterator<User> iter = result.get().getStudents().iterator();
+
+        while(iter.hasNext()) {
+            User u = iter.next();
+            if(u.getType().equals("teacher")) {
+                users.add(new ApiUser(u));
+            }
+        }
+
+        return new ResponseEntity<>(users, HttpStatus.OK);
+    }
+
+    @GetMapping("/course/{id}/admins")
+    public @ResponseBody ResponseEntity<Set<ApiUser>> getCourseAdminList(@PathVariable long id) {
+        Optional<Course> result = cs.findById(id);
+
+        if(!result.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        Set<ApiUser> users = new HashSet<>();
+
+        Iterator<User> iter = result.get().getStudents().iterator();
+
+        while(iter.hasNext()) {
+            User u = iter.next();
+            if(u.getType().equals("admin")) {
+                users.add(new ApiUser(u));
+            }
+        }
+
+        return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
     @PostMapping("/course/create")
@@ -178,7 +238,7 @@ public class CourseController {
 
     @PutMapping("/course/{courseId}/assignment/{assignmentId}")
     public @ResponseBody HttpStatus addAssignmentToCourse(@PathVariable long courseId, @PathVariable long assignmentId, @RequestParam String token) {
-        if (!UserTokens.isTeacher(token) || !UserTokens.isAdmin(token)) {
+        if (!UserTokens.isTeacher(token) && !UserTokens.isAdmin(token)) {
             return HttpStatus.FORBIDDEN;
         }
         Optional<Course> c = cs.findById(courseId);
@@ -197,7 +257,7 @@ public class CourseController {
 
     @DeleteMapping("/course/{courseId}/assignment/{assignmentId}")
     public @ResponseBody HttpStatus removeAssignmentFromCourse(@PathVariable long courseId, @PathVariable long assignmentId, @RequestParam String token) {
-        if (!UserTokens.isTeacher(token) || !UserTokens.isAdmin(token)) {
+        if (!UserTokens.isTeacher(token) && !UserTokens.isAdmin(token)) {
             return HttpStatus.FORBIDDEN;
         }
         Optional<Course> c = cs.findById(courseId);
@@ -222,7 +282,7 @@ public class CourseController {
 
     @PutMapping("/course/{courseId}/user/{userId}")
     public @ResponseBody HttpStatus addUserToCourse(@PathVariable long courseId, @PathVariable long userId, @RequestParam String token) {
-        if (!UserTokens.isTeacher(token) || !UserTokens.isAdmin(token)) {
+        if (!UserTokens.isTeacher(token) && !UserTokens.isAdmin(token)) {
             return HttpStatus.FORBIDDEN;
         }
         Optional<Course> c = cs.findById(courseId);
@@ -241,7 +301,7 @@ public class CourseController {
 
     @DeleteMapping("/course/{courseId}/user/{userId}")
     public @ResponseBody HttpStatus removeUserFromCourse(@PathVariable long courseId, @PathVariable long userId, @RequestParam String token) {
-        if (!UserTokens.isTeacher(token) || !UserTokens.isAdmin(token)) {
+        if (!UserTokens.isTeacher(token) && !UserTokens.isAdmin(token)) {
             return HttpStatus.FORBIDDEN;
         }
         Optional<Course> c = cs.findById(courseId);

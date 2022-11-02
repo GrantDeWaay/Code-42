@@ -104,7 +104,7 @@ public class AssignmentController {
 
     @DeleteMapping("/assignment/{id}/delete")
     public @ResponseBody HttpStatus deleteAssignment(@PathVariable long id, @RequestParam String token) {
-        if (!UserTokens.isTeacher(token) || !UserTokens.isAdmin(token)) {
+        if (!UserTokens.isTeacher(token) && !UserTokens.isAdmin(token)) {
             return HttpStatus.FORBIDDEN;
         }
         Optional<Assignment> a = as.findById(id);
