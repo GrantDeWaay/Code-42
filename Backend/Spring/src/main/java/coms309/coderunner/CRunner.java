@@ -7,14 +7,17 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.concurrent.TimeUnit;
 
+import coms309.api.dataobjects.ApiCodeSubmission;
+import coms309.database.dataobjects.AssignmentFile;
+
 public class CRunner extends CompiledCodeRunner {
 
     private String mainName;
     
-    public CRunner(String codeFolder, String testFolder, String mainName) throws IOException {
-        super(codeFolder, testFolder);
+    public CRunner(AssignmentFile af, ApiCodeSubmission acs, TempFileManager tfm) throws IOException {
+        super(af.getCodeFolder(), tfm.getAssignmentFolderPath());
 
-        this.mainName = mainName;     
+        this.mainName = acs.getName();
         
         copyDirRecursively(codeFolder, testFolder);
     }

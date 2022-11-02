@@ -9,13 +9,20 @@ public class TempFileManager {
     // base directory where all temp files are stored
     private File baseDir;
 
-    public TempFileManager(String baseDirPath) {
+    private Long userId;
+
+    private Long assignmentId;
+
+    public TempFileManager(String baseDirPath, Long userId, Long assignmentId) {
         this.baseDir = new File(baseDirPath);
         if(!baseDir.isDirectory()) throw new IllegalArgumentException("Invalid path to temp file directory \"" + baseDirPath + "\".");
+
+        this.userId = userId;
+        this.assignmentId = assignmentId;
     }
 
     // check if user has a folder already made in the directory
-    public boolean userFolderExists(Long userId) {
+    public boolean userFolderExists() {
         File[] contents = baseDir.listFiles();
 
         boolean found = false;
@@ -27,7 +34,7 @@ public class TempFileManager {
         return found;
     }
 
-    public boolean assignmentFolderExists(Long userId, Long assignmentId) {
+    public boolean assignmentFolderExists() {
         File userDir = new File(baseDir.getAbsolutePath() + "/" + userId.toString() + "/assignments/");
 
         File[] contents = userDir.listFiles();
@@ -41,26 +48,26 @@ public class TempFileManager {
         return found;
     }
 
-    public void createUserFolder(Long userId) {
+    public void createUserFolder() {
         File userDir = new File(baseDir.getAbsolutePath() + "/" + userId.toString());
 
         userDir.mkdirs();
     }
 
-    public void createAssignmentFolder(Long userId, Long assignmentId) {
+    public void createAssignmentFolder() {
         File assignmentDir = new File(baseDir.getAbsolutePath() + "/" + userId.toString() + "/assignments/" + assignmentId.toString());
 
         assignmentDir.mkdirs();
     }
 
-    public String getUserFolderPath(Long userId) throws FileNotFoundException {
-        if(!userFolderExists(userId)) throw new FileNotFoundException("User directory does not exist");
+    public String getUserFolderPath() throws FileNotFoundException {
+        if(!userFolderExists()) throw new FileNotFoundException("User directory does not exist");
 
         return baseDir.getAbsolutePath() + "/" + userId.toString();
     }
 
-    public String getAssignmentFolderPath(Long userId, Long assignmentId) throws FileNotFoundException {
-        if(!assignmentFolderExists(userId, assignmentId)) throw new FileNotFoundException("Assignment directory does not exist");
+    public String getAssignmentFolderPath() throws FileNotFoundException {
+        if(!assignmentFolderExists()) throw new FileNotFoundException("Assignment directory does not exist");
 
         return baseDir.getAbsolutePath() + "/" + userId.toString() + "/assignments/" + assignmentId.toString();
     }

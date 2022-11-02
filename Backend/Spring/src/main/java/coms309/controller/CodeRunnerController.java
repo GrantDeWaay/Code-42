@@ -27,8 +27,6 @@ public class CodeRunnerController {
 
     @Autowired
     private AssignmentService as;
-
-    private TempFileManager tempFileManager = new TempFileManager("/home/gitlab-runner/tempfiles/users/");
     
     @PutMapping("/run/{assignmentId}")
     public ResponseEntity<String> runAssignment(@PathVariable long assignmentId, @RequestBody ApiCodeSubmission codeSubmission, @RequestParam String token) {
@@ -44,16 +42,15 @@ public class CodeRunnerController {
 
         if(af == null) return new ResponseEntity<>("No file mapping found for assignment", HttpStatus.NOT_FOUND);
 
-        tempFileManager.createAssignmentFolder(studentId, assignmentId);
-
-        System.out.println("Past folder creation");
+        TempFileManager tempFileManager = new TempFileManager("/home/gitlab-runner/tempfiles/users/", studentId, a.get().getId());
+        tempFileManager.createAssignmentFolder();
 
         try {
             CodeRunnerFactory factory = new CodeRunnerFactory();
             // TODO add support for interpreted languages
-            CompiledCodeRunner runner = factory.createCompiledCodeRunner(af.getCodeFolder(), tempFileManager.getAssignmentFolderPath(studentId, assignmentId), codeSubmission.getName(), codeSubmission.getLanguage());
+            CompiledCodeRunner runner = factory.createCompiledCodeRunner(af, codeSubmission, tempFileManager);
 
-            File codeFile = new File(tempFileManager.getAssignmentFolderPath(studentId, assignmentId) + "/" + codeSubmission.getName());
+            File codeFile = new File(tempFileManager.getAssignmentFolderPath() + "/" + codeSubmission.getName());
 
             FileWriter writer = new FileWriter(codeFile);
 
