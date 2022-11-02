@@ -70,7 +70,7 @@ public class AssignmentController {
 
     @PostMapping("/assignment/create")
     public @ResponseBody ResponseEntity<ApiAssignment> createAssignment(@RequestBody ApiAssignment a, @RequestParam String token) {
-        if (!UserTokens.isTeacher(token) || !UserTokens.isAdmin(token)) {
+        if (!UserTokens.isTeacher(token) && !UserTokens.isAdmin(token)) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
 
@@ -82,7 +82,7 @@ public class AssignmentController {
 
     @PutMapping("/assignment/{id}/update")
     public @ResponseBody HttpStatus updateAssignment(@PathVariable long id, @RequestBody ApiAssignment a, @RequestParam String token) {
-        if (!UserTokens.isTeacher(token) || !UserTokens.isAdmin(token)) {
+        if (!UserTokens.isTeacher(token) && !UserTokens.isAdmin(token)) {
             return HttpStatus.FORBIDDEN;
         }
         Optional<Assignment> optional = as.findById(id);
