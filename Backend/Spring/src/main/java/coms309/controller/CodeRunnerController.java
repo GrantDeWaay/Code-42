@@ -68,13 +68,17 @@ public class CodeRunnerController {
             if(!runner.run()) {
                 return new ResponseEntity<>("Run failed", HttpStatus.ACCEPTED);
             }
+
+            if(!runner.getStdOutData().equals(a.get().getExpectedOutput())) {
+                return new ResponseEntity<>("Expected output differs", HttpStatus.ACCEPTED);
+            }
         // TODO make this better
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        return new ResponseEntity<>("Program run successful", HttpStatus.ACCEPTED);
+        return new ResponseEntity<>("Expected output matches", HttpStatus.ACCEPTED);
 
     }
 

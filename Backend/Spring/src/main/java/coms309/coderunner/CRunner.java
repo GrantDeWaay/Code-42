@@ -40,14 +40,28 @@ public class CRunner extends CompiledCodeRunner {
 
         Process process = Runtime.getRuntime().exec("./" + testFolder + "/out/" + executableName);
 
-        try {
-            if(!process.waitFor(5, TimeUnit.SECONDS)) {
-                process.destroyForcibly();
-            } else {
-                return process.exitValue() == 0;
+        stdout = process.getInputStream();
+        stderr = process.getErrorStream();
+
+        long startTime = System.currentTimeMillis();
+
+        byte[] buff = new byte[1024];
+
+        // run while process is alive and we have not hit a timeout
+        while(process.isAlive() && System.currentTimeMillis() - startTime < 5000) {
+            while(stdout.available() > 0) {
+                stdout.read(buff);
+                stdOutData = stdOutData.concat(new String(buff));
             }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+            
+            while(stderr.available() > 0) {
+                stderr.read(buff);
+                stdErrData = stdErrData.concat(new String(buff));
+            }
+        }
+
+        if(process.isAlive()){
+            process.destroyForcibly();
         }
 
         return false;
