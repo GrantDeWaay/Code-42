@@ -15,16 +15,16 @@ public class ApiUserLogin extends ApiUser {
         this.token = token;
     }
 
-    
-    /** 
+
+    /**
      * @return String
      */
     public String getToken() {
         return token;
     }
 
-    
-    /** 
+
+    /**
      * @param token
      */
     public void setToken(String token) {
