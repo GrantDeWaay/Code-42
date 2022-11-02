@@ -24,7 +24,18 @@ public class CRunner extends CompiledCodeRunner {
 
     @Override
     public boolean compile() throws IOException {
-        Process process = Runtime.getRuntime().exec("./" + testFolder + "/compile.sh " + mainName);
+
+        Process process;
+        
+        if(codeFolder.equals("")) {
+            // no compile script, just compile a single file
+            String executableName = mainName.substring(0, mainName.indexOf('.'));
+            File outDir = new File(testFolder + "/out/");
+            outDir.mkdirs();
+            process = Runtime.getRuntime().exec("gcc " + testFolder + "/" + mainName + " -o " + testFolder + "/out/" + executableName);
+        } else {
+            process = Runtime.getRuntime().exec(testFolder + "/compile.sh " + mainName);
+        }
         
         try {
             if(process.waitFor(5, TimeUnit.SECONDS)) {
@@ -41,7 +52,7 @@ public class CRunner extends CompiledCodeRunner {
     public boolean run() throws IOException {
         String executableName = mainName.substring(0, mainName.indexOf('.'));
 
-        Process process = Runtime.getRuntime().exec("./" + testFolder + "/out/" + executableName);
+        Process process = Runtime.getRuntime().exec(testFolder + "/out/" + executableName);
 
         stdout = process.getInputStream();
         stderr = process.getErrorStream();
