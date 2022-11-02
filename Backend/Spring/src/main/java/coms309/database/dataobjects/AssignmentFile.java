@@ -21,7 +21,10 @@ public class AssignmentFile {
     private Assignment assignment;
 
     public AssignmentFile() {
-
+        this.id = Long.valueOf(-1);
+        this.codeFolder = "";
+        this.mainFile = "";
+        this.assignment = null;
     }
 
     public void setId(Long id) {
