@@ -57,6 +57,15 @@ public class UserController {
         return new ResponseEntity<>(new ApiUser(u.get()), HttpStatus.OK);
     }
 
+    @GetMapping("/user/{email}")
+    public @ResponseBody ResponseEntity<ApiUser> getUserByEmail(@PathVariable String email) {
+        Optional<User> u = us.findByEmail(email);
+
+        if(!u.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        return new ResponseEntity<>(new ApiUser(u.get()), HttpStatus.OK);
+    }
+
     @GetMapping("/user/{id}/courses")
     public @ResponseBody ResponseEntity<Set<ApiCourse>> getUserCourseList(@PathVariable long id, @RequestParam String token) {
         if (!UserTokens.isLiveToken(token)) {
