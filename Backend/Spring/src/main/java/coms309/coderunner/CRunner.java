@@ -53,7 +53,7 @@ public class CRunner extends CompiledCodeRunner {
                 stdout.read(buff);
                 stdOutData = stdOutData.concat(new String(buff));
             }
-            
+
             while(stderr.available() > 0) {
                 stderr.read(buff);
                 stdErrData = stdErrData.concat(new String(buff));
@@ -71,6 +71,8 @@ public class CRunner extends CompiledCodeRunner {
     // helper function
     private static void copyDirRecursively(String src, String dest) throws IOException {
         File srcFile = new File(src);
+
+        if(!srcFile.exists()) return; // don't copy if no template directory exists
 
         for(File f : srcFile.listFiles()) {
             if(f.isDirectory()) {
