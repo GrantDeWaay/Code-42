@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import coms309.api.dataobjects.ApiCodeRunResult;
 import coms309.api.dataobjects.ApiCodeSubmission;
 import coms309.coderunner.CodeRunnerFactory;
 import coms309.coderunner.CompiledCodeRunner;
@@ -29,14 +30,14 @@ public class CodeRunnerController {
     private AssignmentService as;
     
     @PutMapping("/run/{assignmentId}")
-    public ResponseEntity<String> runAssignment(@PathVariable long assignmentId, @RequestBody ApiCodeSubmission codeSubmission, @RequestParam String token) {
+    public ResponseEntity<ApiCodeRunResult> runAssignment(@PathVariable long assignmentId, @RequestBody ApiCodeSubmission codeSubmission, @RequestParam String token) {
         if(!UserTokens.isStudent(token)) return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 
         Long studentId = UserTokens.getID(token);
 
         Optional<Assignment> a = as.findById(assignmentId);
 
-        if(!a.isPresent()) return new ResponseEntity<>("Assignment not found", HttpStatus.NOT_FOUND);
+        if(!a.isPresent()) return new ResponseEntity<>(new ApiCodeRunResult(false, "Assignment not found", "", ""), HttpStatus.NOT_FOUND);
 
         AssignmentFile af = a.get().getAssignmentFile();
 
@@ -59,23 +60,24 @@ public class CodeRunnerController {
             writer.close();
 
             if(!runner.compile()) {
-                return new ResponseEntity<>("Compilation failed", HttpStatus.ACCEPTED);
+                return new ResponseEntity<>(new ApiCodeRunResult(false, "Compilation failed", "", ""), HttpStatus.ACCEPTED);
             }
 
             if(!runner.run()) {
-                return new ResponseEntity<>("Run failed", HttpStatus.ACCEPTED);
+                return new ResponseEntity<>(new ApiCodeRunResult(false, "Run failed", "", ""), HttpStatus.ACCEPTED);
             }
 
             if(!runner.getStdOutData().equals(a.get().getExpectedOutput())) {
-                return new ResponseEntity<>("Expected output differs", HttpStatus.ACCEPTED);
+                return new ResponseEntity<>(new ApiCodeRunResult(false, "Expected output differs", a.get().getExpectedOutput(), runner.getStdOutData()), HttpStatus.ACCEPTED);
             }
+
+            return new ResponseEntity<>(new ApiCodeRunResult(true, "Expected output matches", a.get().getExpectedOutput(), runner.getStdOutData()), HttpStatus.ACCEPTED);
+
         // TODO make this better
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
-        return new ResponseEntity<>("Expected output matches", HttpStatus.ACCEPTED);
 
     }
 
