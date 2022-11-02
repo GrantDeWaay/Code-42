@@ -86,7 +86,7 @@ public class CRunner extends CodeRunner {
         byte[] buff = new byte[1024];
 
         // run while process is alive and we have not hit a timeout
-        while(process.isAlive() && System.currentTimeMillis() - startTime < 5000) {
+        while(process.isAlive() && System.currentTimeMillis() - startTime < maxRuntime) {
             while(stdout.available() > 0) {
                 int n = stdout.read(buff);
                 stdOutData = stdOutData.concat(new String(buff, 0, n));

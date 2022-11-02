@@ -26,11 +26,15 @@ public abstract class CodeRunner {
     // all data written to stderr during program execution
     protected String stdErrData;
 
+    // maximum time that a program can run for, in milliseconds
+    protected long maxRuntime;
+
     protected CodeRunner(String codeFolder, String testFolder) {
         this.codeFolder = codeFolder;
         this.testFolder = testFolder;
         this.stdOutData = "";
         this.stdErrData = "";
+        this.maxRuntime = 5000; // default to 5 seconds
     }
     
     /**
@@ -84,6 +88,25 @@ public abstract class CodeRunner {
         return stdErrData;
     }
 
+    
+    /**
+     * Sets the maximum runtime for the program being run by the runner.
+     * 
+     * @param maxRuntime maximum runtime in milliseconds
+     */
+    public void setMaxRuntime(long maxRuntime) {
+        this.maxRuntime = maxRuntime;
+    }
+
+
+    /**
+     * Gets the maximum runtime for the program being run by the runner.
+     * 
+     * @return the maximum runtime in milliseconds
+     */
+    public long getMaxRuntime() {
+        return maxRuntime;
+    }
 
     /**
      * Abstract method to be implemented by child class, runs the code.
