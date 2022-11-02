@@ -94,6 +94,8 @@ public class AssignmentController {
         assignment.setTitle(a.getTitle());
         assignment.setDescription(a.getDescription());
         assignment.setProblemStatement(a.getProblemStatement());
+        assignment.setTemplate(a.getTemplate());
+        assignment.setExpectedOutput(a.getExpectedOutput());
 
         as.update(assignment);
 
