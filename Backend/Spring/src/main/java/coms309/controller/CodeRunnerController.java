@@ -2,6 +2,7 @@ package coms309.controller;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.util.Calendar;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,13 +22,18 @@ import coms309.coderunner.TempFileManager;
 import coms309.controller.token.UserTokens;
 import coms309.database.dataobjects.Assignment;
 import coms309.database.dataobjects.AssignmentFile;
+import coms309.database.dataobjects.Grade;
 import coms309.database.services.AssignmentService;
+import coms309.database.services.GradeService;
 
 @RestController
 public class CodeRunnerController {
 
     @Autowired
     private AssignmentService as;
+
+    @Autowired
+    private GradeService gs;
     
     @PutMapping("/run/{assignmentId}")
     public ResponseEntity<ApiCodeRunResult> runAssignment(@PathVariable long assignmentId, @RequestBody ApiCodeSubmission codeSubmission, @RequestParam String token) {
@@ -70,9 +76,11 @@ public class CodeRunnerController {
             }
 
             if(!runner.getStdOutData().equals(a.get().getExpectedOutput())) {
+                gs.create(new Grade(0.0, Calendar.getInstance().getTime()));
                 return new ResponseEntity<>(new ApiCodeRunResult(false, "Expected output differs", a.get().getExpectedOutput(), runner.getStdOutData()), HttpStatus.ACCEPTED);
             }
 
+            gs.create(new Grade(100.0, Calendar.getInstance().getTime()));
             return new ResponseEntity<>(new ApiCodeRunResult(true, "Expected output matches", a.get().getExpectedOutput(), runner.getStdOutData()), HttpStatus.ACCEPTED);
 
         // TODO make this better

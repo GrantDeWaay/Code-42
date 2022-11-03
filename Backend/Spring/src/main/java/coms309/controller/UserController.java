@@ -105,6 +105,29 @@ public class UserController {
         return new ResponseEntity<Set<ApiGrade>>(grades, HttpStatus.OK);
     }
 
+    @GetMapping("/user/{userId}/assignment/{assignmentId}/grade")
+    public @ResponseBody ResponseEntity<ApiGrade> getUserGrade(@PathVariable long userId, @PathVariable long assignmentId, @RequestParam String token) {
+        if(!UserTokens.isLiveToken(token)) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+
+        Optional<User> user = us.findById(userId);
+
+        if(!user.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        Iterator<Grade> iter = user.get().getGrades().iterator();
+
+        while(iter.hasNext()) {
+            Grade g = iter.next();
+
+            if(g.getId() == assignmentId) {
+                return new ResponseEntity<>(new ApiGrade(g), HttpStatus.OK);
+            }
+        }
+
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
     @PostMapping("/user/create")
     public @ResponseBody ResponseEntity<ApiUser> createUser(@RequestBody ApiUser u, @RequestParam String token) {
         if (!UserTokens.isTeacher(token) && !UserTokens.isAdmin(token)) {

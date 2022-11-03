@@ -34,6 +34,11 @@ public class Grade {
 
     }
 
+    public Grade(Double grade, Date updateDate) {
+        this.grade = grade;
+        this.updateDate = updateDate;
+    }
+
     public void setId(Long id) {
         this.id = id;
     }
