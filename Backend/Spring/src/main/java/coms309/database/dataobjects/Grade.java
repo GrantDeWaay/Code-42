@@ -22,12 +22,12 @@ public class Grade {
     private Date updateDate;
 
     // assignment the grade belongs to
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "assignment_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "assignment_id", nullable = true)
     private Assignment assignment;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "student_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "student_id", nullable = true)
     private User user;
 
     public Grade() {

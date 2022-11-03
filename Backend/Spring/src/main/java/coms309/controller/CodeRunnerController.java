@@ -23,8 +23,10 @@ import coms309.controller.token.UserTokens;
 import coms309.database.dataobjects.Assignment;
 import coms309.database.dataobjects.AssignmentFile;
 import coms309.database.dataobjects.Grade;
+import coms309.database.dataobjects.User;
 import coms309.database.services.AssignmentService;
 import coms309.database.services.GradeService;
+import coms309.database.services.UserService;
 
 @RestController
 public class CodeRunnerController {
@@ -34,12 +36,17 @@ public class CodeRunnerController {
 
     @Autowired
     private GradeService gs;
+
+    @Autowired
+    private UserService us;
     
     @PutMapping("/run/{assignmentId}")
     public ResponseEntity<ApiCodeRunResult> runAssignment(@PathVariable long assignmentId, @RequestBody ApiCodeSubmission codeSubmission, @RequestParam String token) {
         if(!UserTokens.isStudent(token)) return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 
         Long studentId = UserTokens.getID(token);
+
+        Optional<User> u = us.findById(studentId);
 
         Optional<Assignment> a = as.findById(assignmentId);
 
@@ -76,11 +83,24 @@ public class CodeRunnerController {
             }
 
             if(!runner.getStdOutData().equals(a.get().getExpectedOutput())) {
+                Grade g = new Grade(0.0, Calendar.getInstance().getTime());
+                g.setAssignment(a.get());
+                a.get().getGrades().add(g);
+                g.setUser(u.get());
+                u.get().getGrades().add(g);
+
                 gs.create(new Grade(0.0, Calendar.getInstance().getTime()));
                 return new ResponseEntity<>(new ApiCodeRunResult(false, "Expected output differs", a.get().getExpectedOutput(), runner.getStdOutData()), HttpStatus.ACCEPTED);
             }
 
+
+            Grade g = new Grade(0.0, Calendar.getInstance().getTime());
+            g.setAssignment(a.get());
+            a.get().getGrades().add(g);
+            g.setUser(u.get());
+            u.get().getGrades().add(g);
             gs.create(new Grade(100.0, Calendar.getInstance().getTime()));
+
             return new ResponseEntity<>(new ApiCodeRunResult(true, "Expected output matches", a.get().getExpectedOutput(), runner.getStdOutData()), HttpStatus.ACCEPTED);
 
         // TODO make this better
