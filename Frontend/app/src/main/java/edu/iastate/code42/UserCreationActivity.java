@@ -59,6 +59,7 @@ public class UserCreationActivity extends AppCompatActivity implements View.OnCl
             startActivity(dash);
         }
         type = getIntent().getIntExtra("type", -1);
+        courseId = getIntent().getIntExtra("courseId", -1);
 
         header = findViewById(R.id.userCreationHeader);
         if(type == 1){
@@ -76,7 +77,7 @@ public class UserCreationActivity extends AppCompatActivity implements View.OnCl
         password = findViewById(R.id.editUserPassword);
         username = findViewById(R.id.editUserUsername);
 
-        if(appSetting.contains("isDefaultPassword") && appSetting.contains("defaultPassword")){
+        if(appSetting.contains("isDefaultPassword") && appSetting.contains("defaultPassword")){//TODO Test in Demo 4 with Settings activity
             if(appSetting.getBoolean("isDefaultPassword",false)){
                 password.setText(appSetting.getString("defaultPassword", ""));
             }
@@ -90,12 +91,12 @@ public class UserCreationActivity extends AppCompatActivity implements View.OnCl
                 email.getText() != null && !(email.getText().toString().isEmpty()) &&
                 password.getText() != null && !(password.getText().toString().isEmpty()) &&
                 username.getText() != null && !(username.getText().toString().isEmpty())) {
-            String url = Const.CREATE_USER;
+            String url = String.format(Const.CREATE_USER, userSession.getString("token", ""));
             JSONObject jsonBody = new JSONObject();
 
             try {
                 jsonBody.put("firstName", firstName.getText());
-                jsonBody.put("lastname", lastName.getText());
+                jsonBody.put("lastName", lastName.getText());
                 jsonBody.put("username", username.getText());
                 jsonBody.put("email", email.getText());
                 jsonBody.put("password", password.getText());
@@ -115,9 +116,20 @@ public class UserCreationActivity extends AppCompatActivity implements View.OnCl
                 public void onResponse(JSONObject response) {
                     Toast.makeText(getApplicationContext(), response.toString(),
                             Toast.LENGTH_LONG).show();
-                    
-                    if(appSetting.getBoolean("isAutoAddUserToCourse", false)){
 
+                    if(appSetting.getBoolean("isAutoAddUserToCourse", false)){
+                        //TODO in Demo 4 with Settings activity
+                    }else{
+                        Intent userListReturn = new Intent(UserCreationActivity.this, UserListActivity.class);
+                        try {
+                            userListReturn.putExtra("userId", response.getInt("id"));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        userListReturn.putExtra("courseId", courseId);
+                        userListReturn.putExtra("type", type);
+
+                        startActivity(userListReturn);
                     }
 
                 }

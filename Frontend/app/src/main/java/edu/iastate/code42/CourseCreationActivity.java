@@ -63,7 +63,7 @@ public class CourseCreationActivity extends AppCompatActivity implements View.On
         if (title.getText() != null && !(title.getText().toString().isEmpty()) &&
                 description.getText() != null && !(description.getText().toString().isEmpty()) &&
                 language.getText() != null && !(language.getText().toString().isEmpty())) {
-            String url = Const.CREATE_COURSE;
+            String url = String.format(Const.CREATE_COURSE, userSession.getString("token", ""));
             JSONObject jsonBody = new JSONObject();
 
             try {

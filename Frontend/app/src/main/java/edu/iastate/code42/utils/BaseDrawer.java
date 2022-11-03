@@ -23,6 +23,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.google.android.material.navigation.NavigationView;
 
 import org.json.JSONException;
@@ -103,13 +104,23 @@ public class BaseDrawer extends AppCompatActivity implements NavigationView.OnNa
                 String url = String.format(Const.LOGOUT, user.getUsername(),
                         userSession.getString("token", ""));
 
-                JsonObjectRequest logoutReq = new JsonObjectRequest(Request.Method.GET, url,
-                        null, null, new Response.ErrorListener() {
+                StringRequest logoutReq = new StringRequest(Request.Method.GET, url,
+                        new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        userSessionEditor.remove("sessionID");
+                        userSessionEditor.commit();
+
+                        user.logout();
+
+                        startActivity(new Intent(BaseDrawer.this, MainActivity.class));
+                        overridePendingTransition(0,0);
+
+                    }
+                        }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        if(!error.toString().equals("com.android.volley.ParseError: org.json.JSONException: Value OK of type java.lang.String cannot be converted to JSONObject")){
-                            Log.e("Volley Login Auth Error:", error.toString());
-                        }
+                        Log.e("Volley Login Auth Error:", error.toString());
                     }
                 }){
                     /**
@@ -131,14 +142,6 @@ public class BaseDrawer extends AppCompatActivity implements NavigationView.OnNa
                 };
 
                 AppController.getInstance().addToRequestQueue(logoutReq, "login_req");
-
-                userSessionEditor.remove("sessionID");
-                userSessionEditor.commit();
-
-                user.logout();
-
-                startActivity(new Intent(this, MainActivity.class));
-                overridePendingTransition(0,0);
 
                 break;
         }

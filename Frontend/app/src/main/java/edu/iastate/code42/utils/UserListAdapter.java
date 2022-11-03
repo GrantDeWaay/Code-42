@@ -1,5 +1,6 @@
 package edu.iastate.code42.utils;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,6 +37,7 @@ public class UserListAdapter extends ArrayAdapter<User> {
 
     private int lastPosition = -1;
 
+    @SuppressLint("ResourceAsColor")
     public View getView(int position, View convertView, ViewGroup parent) {
         // Get the data item for this position
         User u = getItem(position);

@@ -16,4 +16,5 @@
     <string name="app_shared_pref">appSharedFile</string>
     <string name="menu_drawer_open">Drawer Open</string>
     <string name="menu_drawer_close">Drawer Close</string>
+    <string name="user_course_mapping_error">Error when mapping user to course, retry later</string>
 </resources>

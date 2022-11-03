@@ -2,11 +2,13 @@ package edu.iastate.code42;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
@@ -17,6 +19,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.json.JSONArray;
@@ -41,11 +44,14 @@ public class UserListActivity extends AppCompatActivity implements AdapterView.O
 
     ArrayList<User> allUsers;
     ArrayList<User> request;
+    ArrayList<User> selected;
     ArrayList<User> users;
     UserListAdapter userAdapter;
 
+    int i;
     int type;
     int courseId;
+    String url;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +67,10 @@ public class UserListActivity extends AppCompatActivity implements AdapterView.O
 
         userList = findViewById(R.id.userList);
         userList.setOnItemClickListener(this);
+        if(type == 1 || type == 2){
+            userList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
+        }
+        userList.setItemsCanFocus(true);
 
         add = findViewById(R.id.addUser);
         add.setOnClickListener(this);
@@ -68,11 +78,15 @@ public class UserListActivity extends AppCompatActivity implements AdapterView.O
         addSelected = findViewById(R.id.addSelectButton);
         addSelected.setOnClickListener(this);
         addSelected.setVisibility(View.INVISIBLE);
+        addSelected.setEnabled(false);
+
+
 
         allUsers = new ArrayList<>();
         request = new ArrayList<>();
+        selected = new ArrayList<>();
         users = new ArrayList<>();
-        String url = "";
+        url = "";
         type = getIntent().getIntExtra("type",-1);
 
         if(getIntent().hasExtra("courseId")){
@@ -94,6 +108,84 @@ public class UserListActivity extends AppCompatActivity implements AdapterView.O
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
+                    }
+
+                    if(type == 0){
+                        if (allUsers.size() > 0) {
+                            userAdapter = new UserListAdapter(getApplicationContext(), allUsers);
+                            userList.setAdapter(userAdapter);
+                        }
+                    }else{
+                        if(type == 1){
+                            url = String.format(Const.GET_TEACHERS_FOR_COURSE, getIntent().getIntExtra("courseId",0),
+                                    userSession.getString("token", ""));
+                        }else if(type == 2){
+                            url = String.format(Const.GET_STUDENTS_FOR_COURSE, getIntent().getIntExtra("courseId",0),
+                                    userSession.getString("token", ""));
+                        }
+
+                        JsonArrayRequest userListSpecific = new JsonArrayRequest(Request.Method.GET, url,
+                                null, new Response.Listener<JSONArray>() {
+                            @Override
+                            public void onResponse(JSONArray response) {
+                                for (int i = 0; i < response.length(); i++) {
+                                    try {
+                                        User u = new User(response.getJSONObject(i));
+
+                                        request.add(u);
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+
+                                if(type == 1){
+                                    for(int i = 0; i < allUsers.size(); i++){
+                                        if(!(request.contains(allUsers.get(i))) && allUsers.get(i).getType().equals("teacher")){
+                                            users.add(allUsers.get(i));
+                                        }
+                                    }
+
+                                    if (users.size() > 0) {
+                                        userAdapter = new UserListAdapter(getApplicationContext(), users);
+                                        userList.setAdapter(userAdapter);
+                                    }
+                                }else if(type == 2){
+                                    for(int i = 0; i < allUsers.size(); i++){
+                                        if(!(request.contains(allUsers.get(i))) && allUsers.get(i).getType().equals("student")){
+                                            users.add(allUsers.get(i));
+                                        }
+                                    }
+
+                                    if (users.size() > 0) {
+                                        userAdapter = new UserListAdapter(getApplicationContext(), users);
+                                        userList.setAdapter(userAdapter);
+                                    }
+                                }
+                            }
+                        }, new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                Log.e("Volley Login Auth Error:", error.toString());
+
+                                Toast.makeText(getApplicationContext(), R.string.login_volley_error,
+                                        Toast.LENGTH_LONG).show();
+                            }
+                        }) {
+                            @Override
+                            public Map<String, String> getHeaders() throws AuthFailureError {
+                                HashMap<String, String> headers = new HashMap<String, String>();
+                                headers.put("Content-Type", "application/json");
+                                return headers;
+                            }
+
+                            @Override
+                            protected Map<String, String> getParams() {
+                                Map<String, String> params = new HashMap<String, String>();
+
+                                return params;
+                            }
+                        };
+                        AppController.getInstance().addToRequestQueue(userListSpecific, "course_get_students");
                     }
                 }
             }, new Response.ErrorListener() {
@@ -121,18 +213,16 @@ public class UserListActivity extends AppCompatActivity implements AdapterView.O
             };
 
             AppController.getInstance().addToRequestQueue(userListAll, "user_list_all");
-        }
+        } else if(type == 3 || type == 4) {
 
+            if(type == 3){
+                url = String.format(Const.GET_TEACHERS_FOR_COURSE, getIntent().getIntExtra("courseId",0),
+                        userSession.getString("token", ""));
+            }else if(type == 4){
+                url = String.format(Const.GET_STUDENTS_FOR_COURSE, getIntent().getIntExtra("courseId",0),
+                        userSession.getString("token", ""));
+            }
 
-        if(type == 1 || type == 3){
-            url = String.format(Const.GET_TEACHERS_FOR_COURSE, getIntent().getIntExtra("courseId",0),
-                    userSession.getString("token", ""));
-        }else if(type == 2 || type == 4){
-            url = String.format(Const.GET_STUDENTS_FOR_COURSE, getIntent().getIntExtra("courseId",0),
-                    userSession.getString("token", ""));
-        }
-
-        if(type != 0) {
             JsonArrayRequest userListSpecific = new JsonArrayRequest(Request.Method.GET, url,
                     null, new Response.Listener<JSONArray>() {
                 @Override
@@ -147,36 +237,10 @@ public class UserListActivity extends AppCompatActivity implements AdapterView.O
                         }
                     }
 
-                    if(type == 1){
-                        for(int i = 0; i < allUsers.size(); i++){
-                            if(!(request.contains(allUsers.get(i))) && allUsers.get(i).getType().equals("teacher")){
-                                users.add(allUsers.get(i));
-                            }
-                        }
-
-                        if (users.size() > 0) {
-                            userAdapter = new UserListAdapter(getApplicationContext(), users);
-                            userList.setAdapter(userAdapter);
-                        }
-                    }else if(type == 2){
-                        for(int i = 0; i < allUsers.size(); i++){
-                            if(!(request.contains(allUsers.get(i))) && allUsers.get(i).getType().equals("student")){
-                                users.add(allUsers.get(i));
-                            }
-                        }
-
-                        if (users.size() > 0) {
-                            userAdapter = new UserListAdapter(getApplicationContext(), users);
-                            userList.setAdapter(userAdapter);
-                        }
-                    }else{
-                        if (request.size() > 0) {
-                            userAdapter = new UserListAdapter(getApplicationContext(), request);
-                            userList.setAdapter(userAdapter);
-                        }
+                    if (request.size() > 0) {
+                        userAdapter = new UserListAdapter(getApplicationContext(), request);
+                        userList.setAdapter(userAdapter);
                     }
-
-
                 }
             }, new Response.ErrorListener() {
                 @Override
@@ -201,32 +265,41 @@ public class UserListActivity extends AppCompatActivity implements AdapterView.O
                     return params;
                 }
             };
-
             AppController.getInstance().addToRequestQueue(userListSpecific, "course_get_students");
-        }else{
-            if (allUsers.size() > 0) {
-                userAdapter = new UserListAdapter(getApplicationContext(), allUsers);
-                userList.setAdapter(userAdapter);
-            }
         }
     }
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         switch(type) {
-            case 0://ALL
+            case 1://TEACHERS not in COURSE
+            case 2://STUDENTS not in COURSE
+                User u = userAdapter.getItem(i);
+
+                if(selected.contains(u)){
+                    userAdapter.getView(i, view, userList).setBackgroundColor(getColor(R.color.white));
+                    selected.remove(u);
+                }else{
+                    userAdapter.getView(i, view, userList).setBackgroundColor(getColor(R.color.light_gray));
+                    selected.add(u);
+                }
+
+                if(selected.size() > 0){
+                    addSelected.setVisibility(View.VISIBLE);
+                    addSelected.setEnabled(true);
+                }else{
+                    addSelected.setVisibility(View.INVISIBLE);
+                    addSelected.setEnabled(false);
+                }
+
                 break;
 
-            case 1://TEACHERS
+            case 3://TEACHERS in COURSE
+                //TODO when UserProfile/UserEdit complete
                 break;
 
-            case 2://STUDENTS
-                break;
-
-            case 3://TEACHERS FOR COUSRE
-                break;
-
-            case 4://STUDENTS FOR COUSRE
+            case 4://STUDENTS in COURSE
+                //TODO when UserProfile/UserEdit complete
                 break;
         }
     }
@@ -235,8 +308,66 @@ public class UserListActivity extends AppCompatActivity implements AdapterView.O
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.addUser:
+                if(type == 1 || type == 2){
+                    Intent userCreationIntent = new Intent(this, UserCreationActivity.class);
+                    userCreationIntent.putExtra("courseId", courseId);
+                    userCreationIntent.putExtra("type", type);
+
+                    startActivity(userCreationIntent);
+                }else if(type == 3 || type == 4){
+                    Intent userListIntent = new Intent(this, UserListActivity.class);
+                    userListIntent.putExtra("courseId", courseId);
+                    userListIntent.putExtra("type", type - 2);
+
+                    startActivity(userListIntent);
+                }
                 break;
 
+            case R.id.addSelectButton:
+                for(i = 0; i < selected.size(); i++){
+                    url = String.format(Const.ADD_USER_TO_COURSE, courseId, selected.get(i).getId(),
+                            userSession.getString("token", ""));
+
+                    StringRequest addUserToCourse = new StringRequest(Request.Method.PUT, url,
+                            new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            if(i == selected.size()){
+                                Intent userListAdded = new Intent(UserListActivity.this, UserListActivity.class);
+                                userListAdded.putExtra("type", type + 2);
+                                userListAdded.putExtra("courseId", courseId);
+
+                                startActivity(userListAdded);
+                            }
+                        }
+                    }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Log.e("User to Course Mapping Error:", error.toString());
+
+                            Toast.makeText(getApplicationContext(), R.string.user_course_mapping_error,
+                                    Toast.LENGTH_LONG).show();
+                        }
+                    }) {
+                        @Override
+                        public Map<String, String> getHeaders() throws AuthFailureError {
+                            HashMap<String, String> headers = new HashMap<String, String>();
+                            headers.put("Content-Type", "application/json");
+                            return headers;
+                        }
+
+                        @Override
+                        protected Map<String, String> getParams() {
+                            Map<String, String> params = new HashMap<String, String>();
+
+                            return params;
+                        }
+                    };
+
+                    AppController.getInstance().addToRequestQueue(addUserToCourse, "course_get_students");
+                }
+
+                break;
         }
     }
 }
