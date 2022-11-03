@@ -1,63 +1,50 @@
 package edu.iastate.code42.objects;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 public class Assignment {
-    private int id;
+    private String AssignmentName;
+    private String Statement;
+    private String Lang;
+    private String Description;
 
-    private String title;
-    private String description;
-    private String problemStatement;
+    private String teacherCode;
+    private String studentCode;
 
-    public Assignment(int id, String title, String description, String problemStatement){
-        this.id = id;
-        this.title = title;
-        this.description = description;
-        this.problemStatement = problemStatement;
+    public Assignment(String assignmentName, String statement, String lang, String description) {
+        AssignmentName = assignmentName;
+        Statement = statement;
+        Lang = lang;
+        Description = description;
     }
 
-    public Assignment(JSONObject response) throws JSONException {
-        this.id = response.getInt("id");
-        this.title = response.getString("title");
-        this.description = response.getString("description");
-        this.problemStatement = response.getString("problemStatement");
+    public void setTeacherCode(String teacherCode) {
+        this.teacherCode = teacherCode;
     }
 
-    public int getId() {
-        return id;
+    public void setStudentCode(String studentCode) {
+        this.studentCode = studentCode;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public String getAssignmentName() {
+        return AssignmentName;
     }
 
-    public String getTitle() {
-        return title;
+    public String getStatement() {
+        return Statement;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public String getLang() {
+        return Lang;
     }
 
     public String getDescription() {
-        return description;
+        return Description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public String getTeacherCode() {
+        return teacherCode;
     }
 
-    public String getProblemStatement() {
-        return problemStatement;
-    }
-
-    public void setProblemStatement(String problemStatement) {
-        this.problemStatement = problemStatement;
-    }
-
-    @Override
-    public String toString() {
-        return this.title;
+    public String getStudentCode() {
+        return studentCode;
     }
 }

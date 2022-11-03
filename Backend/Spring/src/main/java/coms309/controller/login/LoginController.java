@@ -1,9 +1,11 @@
 package coms309.controller.login;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import coms309.api.dataobjects.ApiUserLogin;
+import coms309.controller.generator.TokenGen;
+import coms309.controller.token.UserTokens;
 import coms309.database.dataobjects.User;
 import coms309.database.services.UserService;
-import coms309.api.dataobjects.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,14 +13,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
 import java.util.Optional;
 import java.util.Random;
 
 @RestController
 public class LoginController {
-
-    public static HashMap<String, Long> sessionTokens = new HashMap<String, Long>(); // (Key: Token, Value: ID)
 
     StringBuilder sb = new StringBuilder();
 
@@ -27,41 +26,40 @@ public class LoginController {
     @Autowired
     UserService us;
 
-    private String generateSessionToken() {
-        StringBuilder sb = new StringBuilder();
-        while (sessionTokens.containsKey(sb.toString()) || sb.toString().equals("")) {
-            for (int i = 0; i < 16; i++) {
-                char c = (char) (33 + r.nextInt(93)); //33-126
-                sb.append(c);
-            }
-        }
-        String s = sb.toString();
-        sb.setLength(0);
-        return s;
-    }
-
     @GetMapping("/login/{username}/{password}")
     public @ResponseBody
-    ResponseEntity<ApiUser> userLogin(@PathVariable String username, @PathVariable String password) {
+    ResponseEntity<ApiUserLogin> userLogin(@PathVariable String username, @PathVariable String password) {
         Optional<User> u = us.findByUsername(username);
         if (u.isPresent()) {
-            String token = generateSessionToken();
-            sessionTokens.put(token, u.get().getId());
-            return new ResponseEntity<ApiUser>(new ApiUser(u.get()), HttpStatus.OK);
+            String token = TokenGen.generateSessionToken();
+            if (u.get().getType().equals("student")) {
+                UserTokens.studentTokens.put(token, u.get().getId());
+            }
+            if (u.get().getType().equals("teacher")) {
+                UserTokens.teacherTokens.put(token, u.get().getId());
+            }
+            if (u.get().getType().equals("admin")) {
+                UserTokens.adminTokens.put(token, u.get().getId());
+            }
+            ApiUserLogin ret = new ApiUserLogin(u.get());
+            ret.setToken(token);
+            return new ResponseEntity<ApiUserLogin>(ret, HttpStatus.OK);
         } else {
-            return new ResponseEntity<ApiUser>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<ApiUserLogin>(HttpStatus.NOT_FOUND);
         }
     }
 
-    @GetMapping("/login/token/{token}")
+    @GetMapping("/logout/{username}/{token}")
     public @ResponseBody
-    ResponseEntity<ApiUser> userLoginToken(@PathVariable String token) {
-        long id = sessionTokens.get(token);
-        Optional<User> u = us.findById(id);
-        if (u.isPresent()) {
-            return new ResponseEntity<ApiUser>(new ApiUser(u.get()), HttpStatus.OK);
+    HttpStatus userLogout(@PathVariable String username, @PathVariable String token) {
+        Optional<User> u = us.findByUsername(username);
+        if (!u.isPresent()) {
+            return HttpStatus.NOT_FOUND;
+        }
+        if (UserTokens.removeToken(token)) {
+            return HttpStatus.OK;
         } else {
-            return new ResponseEntity<ApiUser>(HttpStatus.NOT_FOUND);
+            return HttpStatus.BAD_REQUEST;
         }
     }
 

@@ -51,8 +51,9 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".AssignmentCreateActivity"
-            android:exported="false" />
+            android:name=".AssignmentCodeCreateActivity"
+            android:exported="false">
+        </activity>
     </application>
 
 </manifest>
