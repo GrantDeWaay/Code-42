@@ -63,7 +63,7 @@ public class AssignmentListAdapter extends ArrayAdapter<Assignment> {
         result.startAnimation(animation);
         lastPosition = position;
 
-        viewHolder.title.setText(a.getTitle());
+        viewHolder.title.setText(a.getAssignmentName());
 
         // Return the completed view to render on screen
         return convertView;
