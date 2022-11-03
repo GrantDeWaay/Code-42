@@ -26,7 +26,6 @@ public class UserListAdapter extends ArrayAdapter<User> {
     private static class ViewHolder{
         TextView fullName;
         TextView username;
-        TextView email;
     }
 
     public UserListAdapter(@NonNull Context context, @NonNull List<User> objects) {
@@ -52,7 +51,6 @@ public class UserListAdapter extends ArrayAdapter<User> {
             convertView = inflater.inflate(R.layout.row_user, parent, false);
             viewHolder.fullName = convertView.findViewById(R.id.row_fullName);
             viewHolder.username = convertView.findViewById(R.id.row_username);
-            viewHolder.email = convertView.findViewById(R.id.row_email);
 
             result=convertView;
 
@@ -67,8 +65,7 @@ public class UserListAdapter extends ArrayAdapter<User> {
         lastPosition = position;
 
         viewHolder.fullName.setText(u.getFullName());
-        viewHolder.username.setText(u.getEmail());
-        viewHolder.email.setText(u.getEmail());
+        viewHolder.username.setText(u.getUsername());
 
         // Return the completed view to render on screen
         return convertView;

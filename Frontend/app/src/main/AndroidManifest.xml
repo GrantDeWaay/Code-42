@@ -18,6 +18,12 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".UserCreation"
+            android:exported="false" />
+        <activity
+            android:name=".AssignmentListActivity"
+            android:exported="false" />
+        <activity
             android:name=".UserListActivity"
             android:exported="false" />
         <activity
@@ -46,7 +52,7 @@
         </activity>
         <activity
             android:name=".AssignmentCreateActivity"
-            android:exported="false"></activity>
+            android:exported="false" />
     </application>
 
 </manifest>

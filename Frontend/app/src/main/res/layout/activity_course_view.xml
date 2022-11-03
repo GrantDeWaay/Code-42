@@ -85,7 +85,7 @@
                         android:id="@+id/assignmentsListTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="100dp"
+                        android:layout_marginEnd="100dp"
                         android:text="Assignments"
                         android:textSize="20sp" />
 
@@ -138,7 +138,7 @@
                         android:id="@+id/studentsListTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="175dp"
+                        android:layout_marginEnd="100dp"
                         android:text="Students"
                         android:textSize="20sp" />
 
@@ -191,7 +191,7 @@
                         android:id="@+id/teachersListTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="175dp"
+                        android:layout_marginEnd="100dp"
                         android:text="Teachers"
                         android:textSize="20sp" />
 

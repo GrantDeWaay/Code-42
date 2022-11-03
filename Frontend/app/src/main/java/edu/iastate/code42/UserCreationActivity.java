@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -27,49 +28,83 @@ import edu.iastate.code42.app.AppController;
 import edu.iastate.code42.objects.User;
 import edu.iastate.code42.utils.Const;
 
-public class CourseCreationActivity extends AppCompatActivity implements View.OnClickListener {
 
+public class UserCreationActivity extends AppCompatActivity implements View.OnClickListener {
     Button create;
-    EditText title;
-    EditText description;
-    EditText language;
+    TextView header;
+    EditText firstName;
+    EditText lastName;
+    EditText email;
+    EditText password;
+    EditText username;
 
     User user;
     SharedPreferences userSession;
+    SharedPreferences appSetting;
+
+    int type;
+    int courseId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_course_creation);
-
-        create = findViewById(R.id.createCourse);
-        title = findViewById(R.id.editCourseTitle);
-        description = findViewById(R.id.courseDescriptionView);
-        language = findViewById(R.id.courseLanguagesView);
+        setContentView(R.layout.activity_user_creation);
 
         user = User.get(getApplicationContext());
         userSession = getSharedPreferences(getString(R.string.session_shared_pref), MODE_PRIVATE);
+        appSetting = getSharedPreferences(getString(R.string.app_shared_pref), MODE_PRIVATE);
 
-        if(!userSession.contains("token")){
-            Intent login = new Intent(CourseCreationActivity.this, MainActivity.class);
-            startActivity(login);
+        if(!(getIntent().hasExtra("type")) || !(userSession.contains("token"))){
+            Intent dash = new Intent(this, DashboardActivity.class);
+            startActivity(dash);
+        }
+        type = getIntent().getIntExtra("type", -1);
+
+        header = findViewById(R.id.userCreationHeader);
+        if(type == 1){
+            header.setText("Create new Teacher user");
+        }else if(type == 2){
+            header.setText("Create new Student user");
         }
 
+        create = findViewById(R.id.buttonUserCreate);
         create.setOnClickListener(this);
+
+        firstName = findViewById(R.id.editUserFirstName);
+        lastName = findViewById(R.id.editUserLastName);
+        email = findViewById(R.id.editUserEmail);
+        password = findViewById(R.id.editUserPassword);
+        username = findViewById(R.id.editUserUsername);
+
+        if(appSetting.contains("isDefaultPassword") && appSetting.contains("defaultPassword")){
+            if(appSetting.getBoolean("isDefaultPassword",false)){
+                password.setText(appSetting.getString("defaultPassword", ""));
+            }
+        }
     }
 
     @Override
     public void onClick(View view) {
-        if (title.getText() != null && !(title.getText().toString().isEmpty()) &&
-                description.getText() != null && !(description.getText().toString().isEmpty()) &&
-                language.getText() != null && !(language.getText().toString().isEmpty())) {
-            String url = Const.CREATE_COURSE;
+        if (firstName.getText() != null && !(firstName.getText().toString().isEmpty()) &&
+                lastName.getText() != null && !(lastName.getText().toString().isEmpty()) &&
+                email.getText() != null && !(email.getText().toString().isEmpty()) &&
+                password.getText() != null && !(password.getText().toString().isEmpty()) &&
+                username.getText() != null && !(username.getText().toString().isEmpty())) {
+            String url = Const.CREATE_USER;
             JSONObject jsonBody = new JSONObject();
 
             try {
-                jsonBody.put("title", title.getText());
-                jsonBody.put("description", description.getText());
-                jsonBody.put("languages", language.getText());
+                jsonBody.put("firstName", firstName.getText());
+                jsonBody.put("lastname", lastName.getText());
+                jsonBody.put("username", username.getText());
+                jsonBody.put("email", email.getText());
+                jsonBody.put("password", password.getText());
+
+                if(type == 1){
+                    jsonBody.put("type", "teacher");
+                }else if(type == 2){
+                    jsonBody.put("type", "student");
+                }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -80,14 +115,11 @@ public class CourseCreationActivity extends AppCompatActivity implements View.On
                 public void onResponse(JSONObject response) {
                     Toast.makeText(getApplicationContext(), response.toString(),
                             Toast.LENGTH_LONG).show();
+                    
+                    if(appSetting.getBoolean("isAutoAddUserToCourse", false)){
 
-                    Intent view = new Intent(CourseCreationActivity.this, CourseViewActivity.class);
-                    try {
-                        view.putExtra("courseId", response.getInt("id"));
-                    } catch (JSONException e) {
-                        e.printStackTrace();
                     }
-                    startActivity(view);
+
                 }
             }, new Response.ErrorListener() {
                 @Override
@@ -116,7 +148,7 @@ public class CourseCreationActivity extends AppCompatActivity implements View.On
                 }
             };
 
-            AppController.getInstance().addToRequestQueue(createReq, "create_course_req");
+            AppController.getInstance().addToRequestQueue(createReq, "create_user_req");
         }
     }
 }

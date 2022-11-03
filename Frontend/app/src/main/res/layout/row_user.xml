@@ -19,16 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@id/row_fullName"
-        android:layout_marginLeft="125dp"
-        android:text="Test"
-        android:textSize="20sp" />
-
-    <TextView
-        android:id="@+id/row_email"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/row_username"
-        android:layout_marginLeft="125dp"
+        android:layout_marginLeft="200dp"
         android:text="Test"
         android:textSize="20sp" />
 

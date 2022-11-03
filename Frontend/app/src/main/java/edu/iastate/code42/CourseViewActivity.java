@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -41,7 +42,7 @@ import edu.iastate.code42.utils.BaseDrawer;
 import edu.iastate.code42.utils.Const;
 import edu.iastate.code42.utils.UserListAdapter;
 
-public class CourseViewActivity extends BaseDrawer implements View.OnClickListener {
+public class CourseViewActivity extends BaseDrawer implements View.OnClickListener, AdapterView.OnItemClickListener {
 
     ActivityCourseViewBinding activityBaseDrawerBinding;
     EditText title;
@@ -120,6 +121,13 @@ public class CourseViewActivity extends BaseDrawer implements View.OnClickListen
         addStudent.setOnClickListener(this);
         moreStudent.setOnClickListener(this);
 
+        addTeacher.setOnClickListener(this);
+        moreTeacher.setOnClickListener(this);
+
+        assignmentList.setOnItemClickListener(this);
+        studentList.setOnItemClickListener(this);
+        teacherList.setOnItemClickListener(this);
+
         if(user.getType().equals("student")){
             edit.setVisibility(View.INVISIBLE);
             edit.setEnabled(false);
@@ -149,6 +157,7 @@ public class CourseViewActivity extends BaseDrawer implements View.OnClickListen
 
             assignments = new ArrayList<>();
             students = new ArrayList<>();
+            teachers = new ArrayList<>();
 
             String url = String.format(Const.GET_COURSE, courseId, userSession.getString("token", ""));
 
@@ -349,15 +358,65 @@ public class CourseViewActivity extends BaseDrawer implements View.OnClickListen
                 break;
 
             case R.id.addAssignmentButton:
+                Intent assignmentCreate = new Intent(this, AssignmentCreateActivity.class);
+                startActivity(assignmentCreate);
                 break;
 
             case R.id.moreAssignmentButton:
+                Intent assignmentListIntent = new Intent(this, AssignmentListActivity.class);
+                assignmentListIntent.putExtra("courseId", courseId);
+
+                startActivity(assignmentListIntent);
                 break;
 
             case R.id.addStudentButton:
+                Intent userListStudentAdd = new Intent(this, UserListActivity.class);
+                userListStudentAdd.putExtra("courseId", courseId);
+                userListStudentAdd.putExtra("type", 2);
+
+                startActivity(userListStudentAdd);
                 break;
 
             case R.id.moreStudentButton:
+                Intent userListStudent = new Intent(this, UserListActivity.class);
+                userListStudent.putExtra("courseId", courseId);
+                userListStudent.putExtra("type", 4);
+
+                startActivity(userListStudent);
+                break;
+
+            case R.id.addTeacherButton:
+                Intent userListTeacherAdd = new Intent(this, UserListActivity.class);
+                userListTeacherAdd.putExtra("courseId", courseId);
+                userListTeacherAdd.putExtra("type", 1);
+
+                startActivity(userListTeacherAdd);
+                break;
+
+            case R.id.moreTeacherButton:
+                Intent userListTeacher = new Intent(this, UserListActivity.class);
+                userListTeacher.putExtra("courseId", courseId);
+                userListTeacher.putExtra("type", 3);
+
+                startActivity(userListTeacher);
+                break;
+        }
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        switch(view.getId()){
+            case R.id.assignmentList:
+                Intent assignmentView = new Intent(this, AssignmentWorkActivity.class);
+                assignmentView.putExtra("id", assignments.get(i).getId());
+
+                startActivity(assignmentView);
+                break;
+
+            case R.id.teacherList:
+                break;
+
+            case R.id.studentList:
                 break;
         }
     }

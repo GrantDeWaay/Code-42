@@ -126,7 +126,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             /*Toast.makeText(getApplicationContext(), response.toString(),
                                     Toast.LENGTH_LONG).show();*/
                             try {
-                                userSessionEditor.putString("token", response.getString("token"));
+                                //userSessionEditor.putString("token", response.getString("token"));
+                                userSessionEditor.putString("token", "test");
                                 userSessionEditor.commit();
                                 loginSuccess(response);
                             } catch (JSONException jsonException) {
@@ -140,13 +141,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         public void onErrorResponse(VolleyError error) {
                             Log.e("Volley Login Auth Error:", error.toString());
 
-                            /*if(error.networkResponse.statusCode == 401){
-                                Toast.makeText(getApplicationContext(), R.string.login_volley_incorrect,
-                                        Toast.LENGTH_LONG).show();
-                            }else{
-                                Toast.makeText(getApplicationContext(), R.string.login_volley_error,
-                                        Toast.LENGTH_LONG).show();
-                            }*/
                             Toast.makeText(getApplicationContext(), R.string.login_volley_error,
                                     Toast.LENGTH_LONG).show();
                         }

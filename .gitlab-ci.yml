@@ -5,14 +5,14 @@ stages:
   - androidbuild
   - androidtest
 
-maven-build:   #this is a JOB
-  stage: maventry
-  tags:
-    - springboot_tag  					# this is LINK to the shell runner on the remote-server 
-  script:
-    - cd Backend
-    - cd Spring #change directory to where you have your springboot application
-    - mvn package
+#maven-build:   #this is a JOB
+#  stage: maventry
+#  tags:
+#    - springboot_tag  					# this is LINK to the shell runner on the remote-server 
+#  script:
+#    - cd Backend
+#    - cd Spring #change directory to where you have your springboot application
+#    - mvn package
     
 android-build:
   image: gjandres/android-ci:latest

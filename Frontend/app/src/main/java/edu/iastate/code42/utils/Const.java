@@ -10,6 +10,8 @@ public class Const {
 	public static final String LOGOUT = SOURCE + "logout/%s/%s";
 	public static final String SESSION = SOURCE + "token/user/%s";
 
+	public static final String GET_USERS = SOURCE + "user" + TOKEN;
+	public static final String CREATE_USER = SOURCE + "user/create" + TOKEN;
 	public static final String GET_USER = SOURCE + "user/%d" + TOKEN;
 	public static final String GET_COURSES_FOR_USER = SOURCE + "user/%d/courses" + TOKEN;
 
