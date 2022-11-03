@@ -3,6 +3,7 @@ package edu.iastate.code42;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -23,6 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import edu.iastate.code42.app.AppController;
+import edu.iastate.code42.objects.User;
 import edu.iastate.code42.utils.Const;
 
 public class CourseCreationActivity extends AppCompatActivity implements View.OnClickListener {
@@ -31,6 +33,9 @@ public class CourseCreationActivity extends AppCompatActivity implements View.On
     EditText title;
     EditText description;
     EditText language;
+
+    User user;
+    SharedPreferences userSession;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,63 +47,76 @@ public class CourseCreationActivity extends AppCompatActivity implements View.On
         description = findViewById(R.id.courseDescriptionView);
         language = findViewById(R.id.courseLanguagesView);
 
+        user = User.get(getApplicationContext());
+        userSession = getSharedPreferences(getString(R.string.session_shared_pref), MODE_PRIVATE);
+
+        if(!userSession.contains("token")){
+            Intent login = new Intent(CourseCreationActivity.this, MainActivity.class);
+            startActivity(login);
+        }
+
         create.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View view) {
-        String url = Const.SOURCE + Const.CREATE_COURSE;
-        JSONObject jsonBody = new JSONObject();
-        try {
-            jsonBody.put("title", title.getText());
-            jsonBody.put("description", description.getText());
-            jsonBody.put("languages", language.getText());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        if (title.getText() != null && !(title.getText().toString().isEmpty()) &&
+                description.getText() != null && !(description.getText().toString().isEmpty()) &&
+                language.getText() != null && !(language.getText().toString().isEmpty())) {
+            String url = String.format(Const.CREATE_COURSE, userSession.getString("token", ""));
+            JSONObject jsonBody = new JSONObject();
 
-        JsonObjectRequest createReq = new JsonObjectRequest(Request.Method.POST, url,
-                jsonBody,  new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                Toast.makeText(getApplicationContext(), response.toString(),
-                        Toast.LENGTH_LONG).show();
+            try {
+                jsonBody.put("title", title.getText());
+                jsonBody.put("description", description.getText());
+                jsonBody.put("languages", language.getText());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
 
-                Intent view = new Intent(CourseCreationActivity.this, CourseViewActivity.class);
-                try {
-                    view.putExtra("id",response.getInt("id"));
-                } catch (JSONException e) {
-                    e.printStackTrace();
+            JsonObjectRequest createReq = new JsonObjectRequest(Request.Method.POST, url,
+                    jsonBody, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    Toast.makeText(getApplicationContext(), response.toString(),
+                            Toast.LENGTH_LONG).show();
+
+                    Intent view = new Intent(CourseCreationActivity.this, CourseViewActivity.class);
+                    try {
+                        view.putExtra("courseId", response.getInt("id"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    startActivity(view);
                 }
-                startActivity(view);
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e("Volley Login Auth Error:", error.toString());
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.e("Volley Login Auth Error:", error.toString());
 
-                Toast.makeText(getApplicationContext(), R.string.login_volley_error,
-                        Toast.LENGTH_LONG).show();
-            }
-        }){
-            /**
-             * Passing some request headers
-             * */
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String, String> headers = new HashMap<String, String>();
-                headers.put("Content-Type", "application/json");
-                return headers;
-            }
+                    Toast.makeText(getApplicationContext(), R.string.login_volley_error,
+                            Toast.LENGTH_LONG).show();
+                }
+            }) {
+                /**
+                 * Passing some request headers
+                 */
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    HashMap<String, String> headers = new HashMap<String, String>();
+                    headers.put("Content-Type", "application/json");
+                    return headers;
+                }
 
-            @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<String, String>();
+                @Override
+                protected Map<String, String> getParams() {
+                    Map<String, String> params = new HashMap<String, String>();
 
-                return params;
-            }
-        };
+                    return params;
+                }
+            };
 
-        AppController.getInstance().addToRequestQueue(createReq, "create_req");
+            AppController.getInstance().addToRequestQueue(createReq, "create_course_req");
+        }
     }
 }

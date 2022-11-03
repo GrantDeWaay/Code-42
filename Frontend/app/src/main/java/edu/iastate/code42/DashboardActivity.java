@@ -2,6 +2,8 @@ package edu.iastate.code42;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.TextView;
 
@@ -14,6 +16,8 @@ public class DashboardActivity extends BaseDrawer {
 
     TextView helloMessage;
     ActivityDashboardBinding activityBaseDrawerBinding;
+    SharedPreferences userSession;
+    User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,7 +27,13 @@ public class DashboardActivity extends BaseDrawer {
         setContentView(activityBaseDrawerBinding.getRoot());
         allocateActivityTitle("Dashboard");
 
-        User user = User.get(getApplicationContext());
+        user = User.get(getApplicationContext());
+        userSession = getSharedPreferences(getString(R.string.session_shared_pref), MODE_PRIVATE);
+
+        if(!userSession.contains("token")){
+            Intent login = new Intent(DashboardActivity.this, MainActivity.class);
+            startActivity(login);
+        }
 
         helloMessage = activityBaseDrawerBinding.getRoot().findViewById(R.id.helloMessage);
         helloMessage.setText("Hello, " + user.getFirstName() + "!");

@@ -35,17 +35,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     EditText password;
     EditText username;
 
+    SharedPreferences userSession;
+    SharedPreferences appSetting;
+    SharedPreferences.Editor userSessionEditor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        SharedPreferences userSession = getSharedPreferences(getString(R.string.session_shared_pref), MODE_PRIVATE);
-        SharedPreferences appSetting = getSharedPreferences(getString(R.string.app_shared_pref), MODE_PRIVATE);
+        userSession = getSharedPreferences(getString(R.string.session_shared_pref), MODE_PRIVATE);
+        appSetting = getSharedPreferences(getString(R.string.app_shared_pref), MODE_PRIVATE);
 
-        SharedPreferences.Editor userSessionEditor = userSession.edit();
+        userSessionEditor = userSession.edit();
 
-        /*if(userSession.contains("sessionID")){
+        /*if(userSession.contains("token")){
             String url = Const.SOURCE + Const.SESSION + userSession.getString("sessionID", "");
 
             JsonObjectRequest loginReq = new JsonObjectRequest(Request.Method.GET, url,
@@ -112,18 +116,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
                 if(password.getText() != null && !(password.getText().toString().isEmpty()) &&
                         username.getText() != null && !(username.getText().toString().isEmpty())){
-                    String url = Const.SOURCE + Const.LOGIN + username.getText().toString() + "/" +
-                            password.getText().toString();
+                    String url = String.format(Const.LOGIN, username.getText().toString(),
+                            password.getText().toString());
 
                     JsonObjectRequest loginReq = new JsonObjectRequest(Request.Method.GET, url,
                             null,  new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
-                            Toast.makeText(getApplicationContext(), response.toString(),
-                                    Toast.LENGTH_LONG).show();
+                            /*Toast.makeText(getApplicationContext(), response.toString(),
+                                    Toast.LENGTH_LONG).show();*/
                             try {
-                                //userSessionEditor.putString("sessionID", response.getString("sessionID"));
-                                //userSessionEditor.commit();
+                                //userSessionEditor.putString("token", response.getString("token"));
+                                userSessionEditor.putString("token", "test");
+                                userSessionEditor.commit();
                                 loginSuccess(response);
                             } catch (JSONException jsonException) {
                                 jsonException.printStackTrace();
@@ -136,13 +141,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         public void onErrorResponse(VolleyError error) {
                             Log.e("Volley Login Auth Error:", error.toString());
 
-                            /*if(error.networkResponse.statusCode == 401){
-                                Toast.makeText(getApplicationContext(), R.string.login_volley_incorrect,
-                                        Toast.LENGTH_LONG).show();
-                            }else{
-                                Toast.makeText(getApplicationContext(), R.string.login_volley_error,
-                                        Toast.LENGTH_LONG).show();
-                            }*/
                             Toast.makeText(getApplicationContext(), R.string.login_volley_error,
                                     Toast.LENGTH_LONG).show();
                         }

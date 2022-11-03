@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -26,79 +27,68 @@ import java.util.HashMap;
 import java.util.Map;
 
 import edu.iastate.code42.app.AppController;
-import edu.iastate.code42.databinding.ActivityCoursesBinding;
-import edu.iastate.code42.databinding.ActivityDashboardBinding;
 import edu.iastate.code42.objects.Assignment;
-import edu.iastate.code42.objects.Course;
 import edu.iastate.code42.objects.User;
 import edu.iastate.code42.utils.AssignmentListAdapter;
-import edu.iastate.code42.utils.BaseDrawer;
 import edu.iastate.code42.utils.Const;
-import edu.iastate.code42.utils.CourseListAdapter;
 
-public class CoursesActivity extends BaseDrawer implements AdapterView.OnItemClickListener, View.OnClickListener {
+public class AssignmentListActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, View.OnClickListener {
+    ListView assignmentList;
+    FloatingActionButton addAssignment;
 
-    ActivityCoursesBinding activityBaseDrawerBinding;
-    ListView courseList;
-    FloatingActionButton add;
+    ArrayList<Assignment> assignments;
+    AssignmentListAdapter assignmentAdapter;
+
     User user;
     SharedPreferences userSession;
 
-    ArrayList<Course> courses;
-    CourseListAdapter courseAdapter;
+    int courseId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        activityBaseDrawerBinding = ActivityCoursesBinding.inflate(getLayoutInflater());
-        setContentView(activityBaseDrawerBinding.getRoot());
-        allocateActivityTitle("Courses");
+        setContentView(R.layout.activity_assignment_list);
 
         user = User.get(getApplicationContext());
         userSession = getSharedPreferences(getString(R.string.session_shared_pref), MODE_PRIVATE);
 
         if(!userSession.contains("token")){
-            Intent login = new Intent(CoursesActivity.this, MainActivity.class);
+            Intent login = new Intent(this, MainActivity.class);
             startActivity(login);
         }
+        courseId = getIntent().getIntExtra("courseId", -1);
 
-        courseList = activityBaseDrawerBinding.getRoot().findViewById(R.id.courseList);
-        courseList.setOnItemClickListener(this);
+        assignmentList = findViewById(R.id.listAssignments);
+        assignmentList.setOnItemClickListener(this);
 
-        add = activityBaseDrawerBinding.getRoot().findViewById(R.id.addCourse);
-        add.setOnClickListener(this);
+        addAssignment = findViewById(R.id.addAssignment);
+        addAssignment.setOnClickListener(this);
 
-        if(user.getType().equals("student")){
-            add.setVisibility(View.INVISIBLE);
+        if(user.getType() == "student"){
+            addAssignment.setVisibility(View.INVISIBLE);
         }else{
-            add.setVisibility(View.VISIBLE);
+            addAssignment.setVisibility(View.VISIBLE);
         }
 
-        courses = new ArrayList<>();
-        String url;
+        String url = String.format(Const.GET_ASSIGNMENTS_FOR_COURSE, courseId, userSession.getString("token", ""));
+        assignments = new ArrayList<>();
 
-        if(user.getType().equals("admin")){
-            url = String.format(Const.GET_COURSES, userSession.getString("token", ""));
-        }else{
-           url = String.format(Const.GET_COURSES_FOR_USER, user.getId(), userSession.getString("token", ""));
-        }
-
-
-        JsonArrayRequest courseListReq = new JsonArrayRequest(Request.Method.GET, url,
+        JsonArrayRequest courseAssignmentsReq = new JsonArrayRequest(Request.Method.GET, url,
                 null, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
-
                 for(int i = 0; i < response.length(); i++){
                     try {
-                        Course c = new Course(response.getJSONObject(i));
-                        courses.add(c);
+                        Assignment a = new Assignment(response.getJSONObject(i));
+                        assignments.add(a);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    courseAdapter = new CourseListAdapter(getApplicationContext(), courses);
-                    courseList.setAdapter(courseAdapter);
+                }
+
+                if(assignments.size() > 0){
+                    assignmentAdapter = new AssignmentListAdapter(getApplicationContext(), assignments);
+                    assignmentList.setAdapter(assignmentAdapter);
                 }
             }
         }, new Response.ErrorListener() {
@@ -106,13 +96,10 @@ public class CoursesActivity extends BaseDrawer implements AdapterView.OnItemCli
             public void onErrorResponse(VolleyError error) {
                 Log.e("Volley Login Auth Error:", error.toString());
 
-                Toast.makeText(getApplicationContext(), url,
+                Toast.makeText(getApplicationContext(), R.string.login_volley_error,
                         Toast.LENGTH_LONG).show();
             }
         }){
-            /**
-             * Passing some request headers
-             **/
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String, String> headers = new HashMap<String, String>();
@@ -128,20 +115,20 @@ public class CoursesActivity extends BaseDrawer implements AdapterView.OnItemCli
             }
         };
 
-        AppController.getInstance().addToRequestQueue(courseListReq, "course_get_course");
+        AppController.getInstance().addToRequestQueue(courseAssignmentsReq, "course_get_assignments");
     }
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        Intent viewCourse = new Intent(CoursesActivity.this, CourseViewActivity.class);
-        viewCourse.putExtra("courseId", courses.get(i).getId());
+        Intent assignmentView = new Intent(this, AssignmentWorkActivity.class);
+        assignmentView.putExtra("id", assignments.get(i).getId());
 
-        startActivity(viewCourse);
+        startActivity(assignmentView);
     }
 
     @Override
     public void onClick(View view) {
-        Intent creation = new Intent(CoursesActivity.this, CourseCreationActivity.class);
-        startActivity(creation);
+        Intent assignmentCreate = new Intent(this, AssignmentCreateActivity.class);
+        startActivity(assignmentCreate);
     }
 }
