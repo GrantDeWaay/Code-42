@@ -89,17 +89,17 @@ public class CodeRunnerController {
                 g.setUser(u.get());
                 u.get().getGrades().add(g);
 
-                gs.create(new Grade(0.0, Calendar.getInstance().getTime()));
+                gs.create(g);
                 return new ResponseEntity<>(new ApiCodeRunResult(false, "Expected output differs", a.get().getExpectedOutput(), runner.getStdOutData()), HttpStatus.ACCEPTED);
             }
 
 
-            Grade g = new Grade(0.0, Calendar.getInstance().getTime());
+            Grade g = new Grade(100.0, Calendar.getInstance().getTime());
             g.setAssignment(a.get());
             a.get().getGrades().add(g);
             g.setUser(u.get());
             u.get().getGrades().add(g);
-            gs.create(new Grade(100.0, Calendar.getInstance().getTime()));
+            gs.create(g);
 
             return new ResponseEntity<>(new ApiCodeRunResult(true, "Expected output matches", a.get().getExpectedOutput(), runner.getStdOutData()), HttpStatus.ACCEPTED);
 
