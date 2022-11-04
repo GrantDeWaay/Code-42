@@ -21,6 +21,8 @@ public class CodeRunnerFactory {
             switch(acs.getLanguage()) {
                 case "C":
                     return new CRunner(af, acs, tfm);
+                case "Java":
+                    return new JavaRunner(af, acs, tfm);
 
                 default:
                     return null;
