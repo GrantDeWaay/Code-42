@@ -3,9 +3,7 @@ package coms309.coderunner;
 import coms309.api.dataobjects.ApiCodeSubmission;
 import coms309.database.dataobjects.AssignmentFile;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.util.concurrent.TimeUnit;
 
 public class JavaRunner extends CodeRunner {
@@ -38,22 +36,19 @@ public class JavaRunner extends CodeRunner {
         Process process = Runtime.getRuntime().exec("java " + testFolder + "/" + className);
 
         stdout = process.getInputStream();
-        stderr = process.getErrorStream();
 
         long startTime = System.currentTimeMillis();
 
         byte[] buff = new byte[1024];
 
-        while (process.isAlive() && System.currentTimeMillis() - startTime < maxRuntime) {
-            while (stdout.available() > 0) {
-                int n = stdout.read(buff);
-                stdOutData = stdOutData.concat(new String(buff, 0, n));
-            }
+        while(process.isAlive() && System.currentTimeMillis() - startTime < maxRuntime) {
+            // Waiting
+        }
+        
+        BufferedReader reader = new BufferedReader(new InputStreamReader(stdout));
 
-            while (stderr.available() > 0) {
-                int n = stderr.read(buff);
-                stdErrData = stdErrData.concat(new String(buff, 0, n));
-            }
+        for (String line = reader.readLine(); line != null; line = reader.readLine()) {
+            stdOutData += line;
         }
 
         if (process.isAlive()) {
