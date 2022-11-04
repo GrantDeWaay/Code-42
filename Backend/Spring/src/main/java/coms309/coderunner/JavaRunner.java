@@ -34,7 +34,8 @@ public class JavaRunner extends CodeRunner {
 
     @Override
     public boolean run() throws IOException {
-        Process process = Runtime.getRuntime().exec("java " + testFolder + "/" + fileName);
+        String className = fileName.substring(0, fileName.indexOf('.'));
+        Process process = Runtime.getRuntime().exec("java " + testFolder + "/" + className);
 
         stdout = process.getInputStream();
         stderr = process.getErrorStream();
