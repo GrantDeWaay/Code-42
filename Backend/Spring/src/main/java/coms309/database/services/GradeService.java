@@ -25,6 +25,16 @@ public class GradeService implements RepositoryService<Grade> {
         return repository.findAll();
     }
 
+    public Grade findByUserAndAssignment(Long userId, Long assignmentId) {
+        List<Grade> grades = findAll();
+
+        for(Grade g : grades) {
+            if(g.getUser().getId() == userId && g.getAssignment().getId() == assignmentId) return g;
+        }
+
+        return null;
+    }
+
     @Override
     public Grade create(Grade t) {
         return repository.save(t);
