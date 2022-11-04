@@ -61,7 +61,7 @@ public class JavaRunner extends CodeRunner {
             return false;
         }
 
-        return false;
+        return true;
     }
 
 }
