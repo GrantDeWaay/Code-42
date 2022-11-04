@@ -7,6 +7,7 @@
     android:layout_height="match_parent">
 
     <ScrollView
+        android:id="@+id/scrollView2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:layout_editor_absoluteX="-30dp"
@@ -53,13 +54,22 @@
                 android:inputType="textMultiLine"
                 android:text="statement" />
 
-            <Button
-                android:id="@+id/button"
+            <EditText
+                android:id="@+id/scoreNumber"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Submit" />
+                android:ems="10"
+                android:inputType="number" />
 
         </LinearLayout>
     </ScrollView>
+
+    <Button
+        android:id="@+id/nextButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Next"
+        app:cornerRadius="0dp"
+        app:layout_constraintBottom_toBottomOf="@+id/scrollView2" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

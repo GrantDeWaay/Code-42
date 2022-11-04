@@ -11,38 +11,16 @@
         android:orientation="vertical">
 
         <EditText
-            android:id="@+id/definedVar"
+            android:id="@+id/unitTestText"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:text="var" />
-
-        <TextView
-            android:id="@+id/textView3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="equals" />
-
-        <EditText
-            android:id="@+id/expectedOut"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:text="expectedOut" />
-
-        <EditText
-            android:id="@+id/teacherBaseCode"
-            android:layout_width="300dp"
-            android:layout_height="150dp"
+            android:layout_height="238dp"
             android:ems="10"
             android:gravity="start|top"
             android:inputType="textMultiLine" />
 
         <EditText
-            android:id="@+id/studentBaseCode"
-            android:layout_width="300dp"
+            android:id="@+id/baseCode"
+            android:layout_width="match_parent"
             android:layout_height="150dp"
             android:ems="10"
             android:gravity="start|top"
@@ -53,6 +31,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="finish" />
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
