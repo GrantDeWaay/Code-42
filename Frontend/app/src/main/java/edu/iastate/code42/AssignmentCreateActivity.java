@@ -20,6 +20,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 
 import edu.iastate.code42.app.AppController;
 import edu.iastate.code42.objects.Assignment;
+import edu.iastate.code42.utils.LanguageSpinnerAdapter;
 
 public class AssignmentCreateActivity extends AppCompatActivity {
     private Button btnClick;
@@ -44,8 +45,7 @@ public class AssignmentCreateActivity extends AppCompatActivity {
         Integer[] langIcons = new Integer[]{R.drawable.py_lang_logo,
                 R.drawable.c_lang_logo, R.drawable.java_lang_logo};
 
-        ArrayAdapter<String> adapter = new LanguageSpinnerAdapter(this,
-                langText, langIcons);
+        ArrayAdapter<String> adapter = new LanguageSpinnerAdapter(this, langText, langIcons);
         langSpin.setAdapter(adapter);
         btnClick.setOnClickListener(v -> {
 
