@@ -120,7 +120,7 @@ public class UserController {
         while(iter.hasNext()) {
             Grade g = iter.next();
 
-            if(g.getId() == assignmentId) {
+            if(g.getAssignment().getId() == assignmentId) {
                 return new ResponseEntity<>(new ApiGrade(g), HttpStatus.OK);
             }
         }
