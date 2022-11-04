@@ -68,6 +68,7 @@ public class Assignment {
         this.assignmentName = response.getString("title");
         this.statement = response.getString("problemStatement");
         this.description = response.getString("description");
+
     }
 
     public int getId() {

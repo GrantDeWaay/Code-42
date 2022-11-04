@@ -122,6 +122,25 @@ public class AssignmentWorkActivity extends AppCompatActivity implements View.On
             });
         }
         else if (view.getId() == submitId) {
+            String urlw = String.format(Const.SOURCE + "run/%s" + Const.TOKEN, id, userSession.getString("token", ""));
+            JSONObject obj = new JSONObject();
+            try {
+                obj.put("name", "code42" + ".java");
+                obj.put("contents", ide.getText().toString());
+                obj.put("language", "Java");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            Log.i("json", obj.toString());
+            JsonObjectRequest req = new JsonObjectRequest(Request.Method.PUT, urlw,obj,
+                    response -> {
+                        results.setText(response.toString());
+                        Log.i("result", response.toString());
+                    }, error -> {
+                results.setText(error.toString());
+            });
+
+            AppController.getInstance().addToRequestQueue(req);
             testPopup.showAtLocation(view, Gravity.CENTER, 0, 0);
             testPUV.setOnTouchListener((v, event) -> {
                 v.performClick();
