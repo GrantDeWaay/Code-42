@@ -26,8 +26,18 @@ public class Assignment {
         return sAssignment;
     }
 
-    public void setCode(String Code) {
-        this.Code = Code;
+    public Assignment(String assignmentName, String statement, String lang, String description) {
+        this.assignmentName = assignmentName;
+        this.statement = statement;
+        this.lang = lang;
+        this.description = description;
+    }
+
+    public Assignment(JSONObject response) throws JSONException {
+        this.id = response.getInt("id");
+        this.assignmentName = response.getString("title");
+        this.statement = response.getString("problemStatement");
+        this.description = response.getString("description");
     }
 
     public void setPoints(int Points) { this.Points = Points;}
@@ -50,20 +60,28 @@ public class Assignment {
         this.Description = Description;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public String getAssignmentName() {
-        return AssignmentName;
+        return assignmentName;
     }
 
     public String getStatement() {
-        return Statement;
+        return statement;
     }
 
     public String getLang() {
-        return Lang;
+        return lang;
     }
 
     public String getDescription() {
-        return Description;
+        return description;
     }
 
     public String getCode() {

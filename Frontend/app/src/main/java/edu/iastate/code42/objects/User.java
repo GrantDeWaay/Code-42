@@ -10,6 +10,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Objects;
 
 public class User extends Application {
     private Long id;
@@ -40,6 +41,18 @@ public class User extends Application {
         mAppContext = c.getApplicationContext();
     }
 
+    public User(JSONObject response) throws JSONException {
+        mAppContext = null;
+
+        this.id = response.getLong("id");
+        this.username = response.getString("username");
+        this.firstName = response.getString("firstName");
+        this.lastName = response.getString("lastName");
+        this.email = response.getString("email");
+        this.type = response.getString("type");
+    }
+
+
     public static User get(Context c){
         if(sUser == null){
             sUser = new User(c);
@@ -47,8 +60,7 @@ public class User extends Application {
         return sUser;
     }
 
-
-    public void fromJson(JSONObject response) throws JSONException, ParseException {
+    public void fromJson(JSONObject response) throws JSONException{
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH);
 
         this.id = response.getLong("id");
@@ -68,6 +80,10 @@ public class User extends Application {
         this.email = null;
         this.type = null;
         this.creationDate = null;
+    }
+
+    public String getFullName(){
+        return firstName + " " + lastName;
     }
 
     public Long getId() {
@@ -124,5 +140,24 @@ public class User extends Application {
 
     public void setCreationDate(Date creationDate) {
         this.creationDate = creationDate;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return id.equals(user.id) && username.equals(user.username) && firstName.equals(user.firstName)
+                && lastName.equals(user.lastName) && email.equals(user.email) && type.equals(user.type);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, username, firstName, lastName, email, type);
+    }
+
+    @Override
+    public String toString() {
+        return this.lastName + ", " + this.firstName + "\t" + this.username + "\t" + this.email;
     }
 }

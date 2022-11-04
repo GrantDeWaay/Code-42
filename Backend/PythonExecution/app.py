@@ -68,7 +68,7 @@ def run(code, tests, conn):
 	conn.close()
 
 
-@app.route('/python', methods=["POST"])
+@app.route('/assignment/python', methods=["POST"])
 def init_student_run():
 	json_data = request.get_json()
 	code = json_data.get('code')

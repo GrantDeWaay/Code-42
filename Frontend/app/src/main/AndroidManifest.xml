@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="edu.iastate.code42">
+
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -15,8 +16,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Code42"
         android:usesCleartextTraffic="true"
-
         tools:targetApi="31">
+        <activity
+            android:name=".UserCreationActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AssignmentListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".UserListActivity"
+            android:exported="false" />
         <activity
             android:name=".CourseViewActivity"
             android:exported="false" />
@@ -34,18 +43,12 @@
             android:exported="false" />
         <activity
             android:name=".MainActivity"
-            android:exported="false">
-
-        </activity>
-        <activity
-            android:name=".AssignmentCreateActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
         <activity
             android:name=".AssignmentCodeCreateActivity"

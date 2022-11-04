@@ -27,26 +27,50 @@ public class ApiGrade {
         this.updateDate = g.getUpdateDate();
     }
 
+    
+    /** 
+     * @param id
+     */
     public void setId(Long id) {
         this.id = id;
     }
 
+    
+    /** 
+     * @return Long
+     */
     public Long getId() {
         return id;
     }
 
+    
+    /** 
+     * @param grade
+     */
     public void setGrade(Double grade) {
         this.grade = grade;
     }
 
+    
+    /** 
+     * @return Double
+     */
     public Double getGrade() {
         return grade;
     }
 
+    
+    /** 
+     * @param updateDate
+     */
     public void setUpdateDate(Date updateDate) {
         this.updateDate = updateDate;
     }
 
+    
+    /** 
+     * @return Date
+     */
     public Date getUpdateDate() {
         return updateDate;
     }

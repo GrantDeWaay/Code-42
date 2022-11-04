@@ -1,23 +1,22 @@
 package coms309.controller;
 
+import coms309.api.dataobjects.ApiAssignment;
+import coms309.api.dataobjects.ApiCourse;
+import coms309.api.dataobjects.ApiUser;
+import coms309.controller.token.UserTokens;
 import coms309.database.dataobjects.Assignment;
 import coms309.database.dataobjects.Course;
 import coms309.database.dataobjects.User;
+import coms309.database.services.AssignmentService;
 import coms309.database.services.CourseService;
+import coms309.database.services.UserService;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import coms309.api.dataobjects.*;
-
-import java.util.List;
-import java.util.Set;
-import java.util.Calendar;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 public class CourseController {
@@ -25,47 +24,87 @@ public class CourseController {
     @Autowired
     CourseService cs;
 
+    @Autowired
+    AssignmentService as;
+
+    @Autowired
+    UserService us;
+
     @GetMapping("/course")
-    public @ResponseBody List<ApiCourse> getCourseList() {
+    public @ResponseBody
+    ResponseEntity<List<ApiCourse>> getCourseList(@RequestParam String token) {
+        if (!UserTokens.isTeacher(token) && !UserTokens.isAdmin(token)) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+
         List<Course> result = cs.findAll();
 
         List<ApiCourse> courses = new LinkedList<>();
 
-        for(Course c : result) {
+        for (Course c : result) {
             courses.add(new ApiCourse(c));
         }
 
-        return courses;
+        return new ResponseEntity<List<ApiCourse>>(courses, HttpStatus.OK);
     }
 
     @GetMapping("/course/{id}")
-    public @ResponseBody ResponseEntity<ApiCourse> getCourse(@PathVariable long id) {
+    public @ResponseBody
+    ResponseEntity<ApiCourse> getCourse(@PathVariable long id, @RequestParam String token) {
+        if (!UserTokens.isLiveToken(token)) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
         Optional<Course> c = cs.findById(id);
 
-        if(!c.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        if (!c.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
-        return new ResponseEntity<>(new ApiCourse(c.get()), HttpStatus.OK);
+        return new ResponseEntity<ApiCourse>(new ApiCourse(c.get()), HttpStatus.OK);
     }
 
     @GetMapping("/course/{id}/assignments")
-    public @ResponseBody ResponseEntity<Set<ApiAssignment>> getCourseAssignmentList(@PathVariable long id) {
+    public @ResponseBody
+    ResponseEntity<Set<ApiAssignment>> getCourseAssignmentList(@PathVariable long id, @RequestParam String token) {
+        if (!UserTokens.isLiveToken(token)) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
         Optional<Course> result = cs.findById(id);
 
-        if(!result.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        if (!result.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
         Set<ApiAssignment> assignments = new HashSet<>();
 
         Iterator<Assignment> iter = result.get().getAssignments().iterator();
 
-        while(iter.hasNext()) {
+        while (iter.hasNext()) {
             assignments.add(new ApiAssignment(iter.next()));
         }
 
-        return new ResponseEntity<>(assignments, HttpStatus.OK);
+        return new ResponseEntity<Set<ApiAssignment>>(assignments, HttpStatus.OK);
     }
 
     @GetMapping("/course/{id}/users")
-    public @ResponseBody ResponseEntity<Set<ApiUser>> getCourseUserList(@PathVariable long id) {
+    public @ResponseBody
+    ResponseEntity<Set<ApiUser>> getCourseUserList(@PathVariable long id, @RequestParam String token) {
+        if (!UserTokens.isLiveToken(token)) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+        Optional<Course> result = cs.findById(id);
+
+        if (!result.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        Set<ApiUser> users = new HashSet<>();
+
+        Iterator<User> iter = result.get().getStudents().iterator();
+
+        while (iter.hasNext()) {
+            users.add(new ApiUser(iter.next()));
+        }
+
+        return new ResponseEntity<Set<ApiUser>>(users, HttpStatus.OK);
+    }
+
+    @GetMapping("/course/{id}/students")
+    public @ResponseBody ResponseEntity<Set<ApiUser>> getCourseStudentList(@PathVariable long id) {
         Optional<Course> result = cs.findById(id);
 
         if(!result.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -75,27 +114,78 @@ public class CourseController {
         Iterator<User> iter = result.get().getStudents().iterator();
 
         while(iter.hasNext()) {
-            users.add(new ApiUser(iter.next()));
+            User u = iter.next();
+            if(u.getType().equals("student")) {
+                users.add(new ApiUser(u));
+            }
+        }
+
+        return new ResponseEntity<>(users, HttpStatus.OK);
+    }
+
+    @GetMapping("/course/{id}/teachers")
+    public @ResponseBody ResponseEntity<Set<ApiUser>> getCourseTeacherList(@PathVariable long id) {
+        Optional<Course> result = cs.findById(id);
+
+        if(!result.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        Set<ApiUser> users = new HashSet<>();
+
+        Iterator<User> iter = result.get().getStudents().iterator();
+
+        while(iter.hasNext()) {
+            User u = iter.next();
+            if(u.getType().equals("teacher")) {
+                users.add(new ApiUser(u));
+            }
+        }
+
+        return new ResponseEntity<>(users, HttpStatus.OK);
+    }
+
+    @GetMapping("/course/{id}/admins")
+    public @ResponseBody ResponseEntity<Set<ApiUser>> getCourseAdminList(@PathVariable long id) {
+        Optional<Course> result = cs.findById(id);
+
+        if(!result.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        Set<ApiUser> users = new HashSet<>();
+
+        Iterator<User> iter = result.get().getStudents().iterator();
+
+        while(iter.hasNext()) {
+            User u = iter.next();
+            if(u.getType().equals("admin")) {
+                users.add(new ApiUser(u));
+            }
         }
 
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
     @PostMapping("/course/create")
-    public @ResponseBody ApiCourse createCourse(@RequestBody ApiCourse c) {
+    public @ResponseBody
+    ResponseEntity<ApiCourse> createCourse(@RequestBody ApiCourse c, @RequestParam String token) {
+        if (!UserTokens.isAdmin(token)) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
         c.setCreationDate(Calendar.getInstance().getTime());
 
         Course course = new Course(c);
         cs.create(course);
 
-        return new ApiCourse(course);
+        return new ResponseEntity<ApiCourse>(new ApiCourse(course), HttpStatus.OK);
     }
 
     @PutMapping("/course/{id}/update")
-    public @ResponseBody HttpStatus updateCourse(@PathVariable long id, @RequestBody ApiCourse c) {
+    public @ResponseBody
+    HttpStatus updateCourse(@PathVariable long id, @RequestBody ApiCourse c, @RequestParam String token) {
+        if (!UserTokens.isAdmin(token)) {
+            return HttpStatus.FORBIDDEN;
+        }
         Optional<Course> optional = cs.findById(id);
 
-        if(!optional.isPresent()) return HttpStatus.NOT_FOUND;
+        if (!optional.isPresent()) return HttpStatus.NOT_FOUND;
 
         Course course = optional.get();
 
@@ -109,7 +199,11 @@ public class CourseController {
     }
 
     @DeleteMapping("/course/{id}/delete")
-    public @ResponseBody HttpStatus deleteAssignment(@PathVariable long id) {
+    public @ResponseBody
+    HttpStatus deleteAssignment(@PathVariable long id, @RequestParam String token) {
+        if (!UserTokens.isAdmin(token)) {
+            return HttpStatus.FORBIDDEN;
+        }
         Optional<Course> c = cs.findById(id);
         if (c.isPresent()) {
             cs.delete(id);
@@ -117,6 +211,116 @@ public class CourseController {
         } else {
             return HttpStatus.BAD_REQUEST;
         }
+    }
+
+    @GetMapping("/course/{id}/upcoming")
+    public @ResponseBody ResponseEntity<Set<ApiAssignment>> getUpcomingAssignments(@PathVariable long id, @RequestParam String token) {
+        if(!UserTokens.isLiveToken(token)) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+
+        Optional<Course> course = cs.findById(id);
+
+        if(!course.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        Date now = new Date();
+
+        Set<ApiAssignment> upcomingAssignments = new HashSet<>();
+
+        for(Assignment a : course.get().getAssignments()) {
+            if(a.getDueDate().compareTo(now) < 0) {
+                upcomingAssignments.add(new ApiAssignment(a));
+            }
+        }
+
+        return new ResponseEntity<>(upcomingAssignments, HttpStatus.OK);
+    }
+
+    @PutMapping("/course/{courseId}/assignment/{assignmentId}")
+    public @ResponseBody HttpStatus addAssignmentToCourse(@PathVariable long courseId, @PathVariable long assignmentId, @RequestParam String token) {
+        if (!UserTokens.isTeacher(token) && !UserTokens.isAdmin(token)) {
+            return HttpStatus.FORBIDDEN;
+        }
+        Optional<Course> c = cs.findById(courseId);
+        Optional<Assignment> a = as.findById(assignmentId);
+
+        if (!c.isPresent() || !a.isPresent()) return HttpStatus.NOT_FOUND;
+
+        c.get().getAssignments().add(a.get());
+        cs.update(c.get());
+
+        a.get().setCourse(c.get());
+        as.update(a.get());
+
+        return HttpStatus.ACCEPTED;
+    }
+
+    @DeleteMapping("/course/{courseId}/assignment/{assignmentId}")
+    public @ResponseBody HttpStatus removeAssignmentFromCourse(@PathVariable long courseId, @PathVariable long assignmentId, @RequestParam String token) {
+        if (!UserTokens.isTeacher(token) && !UserTokens.isAdmin(token)) {
+            return HttpStatus.FORBIDDEN;
+        }
+        Optional<Course> c = cs.findById(courseId);
+        Optional<Assignment> a = as.findById(assignmentId);
+
+        if (!c.isPresent() || !a.isPresent()) return HttpStatus.NOT_FOUND;
+
+        Course course = c.get();
+        Assignment assignment = a.get();
+
+        if (!course.getAssignments().contains(assignment) || assignment.getCourse() != course)
+            return HttpStatus.NOT_FOUND;
+
+        assignment.setCourse(null);
+        course.getAssignments().remove(assignment);
+
+        as.update(assignment);
+        cs.update(course);
+
+        return HttpStatus.ACCEPTED;
+    }
+
+    @PutMapping("/course/{courseId}/user/{userId}")
+    public @ResponseBody HttpStatus addUserToCourse(@PathVariable long courseId, @PathVariable long userId, @RequestParam String token) {
+        if (!UserTokens.isTeacher(token) && !UserTokens.isAdmin(token)) {
+            return HttpStatus.FORBIDDEN;
+        }
+        Optional<Course> c = cs.findById(courseId);
+        Optional<User> u = us.findById(userId);
+
+        if (!c.isPresent() || !u.isPresent()) return HttpStatus.NOT_FOUND;
+
+        c.get().getStudents().add(u.get());
+        cs.update(c.get());
+
+        u.get().getCourses().add(c.get());
+        us.update(u.get());
+
+        return HttpStatus.ACCEPTED;
+    }
+
+    @DeleteMapping("/course/{courseId}/user/{userId}")
+    public @ResponseBody HttpStatus removeUserFromCourse(@PathVariable long courseId, @PathVariable long userId, @RequestParam String token) {
+        if (!UserTokens.isTeacher(token) && !UserTokens.isAdmin(token)) {
+            return HttpStatus.FORBIDDEN;
+        }
+        Optional<Course> c = cs.findById(courseId);
+        Optional<User> u = us.findById(userId);
+
+        if (!c.isPresent() || !u.isPresent()) return HttpStatus.NOT_FOUND;
+
+        Course course = c.get();
+        User user = u.get();
+
+        if (!course.getStudents().contains(user) || !user.getCourses().contains(course)) return HttpStatus.NOT_FOUND;
+
+        course.getStudents().remove(user);
+        user.getCourses().remove(course);
+
+        cs.update(course);
+        us.update(user);
+
+        return HttpStatus.ACCEPTED;
     }
 
 }

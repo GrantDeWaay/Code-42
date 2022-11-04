@@ -25,7 +25,9 @@ public class Assignment {
     // problem statement for coding challenge
     private String problemStatement;
 
-    // TODO add in sample code (may end up being in database or stored as a file)
+    private String template;
+
+    private String expectedOutput;
 
     private Date creationDate;
 
@@ -41,6 +43,9 @@ public class Assignment {
     @OneToMany(mappedBy = "assignment", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Grade> grades = new HashSet<>();
 
+    @OneToOne(mappedBy = "assignment", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private AssignmentFile assignmentFile;
+
     public Assignment() {
 
     }
@@ -52,6 +57,8 @@ public class Assignment {
         this.problemStatement = a.getProblemStatement();
         this.creationDate = a.getCreationDate();
         this.dueDate = a.getDueDate();
+        this.template = a.getTemplate();
+        this.expectedOutput = a.getExpectedOutput();
     }
 
     public void setId(Long id) {
@@ -88,6 +95,22 @@ public class Assignment {
         return problemStatement;
     }
 
+    public void setTemplate(String template) {
+        this.template = template;
+    }
+
+    public String getTemplate() {
+        return template;
+    }
+
+    public void setExpectedOutput(String expectedOutput) {
+        this.expectedOutput = expectedOutput;
+    }
+
+    public String getExpectedOutput() {
+        return expectedOutput;
+    }
+
     public void setCreationDate(Date creationDate) {
         this.creationDate = creationDate;
     }
@@ -104,12 +127,24 @@ public class Assignment {
         return dueDate;
     }
 
+    public void setCourse(Course course) {
+        this.course = course;
+    }
+
     public Course getCourse() {
         return course;
     }
 
     public Set<Grade> getGrades() {
         return grades;
+    }
+
+    public void setAssignmentFile(AssignmentFile assignmentFile) {
+        this.assignmentFile = assignmentFile;
+    }
+
+    public AssignmentFile getAssignmentFile() {
+        return assignmentFile;
     }
 
 }
