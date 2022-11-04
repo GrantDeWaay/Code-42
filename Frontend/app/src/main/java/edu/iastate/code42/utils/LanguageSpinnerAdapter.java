@@ -1,4 +1,4 @@
-package edu.iastate.code42;
+package edu.iastate.code42.utils;
 
 
 import android.annotation.SuppressLint;
@@ -16,6 +16,9 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+
+import edu.iastate.code42.R;
+
 public class LanguageSpinnerAdapter extends ArrayAdapter<String> {
 
     private Context ctx;

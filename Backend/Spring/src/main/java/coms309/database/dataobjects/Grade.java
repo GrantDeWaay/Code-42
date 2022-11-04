@@ -58,4 +58,20 @@ public class Grade {
         return updateDate;
     }
 
+    public void setAssignment(Assignment assignment) {
+        this.assignment = assignment;
+    }
+
+    public Assignment getAssignment() {
+        return assignment;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
 }

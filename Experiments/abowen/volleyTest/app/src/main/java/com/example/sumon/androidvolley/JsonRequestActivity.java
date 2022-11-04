@@ -129,6 +129,7 @@ public class JsonRequestActivity extends Activity implements OnClickListener {
                         Log.d(TAG, response.toString());
                         msgResponse.setText(response.toString());
                         hideProgressDialog();
+
                     }
                 }, new Response.ErrorListener() {
             @Override
