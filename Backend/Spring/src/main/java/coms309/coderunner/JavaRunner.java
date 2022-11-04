@@ -20,7 +20,7 @@ public class JavaRunner extends CodeRunner {
 
     @Override
     public boolean compile() throws IOException {
-        Process process = Runtime.getRuntime().exec("javac " + testFolder + "/" + fileName + ".java");
+        Process process = Runtime.getRuntime().exec("javac " + testFolder + "/" + fileName);
 
         try {
             if (process.waitFor(5, TimeUnit.SECONDS)) {
