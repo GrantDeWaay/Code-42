@@ -11,11 +11,17 @@ public class Assignment {
     private String Lang;
     private String Description;
     private String Code;
+    private int id;
     private int Points;
+    private String statement;
+    private String lang;
+    private String description;
     private String UnitTests;
     private String studentCode;
     private static Assignment sAssignment;
-    private final Context mAppContext;
+    private Context mAppContext;
+    private String assignmentName;
+
     public Assignment(Context c){
         mAppContext = c.getApplicationContext();
     }
@@ -26,7 +32,7 @@ public class Assignment {
         return sAssignment;
     }
 
-<<<<<<< HEAD
+
     public void setCode(String Code) {
         this.Code = Code;
     }
@@ -49,7 +55,7 @@ public class Assignment {
     }
     public void setDescription(String Description) {
         this.Description = Description;
-=======
+    }
     public Assignment(String assignmentName, String statement, String lang, String description) {
         this.assignmentName = assignmentName;
         this.statement = statement;
@@ -64,33 +70,12 @@ public class Assignment {
         this.description = response.getString("description");
     }
 
-    public void setPoints(int Points) { this.Points = Points;}
-
-    public void setAssignmentName(String AssignmentName) {
-        this.AssignmentName = AssignmentName;
-    }
-
-    public void setStatement(String Statement) {
-        this.Statement = Statement;
-    }
-
-    public void setLang(String Lang) {
-        this.Lang = Lang;
-    }
-    public void setUnitTests(String setUnitTests) {
-        this.Lang = setUnitTests;
-    }
-    public void setDescription(String Description) {
-        this.Description = Description;
-    }
-
     public int getId() {
         return id;
     }
 
     public void setId(int id) {
         this.id = id;
->>>>>>> ec4b8dfa3af4d9ad89ab5e5326697b59faef498f
     }
 
     public String getAssignmentName() {
