@@ -68,7 +68,11 @@ def run(code, tests, conn):
 	conn.close()
 
 
+<<<<<<< HEAD
+@app.route('/python', methods=["POST"])
+=======
 @app.route('/assignment/python', methods=["POST"])
+>>>>>>> ec4b8dfa3af4d9ad89ab5e5326697b59faef498f
 def init_student_run():
 	json_data = request.get_json()
 	code = json_data.get('code')
@@ -76,7 +80,7 @@ def init_student_run():
 	parent_conn, child_conn = Pipe()
 	p = multiprocessing.Process(target=run, args=(code, tests, child_conn))
 	p.start()
-	p.join(10)
+	p.join(20)
 	if p.is_alive():
 		p.kill()
 		p.join()

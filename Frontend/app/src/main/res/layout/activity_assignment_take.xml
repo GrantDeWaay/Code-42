@@ -7,40 +7,69 @@
 
     <LinearLayout
         android:layout_width="0dp"
-        android:layout_height="729dp"
-        android:layout_marginTop="1dp"
-        android:layout_marginBottom="1dp"
+        android:layout_height="0dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/textView2"
+        <TableRow
             android:layout_width="match_parent"
-            android:layout_height="63dp"
-            android:autoSizeTextType="uniform"
-            android:text="Name of Assignment" />
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/assignmentNameTextView"
+                android:layout_width="279dp"
+                android:layout_height="match_parent"
+                android:autoSizeTextType="uniform"
+                android:text="TextView"
+                android:textAllCaps="true" />
+
+            <Button
+                android:id="@+id/infoButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="info" />
+
+        </TableRow>
+
+        <TextView
+            android:id="@+id/statementTextView"
+            android:layout_width="match_parent"
+            android:layout_height="75dp"
+            android:text="Statement" />
+
+        <TextView
+            android:id="@+id/varsInitTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="x is an integer given by the compiler" />
 
         <EditText
-            android:id="@+id/TypeIDE"
+            android:id="@+id/codeEditText"
             android:layout_width="match_parent"
-            android:layout_height="275dp"
+            android:layout_height="502dp"
             android:ems="10"
             android:gravity="start|top"
             android:inputType="textMultiLine" />
 
-        <TextView
-            android:id="@+id/Console"
-            android:layout_width="match_parent"
-            android:layout_height="201dp"
-            android:text="TextView" />
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
-        <Button
-            android:id="@+id/runCode"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Submit" />
+            <Button
+                android:id="@+id/submitButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Submit" />
+
+            <Button
+                android:id="@+id/loadDefaultButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Load Default" />
+        </TableRow>
+
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
