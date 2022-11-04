@@ -2,6 +2,7 @@ package coms309.controller;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.util.Calendar;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,19 +22,31 @@ import coms309.coderunner.TempFileManager;
 import coms309.controller.token.UserTokens;
 import coms309.database.dataobjects.Assignment;
 import coms309.database.dataobjects.AssignmentFile;
+import coms309.database.dataobjects.Grade;
+import coms309.database.dataobjects.User;
 import coms309.database.services.AssignmentService;
+import coms309.database.services.GradeService;
+import coms309.database.services.UserService;
 
 @RestController
 public class CodeRunnerController {
 
     @Autowired
     private AssignmentService as;
+
+    @Autowired
+    private GradeService gs;
+
+    @Autowired
+    private UserService us;
     
     @PutMapping("/run/{assignmentId}")
     public ResponseEntity<ApiCodeRunResult> runAssignment(@PathVariable long assignmentId, @RequestBody ApiCodeSubmission codeSubmission, @RequestParam String token) {
         if(!UserTokens.isStudent(token)) return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 
         Long studentId = UserTokens.getID(token);
+
+        Optional<User> u = us.findById(studentId);
 
         Optional<Assignment> a = as.findById(assignmentId);
 
@@ -70,8 +83,34 @@ public class CodeRunnerController {
             }
 
             if(!runner.getStdOutData().equals(a.get().getExpectedOutput())) {
+                Grade g = gs.findByUserAndAssignment(studentId, assignmentId);
+                
+                if(g == null) {
+                    g = new Grade(0.0, Calendar.getInstance().getTime());
+                    g.setAssignment(a.get());
+                    a.get().getGrades().add(g);
+                    g.setUser(u.get());
+                    u.get().getGrades().add(g);
+
+                    gs.create(g);
+                }
                 return new ResponseEntity<>(new ApiCodeRunResult(false, "Expected output differs", a.get().getExpectedOutput(), runner.getStdOutData()), HttpStatus.ACCEPTED);
             }
+
+            Grade g = gs.findByUserAndAssignment(studentId, assignmentId);
+            
+            if(g == null) {
+                g = new Grade(0.0, Calendar.getInstance().getTime());
+                g.setAssignment(a.get());
+                a.get().getGrades().add(g);
+                g.setUser(u.get());
+                u.get().getGrades().add(g);
+            } else {
+                g.setGrade(100.0);
+                g.setUpdateDate(Calendar.getInstance().getTime());
+            }
+            
+            gs.create(g);
 
             return new ResponseEntity<>(new ApiCodeRunResult(true, "Expected output matches", a.get().getExpectedOutput(), runner.getStdOutData()), HttpStatus.ACCEPTED);
 
