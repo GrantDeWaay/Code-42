@@ -70,6 +70,8 @@ public class AssignmentCreateActivity extends AppCompatActivity {
                 cc.setStatement(problem.getText().toString());
                 cc.setPoints(Integer.parseInt(score.getText().toString()));
                 cc.setLang(langText[langSpin.getSelectedItemPosition()]);
+
+                i.putExtra("courseId", getIntent().getIntExtra("courseId", -1));
                 startActivity(i);
             }
         });

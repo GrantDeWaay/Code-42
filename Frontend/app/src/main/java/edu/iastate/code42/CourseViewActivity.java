@@ -359,6 +359,8 @@ public class CourseViewActivity extends BaseDrawer implements View.OnClickListen
 
             case R.id.addAssignmentButton:
                 Intent assignmentCreate = new Intent(this, AssignmentCreateActivity.class);
+                assignmentCreate.putExtra("courseId", courseId);
+
                 startActivity(assignmentCreate);
                 break;
 

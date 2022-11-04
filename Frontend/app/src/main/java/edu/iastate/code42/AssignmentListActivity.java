@@ -129,6 +129,8 @@ public class AssignmentListActivity extends AppCompatActivity implements Adapter
     @Override
     public void onClick(View view) {
         Intent assignmentCreate = new Intent(this, AssignmentCreateActivity.class);
+        assignmentCreate.putExtra("courseId", courseId);
+
         startActivity(assignmentCreate);
     }
 }

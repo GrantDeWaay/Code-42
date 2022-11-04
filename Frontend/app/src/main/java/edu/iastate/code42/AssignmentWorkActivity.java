@@ -1,6 +1,7 @@
 package edu.iastate.code42;
 
 import android.annotation.SuppressLint;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -21,6 +22,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import edu.iastate.code42.app.AppController;
+import edu.iastate.code42.objects.User;
+import edu.iastate.code42.utils.Const;
 
 public class AssignmentWorkActivity extends AppCompatActivity implements View.OnClickListener{
     private Button submit;
@@ -39,6 +42,11 @@ public class AssignmentWorkActivity extends AppCompatActivity implements View.On
     private JSONObject assignmentData;
     private String descText;
     private String baseCode;
+
+    User user;
+    SharedPreferences userSession;
+
+    int id;
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,10 +70,14 @@ public class AssignmentWorkActivity extends AppCompatActivity implements View.On
         testPUV = inflater.inflate(R.layout.popup_window, null);
         results = testPUV.findViewById(R.id.testResultsTextView);
 
+        user = User.get(getApplicationContext());
+        userSession = getSharedPreferences(getString(R.string.session_shared_pref), MODE_PRIVATE);
+
 
         testPopup = new PopupWindow(testPUV, width, height, true);
+        id = getIntent().getIntExtra("id", -1);
 
-        String url = "http://coms-309-028.class.las.iastate.edu:8080/assignment/37?token=test";
+        String url = String.format(Const.GET_ASSIGNMENT, id, userSession.getString("token", ""));
         JsonObjectRequest req = new JsonObjectRequest(Request.Method.GET, url,null,
                 response -> {
                     assignmentData = response;
@@ -93,10 +105,6 @@ public class AssignmentWorkActivity extends AppCompatActivity implements View.On
         loadDefault.setOnClickListener(view -> {
             ide.setText(baseCode);
         });
-
-
-
-
 
         info.setOnClickListener(this);
         submit.setOnClickListener(this);
