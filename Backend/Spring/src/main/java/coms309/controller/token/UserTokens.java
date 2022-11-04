@@ -11,10 +11,20 @@ public class UserTokens {
     public static HashMap<String, Long> adminTokens = new HashMap<String, Long>(); // (Key: Token, Value: ID)
 
     public static boolean isStudent(String token) {
+        // Built in token for testing purpose
+        // Should remove in final build
+        if (token.equals("test")) {
+            return true;
+        }
         return studentTokens.containsKey(token);
     }
 
     public static boolean isTeacher(String token) {
+        // Built in token for testing purpose
+        // Should remove in final build
+        if (token.equals("test")) {
+            return true;
+        }
         return teacherTokens.containsKey(token);
     }
 
