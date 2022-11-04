@@ -2,14 +2,11 @@
 stages:
   - maventry
   - mavendeploy
-  - androidtry
-  - androidbuild
-  - androidtest
 
 maven-build:   #this is a JOB
   stage: maventry
   tags:
-    - springboot_tag  					# this is LINK to the shell runner on the remote-server 
+    - nathan_backend_tag  					# this is LINK to the shell runner on the remote-server 
   script:
     - cd Backend
     - cd Spring #change directory to where you have your springboot application
@@ -18,7 +15,7 @@ maven-build:   #this is a JOB
 maven-deploy:
   stage: mavendeploy
   tags:
-    - springboot_tag
+    - nathan_backend_tag
   script:
     - cd Backend/Spring
     - mvn package
@@ -26,29 +23,3 @@ maven-deploy:
     - sudo systemctl stop system-code42
     - sudo systemctl start system-code42
     
-android-build:
-  image: gjandres/android-ci:latest
-  stage: androidbuild
-  before_script:
-    - export GRADLE_USER_HOME=`pwd`/.gradle
-    - chmod +x ./Frontend/gradlew
-  tags:
-   - android_tag
-  script:
-    - cd Frontend
-    - ./gradlew build
-  artifacts:
-    paths:
-    - Android_test/app/build/outputs/
-
-android-test:
-  image: gjandres/android-ci:latest
-  stage: androidtest
-  before_script:
-    - export GRADLE_USER_HOME=`pwd`/.gradle
-    - chmod +x ./Frontend/gradlew
-  tags:
-   - android_tag
-  script:
-    - cd Frontend
-    - ./gradlew test
