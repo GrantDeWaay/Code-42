@@ -38,6 +38,7 @@ public class AssignmentCodeCreateActivity extends AppCompatActivity {
     private Button goNext;
     private EditText baseCode;
     private EditText newUnitTest;
+    private Assignment cc;
 
     User user;
     SharedPreferences userSession;
@@ -50,9 +51,7 @@ public class AssignmentCodeCreateActivity extends AppCompatActivity {
         goNext = findViewById(R.id.goNext);
         baseCode = findViewById(R.id.baseCode);
         newUnitTest = findViewById(R.id.unitTestText);
-        Assignment cc = Assignment.get(getApplicationContext());
-        cc.setCode(baseCode.getText().toString());
-
+        cc = Assignment.get(getApplicationContext());
         user = User.get(getApplicationContext());
         userSession = getSharedPreferences(getString(R.string.session_shared_pref), MODE_PRIVATE);
 
