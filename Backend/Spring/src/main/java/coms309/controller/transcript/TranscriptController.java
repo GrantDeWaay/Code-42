@@ -19,6 +19,10 @@ import java.util.*;
 @RestController
 public class TranscriptController {
 
+    /*
+        Input ID, and returns JSON with assignments and grades sorted by courses
+     */
+
     @Autowired
     UserService us;
 
