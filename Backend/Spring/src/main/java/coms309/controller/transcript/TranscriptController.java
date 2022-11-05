@@ -39,13 +39,14 @@ public class TranscriptController {
         if (!user.isPresent()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        List<Transcript.CourseAssignments> ca = new LinkedList<>(); // List of courses and their assignment-grade pairs
-        Set<Grade> grades = user.get().getGrades();
+        List<Transcript.CourseAssignments> ca = new LinkedList<>();
         for (Course c : user.get().getCourses()) {
-            List<Transcript.AssignmentGrade> ag = new LinkedList<>(); // New list of assignments and their grades for each course
-            for (Grade g : grades){
-                if (Objects.equals(c.getId(), g.getAssignment().getCourse().getId())) { // Only add assignment grades from assignments that belong to course
-                    ag.add(new Transcript.AssignmentGrade(g.getAssignment().getTitle(), g.getGrade()));
+            Set<Assignment> assignments = c.getAssignments(); // Assignments of specific course
+            List<Transcript.AssignmentGrade> ag = new LinkedList<>();
+            for (Assignment a : assignments) {
+                Set<Grade> grades = a.getGrades(); // All grades from assignment
+                for (Grade g : grades) {
+                    ag.add(new Transcript.AssignmentGrade(a.getTitle(), g.getGrade()));
                 }
             }
             ca.add(new Transcript.CourseAssignments(c.getTitle(), ag));
