@@ -122,11 +122,13 @@ public class AssignmentWorkActivity extends AppCompatActivity implements View.On
             });
         }
         else if (view.getId() == submitId) {
+            Log.i("ok",userSession.getString("token", ""));
             String urlw = String.format(Const.SOURCE + "run/%s" + Const.TOKEN, id, userSession.getString("token", ""));
+            Log.i("url", urlw);
             JSONObject obj = new JSONObject();
             try {
-                obj.put("name", "code42" + ".java");
-                obj.put("contents", ide.getText().toString());
+                obj.put("name", "name" + ".java");
+                obj.put("contents", ide.getText().toString().replaceAll("\"", ("\\" + "\"")));
                 obj.put("language", "Java");
             } catch (JSONException e) {
                 e.printStackTrace();

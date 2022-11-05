@@ -51,7 +51,7 @@ public class Assignment {
         this.Lang = Lang;
     }
     public void setUnitTests(String setUnitTests) {
-        this.Lang = setUnitTests;
+        this.UnitTests = setUnitTests;
     }
     public void setDescription(String Description) {
         this.Description = Description;
