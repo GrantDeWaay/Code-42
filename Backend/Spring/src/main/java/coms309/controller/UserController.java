@@ -1,25 +1,22 @@
 package coms309.controller;
 
+import coms309.api.dataobjects.ApiCourse;
+import coms309.api.dataobjects.ApiGrade;
+import coms309.api.dataobjects.ApiUser;
 import coms309.controller.token.UserTokens;
+import coms309.controller.websocket.UserWebsocket;
 import coms309.database.dataobjects.Course;
 import coms309.database.dataobjects.Grade;
 import coms309.database.dataobjects.User;
 import coms309.database.services.UserService;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import coms309.api.dataobjects.*;
-
-import java.util.List;
-import java.util.LinkedList;
-import java.util.Set;
-import java.util.Calendar;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Optional;
+import javax.websocket.EncodeException;
+import java.io.IOException;
+import java.util.*;
 
 @RestController
 public class UserController {
@@ -29,7 +26,8 @@ public class UserController {
     UserService us;
 
     @GetMapping("/user")
-    public @ResponseBody ResponseEntity<List<ApiUser>> getUserList(@RequestParam String token) {
+    public @ResponseBody
+    ResponseEntity<List<ApiUser>> getUserList(@RequestParam String token) {
         if (!UserTokens.isTeacher(token) && !UserTokens.isAdmin(token)) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
@@ -45,7 +43,8 @@ public class UserController {
     }
 
     @GetMapping("/user/{id}")
-    public @ResponseBody ResponseEntity<ApiUser> getUser(@PathVariable long id, @RequestParam String token) {
+    public @ResponseBody
+    ResponseEntity<ApiUser> getUser(@PathVariable long id, @RequestParam String token) {
         if (!UserTokens.isLiveToken(token)) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
@@ -57,16 +56,18 @@ public class UserController {
     }
 
     @GetMapping("/user/{email}")
-    public @ResponseBody ResponseEntity<ApiUser> getUserByEmail(@PathVariable String email) {
+    public @ResponseBody
+    ResponseEntity<ApiUser> getUserByEmail(@PathVariable String email) {
         Optional<User> u = us.findByEmail(email);
 
-        if(!u.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        if (!u.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
         return new ResponseEntity<>(new ApiUser(u.get()), HttpStatus.OK);
     }
 
     @GetMapping("/user/{id}/courses")
-    public @ResponseBody ResponseEntity<Set<ApiCourse>> getUserCourseList(@PathVariable long id, @RequestParam String token) {
+    public @ResponseBody
+    ResponseEntity<Set<ApiCourse>> getUserCourseList(@PathVariable long id, @RequestParam String token) {
         if (!UserTokens.isLiveToken(token)) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
@@ -86,7 +87,8 @@ public class UserController {
     }
 
     @GetMapping("/user/{id}/grades")
-    public @ResponseBody ResponseEntity<Set<ApiGrade>> getUserGradeList(@PathVariable long id, @RequestParam String token) {
+    public @ResponseBody
+    ResponseEntity<Set<ApiGrade>> getUserGradeList(@PathVariable long id, @RequestParam String token) {
         if (!UserTokens.isLiveToken(token)) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
@@ -106,21 +108,22 @@ public class UserController {
     }
 
     @GetMapping("/user/{userId}/assignment/{assignmentId}/grade")
-    public @ResponseBody ResponseEntity<ApiGrade> getUserGrade(@PathVariable long userId, @PathVariable long assignmentId, @RequestParam String token) {
-        if(!UserTokens.isLiveToken(token)) {
+    public @ResponseBody
+    ResponseEntity<ApiGrade> getUserGrade(@PathVariable long userId, @PathVariable long assignmentId, @RequestParam String token) {
+        if (!UserTokens.isLiveToken(token)) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
 
         Optional<User> user = us.findById(userId);
 
-        if(!user.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        if (!user.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
         Iterator<Grade> iter = user.get().getGrades().iterator();
 
-        while(iter.hasNext()) {
+        while (iter.hasNext()) {
             Grade g = iter.next();
 
-            if(g.getAssignment().getId() == assignmentId) {
+            if (g.getAssignment().getId() == assignmentId) {
                 return new ResponseEntity<>(new ApiGrade(g), HttpStatus.OK);
             }
         }
@@ -129,7 +132,8 @@ public class UserController {
     }
 
     @PostMapping("/user/create")
-    public @ResponseBody ResponseEntity<ApiUser> createUser(@RequestBody ApiUser u, @RequestParam String token) {
+    public @ResponseBody
+    ResponseEntity<ApiUser> createUser(@RequestBody ApiUser u, @RequestParam String token) {
         if (!UserTokens.isTeacher(token) && !UserTokens.isAdmin(token)) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
@@ -142,7 +146,8 @@ public class UserController {
     }
 
     @PutMapping("/user/{id}/update")
-    public @ResponseBody HttpStatus updateUser(@PathVariable long id, @RequestBody ApiUser u, @RequestParam String token) {
+    public @ResponseBody
+    HttpStatus updateUser(@PathVariable long id, @RequestBody ApiUser u, @RequestParam String token) throws EncodeException, IOException {
         if (!UserTokens.isLiveToken(token)) {
             return HttpStatus.FORBIDDEN;
         }
@@ -161,11 +166,15 @@ public class UserController {
 
         us.update(user);
 
+        // Added code for UserWebsocket test
+        UserWebsocket.sendUpdatedUser(user.getUsername(), new ApiUser(user));
+
         return HttpStatus.ACCEPTED;
     }
 
     @DeleteMapping("/user/{id}/delete")
-    public @ResponseBody HttpStatus deleteUser(@PathVariable long id, @RequestParam String token) {
+    public @ResponseBody
+    HttpStatus deleteUser(@PathVariable long id, @RequestParam String token) {
         if (!UserTokens.isTeacher(token) && !UserTokens.isAdmin(token)) {
             return HttpStatus.FORBIDDEN;
         }
