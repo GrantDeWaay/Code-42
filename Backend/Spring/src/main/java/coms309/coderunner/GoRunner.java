@@ -10,12 +10,27 @@ public class GoRunner extends CodeRunner {
 
     private String fileName;
 
+    /**
+     * Constructor.  Creates a new Go Runner with the given parameters.
+     * 
+     * @param af AssignmentFile object for use with files (should not be null, can just pass new AssignmentFile() if none available)
+     * @param acs ApiCodeSubmission object to get contents of submission to run
+     * @param tfm TempFileManager object to manage temporary directory for executing file
+     * @throws FileNotFoundException
+     */
     public GoRunner(AssignmentFile af, ApiCodeSubmission acs, TempFileManager tfm) throws FileNotFoundException {
         super(af.getCodeFolder(), tfm.getAssignmentFolderPath());
         compiledRunner = true;
         this.fileName = acs.getName();
     }
 
+    
+    /** 
+     * Method inherited from CompiledCodeRunner.  Compiles the Go program.
+     * 
+     * @return true on compilation success, false on failure
+     * @throws IOException
+     */
     @Override
     public boolean compile() throws IOException {
         Process process = Runtime.getRuntime().exec("go build -o " + testFolder + "/out " + testFolder + "/" + fileName);
@@ -29,6 +44,13 @@ public class GoRunner extends CodeRunner {
         return false;
     }
 
+    
+    /** 
+     * Method inherited from CodeRunner.  Runs the compiled Go program and saves the output/error streams so they can be checked later.
+     * 
+     * @return true if process runs successfully in allotted time with exit code 0, false otherwise
+     * @throws IOException
+     */
     @Override
     public boolean run() throws IOException {
         String executableName = fileName.substring(0, fileName.indexOf('.'));

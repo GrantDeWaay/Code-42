@@ -13,6 +13,13 @@ public class TempFileManager {
 
     private Long assignmentId;
 
+    /**
+     * Constructor.  Create a TempFileManager with the given parameters.
+     * 
+     * @param baseDirPath base directory path where temp files are stored
+     * @param userId user id for the temp files, used to construct path
+     * @param assignmentId assignment id for the temp files, used to construct path
+     */
     public TempFileManager(String baseDirPath, Long userId, Long assignmentId) {
         this.baseDir = new File(baseDirPath);
         if(!baseDir.isDirectory()) throw new IllegalArgumentException("Invalid path to temp file directory \"" + baseDirPath + "\".");
@@ -23,9 +30,10 @@ public class TempFileManager {
 
     
     /** 
-     * @return boolean
+     * Checks if user already has a temporary file directory under the base directory.
+     * 
+     * @return true if user folder exists, false otherwise
      */
-    // check if user has a folder already made in the directory
     public boolean userFolderExists() {
         File[] contents = baseDir.listFiles();
 
@@ -40,7 +48,9 @@ public class TempFileManager {
 
     
     /** 
-     * @return boolean
+     * Checks if this assignment already has a folder under the user.
+     * 
+     * @return true if assignment folder exists, false otherwise
      */
     public boolean assignmentFolderExists() {
         File userDir = new File(baseDir.getAbsolutePath() + "/" + userId.toString() + "/assignments/");
@@ -56,12 +66,18 @@ public class TempFileManager {
         return found;
     }
 
+    /**
+     * Create user folder if it doesn't exist.
+     */
     public void createUserFolder() {
         File userDir = new File(baseDir.getAbsolutePath() + "/" + userId.toString());
 
         userDir.mkdirs();
     }
 
+    /**
+     * Create assignment folder for user if it doesn't exist.
+     */
     public void createAssignmentFolder() {
         File assignmentDir = new File(baseDir.getAbsolutePath() + "/" + userId.toString() + "/assignments/" + assignmentId.toString());
 
@@ -70,6 +86,8 @@ public class TempFileManager {
 
     
     /** 
+     * Get the path to the user temporary folder.
+     * 
      * @return String
      * @throws FileNotFoundException
      */
@@ -81,6 +99,8 @@ public class TempFileManager {
 
     
     /** 
+     * Get the path to the assignment temporary folder.
+     * 
      * @return String
      * @throws FileNotFoundException
      */
@@ -92,6 +112,8 @@ public class TempFileManager {
 
     
     /** 
+     * Get the path to the base temporary directory.
+     * 
      * @return String
      */
     public String getBaseDirPath() {

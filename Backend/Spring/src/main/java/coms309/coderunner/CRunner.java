@@ -15,7 +15,7 @@ public class CRunner extends CodeRunner {
     private String mainName;
     
     /**
-     * Constructor for C Runner.
+     * Constructor.  Creates a new C Runner with the given parameters.
      * 
      * @param af AssignmentFile object for use with files (should not be null, can just pass new AssignmentFile() if none available)
      * @param acs ApiCodeSubmission object to get contents of submission to run
