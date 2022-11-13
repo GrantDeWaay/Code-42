@@ -17,10 +17,18 @@ public class ApiGrade {
     // date the grade was last updated
     private Date updateDate;
 
+    /**
+     * Default constructor.  All fields are initialized to null.
+     */
     public ApiGrade() {
 
     }
 
+    /**
+     * Constructor.  Creates a new ApiGrade from a database grade.
+     * 
+     * @param g database grade to create from
+     */
     public ApiGrade(Grade g) {
         this.id = g.getId();
         this.grade = g.getGrade();
@@ -29,7 +37,9 @@ public class ApiGrade {
 
     
     /** 
-     * @param id
+     * Set the unique id for this grade.
+     * 
+     * @param id new id
      */
     public void setId(Long id) {
         this.id = id;
@@ -37,6 +47,8 @@ public class ApiGrade {
 
     
     /** 
+     * Get the unique id for this grade.
+     * 
      * @return Long
      */
     public Long getId() {
@@ -45,7 +57,9 @@ public class ApiGrade {
 
     
     /** 
-     * @param grade
+     * Set the grade (percentage).
+     * 
+     * @param grade new grade
      */
     public void setGrade(Double grade) {
         this.grade = grade;
@@ -53,6 +67,8 @@ public class ApiGrade {
 
     
     /** 
+     * Get the grade.
+     * 
      * @return Double
      */
     public Double getGrade() {
@@ -61,7 +77,9 @@ public class ApiGrade {
 
     
     /** 
-     * @param updateDate
+     * Set the update date for the grade.
+     * 
+     * @param updateDate new update date
      */
     public void setUpdateDate(Date updateDate) {
         this.updateDate = updateDate;
@@ -69,6 +87,8 @@ public class ApiGrade {
 
     
     /** 
+     * Get the update date for the grade.
+     * 
      * @return Date
      */
     public Date getUpdateDate() {

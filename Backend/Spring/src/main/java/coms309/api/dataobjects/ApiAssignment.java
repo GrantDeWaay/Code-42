@@ -6,6 +6,7 @@ import coms309.database.dataobjects.Assignment;
 
 public class ApiAssignment {
 
+    // unique id for the assignment
     private Long id;
 
     // title of assignment
@@ -26,10 +27,18 @@ public class ApiAssignment {
     // date assignment is due
     private Date dueDate;
 
+    /**
+     * Default constructor, all fields initialize to null.
+     */
     public ApiAssignment() {
 
     }
 
+    /**
+     * Create an ApiAssignment from a database Assignment.  Used when returning info to clients.
+     * 
+     * @param a
+     */
     public ApiAssignment(Assignment a) {
         this.id = a.getId();
         this.title = a.getTitle();
@@ -43,25 +52,29 @@ public class ApiAssignment {
 
     
     /** 
-     * @param id
+     * Set the id for this object.
+     * 
+     * @param id new id
      */
     public void setId(Long id) {
-        // TODO add in code to check IDs for uniqueness
         this.id = id;
     }
 
     
-    /** 
+    /**
+     * Get the id for this object.
+     *  
      * @return Long
      */
-    // returns the ID of the user
     public Long getId() {
         return id;
     }
 
     
     /** 
-     * @param title
+     * Set the title of the assignment.
+     * 
+     * @param title new title
      */
     public void setTitle(String title) {
         this.title = title;
@@ -69,6 +82,8 @@ public class ApiAssignment {
 
     
     /** 
+     * Get the title of the assignment.
+     * 
      * @return String
      */
     public String getTitle() {
@@ -77,7 +92,9 @@ public class ApiAssignment {
 
     
     /** 
-     * @param description
+     * Set the description for the assignment.
+     * 
+     * @param description new description
      */
     public void setDescription(String description) {
         this.description = description;
@@ -85,6 +102,8 @@ public class ApiAssignment {
 
     
     /** 
+     * Get the description for the assignment.
+     * 
      * @return String
      */
     public String getDescription() {
@@ -93,7 +112,9 @@ public class ApiAssignment {
 
     
     /** 
-     * @param problemStatement
+     * Set the problem statement for the assignment.
+     * 
+     * @param problemStatement new problem statement
      */
     public void setProblemStatement(String problemStatement) {
         this.problemStatement = problemStatement;
@@ -101,6 +122,8 @@ public class ApiAssignment {
 
     
     /** 
+     * Get the problem statement for the assignment.
+     * 
      * @return String
      */
     public String getProblemStatement() {
@@ -109,7 +132,9 @@ public class ApiAssignment {
 
     
     /** 
-     * @param template
+     * Set the template code for the assignment.
+     * 
+     * @param template new template code
      */
     public void setTemplate(String template) {
         this.template = template;
@@ -117,6 +142,8 @@ public class ApiAssignment {
 
     
     /** 
+     * Get the template code for the assignment.
+     * 
      * @return String
      */
     public String getTemplate() {
@@ -125,7 +152,9 @@ public class ApiAssignment {
 
     
     /** 
-     * @param expectedOutput
+     * Set the expected output for the assignment.
+     * 
+     * @param expectedOutput new expected output
      */
     public void setExpectedOutput(String expectedOutput) {
         this.expectedOutput = expectedOutput;
@@ -133,6 +162,8 @@ public class ApiAssignment {
 
     
     /** 
+     * Get the expected output for the assignment.
+     * 
      * @return String
      */
     public String getExpectedOutput() {
@@ -141,7 +172,9 @@ public class ApiAssignment {
 
     
     /** 
-     * @param creationDate
+     * Set the creation date for the assignment.
+     * 
+     * @param creationDate new creation date
      */
     public void setCreationDate(Date creationDate) {
         this.creationDate = creationDate;
@@ -149,6 +182,8 @@ public class ApiAssignment {
 
     
     /** 
+     * Get the creation date for the assignment.
+     * 
      * @return Date
      */
     public Date getCreationDate() {
@@ -157,7 +192,9 @@ public class ApiAssignment {
 
     
     /** 
-     * @param dueDate
+     * Set the due date for the assignment.
+     * 
+     * @param dueDate new due date
      */
     public void setDueDate(Date dueDate) {
         this.dueDate = dueDate;
@@ -165,6 +202,8 @@ public class ApiAssignment {
 
     
     /** 
+     * Get the due date for the assignment.
+     * 
      * @return Date
      */
     public Date getDueDate() {

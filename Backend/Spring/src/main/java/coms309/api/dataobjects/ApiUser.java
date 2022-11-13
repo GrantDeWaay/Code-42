@@ -30,10 +30,18 @@ public class ApiUser {
     // time of user creation
     private Date creationDate;
 
+    /**
+     * Default constructor.  All fields initialize to null.
+     */
     public ApiUser() {
 
     }
 
+    /**
+     * Constructor.  Create an ApiUser from a database User.
+     * 
+     * @param u database user to create from
+     */
     public ApiUser(User u) {
         this.id = u.getId();
         this.username = u.getUsername();
@@ -44,6 +52,17 @@ public class ApiUser {
         this.type = u.getType();
     }
 
+    /**
+     * Constructor.  Create an ApiUser with the fields initialized to the given values.
+     * 
+     * @param id id
+     * @param username username
+     * @param firstName first name
+     * @param lastName last name
+     * @param password password
+     * @param email email for user
+     * @param type type of user
+     */
     public ApiUser(Long id, String username, String firstName, String lastName, String password, String email, String type) {
         this.id = id;
         this.username = username;
@@ -56,25 +75,29 @@ public class ApiUser {
 
     
     /** 
-     * @param id
+     * Set the unique id for the user.
+     * 
+     * @param id new id
      */
     public void setId(Long id) {
-        // TODO add in code to check IDs for uniqueness
         this.id = id;
     }
 
     
     /** 
+     * Get the unique id for the user.
+     * 
      * @return Long
      */
-    // returns the ID of the user
     public Long getId() {
         return id;
     }
 
     
     /** 
-     * @param username
+     * Set the username for the user.
+     * 
+     * @param username new username
      */
     public void setUsername(String username) {
         this.username = username;
@@ -82,6 +105,8 @@ public class ApiUser {
 
     
     /** 
+     * Get the username for the user.
+     * 
      * @return String
      */
     public String getUsername() {
@@ -90,7 +115,9 @@ public class ApiUser {
 
     
     /** 
-     * @param firstName
+     * Set the first name for the user.
+     * 
+     * @param firstName new first name
      */
     public void setFirstName(String firstName) {
         this.firstName = firstName;
@@ -98,6 +125,8 @@ public class ApiUser {
 
     
     /** 
+     * Get the first name for the user.
+     * 
      * @return String
      */
     public String getFirstName() {
@@ -106,7 +135,9 @@ public class ApiUser {
 
     
     /** 
-     * @param lastName
+     * Set the last name for the user.
+     * 
+     * @param lastName new last name
      */
     public void setLastName(String lastName) {
         this.lastName = lastName;
@@ -114,6 +145,8 @@ public class ApiUser {
 
     
     /** 
+     * Get the last name for the user.
+     * 
      * @return String
      */
     public String getLastName() {
@@ -122,7 +155,9 @@ public class ApiUser {
 
     
     /** 
-     * @param password
+     * Set the password for the user.
+     * 
+     * @param password new password
      */
     public void setPassword(String password) {
         this.password = password;
@@ -130,6 +165,8 @@ public class ApiUser {
 
     
     /** 
+     * Get the password for the user.
+     * 
      * @return String
      */
     public String getPassword() {
@@ -138,7 +175,9 @@ public class ApiUser {
 
     
     /** 
-     * @param email
+     * Set the email for the user.
+     * 
+     * @param email new email
      */
     public void setEmail(String email) {
         this.email = email;
@@ -146,6 +185,8 @@ public class ApiUser {
 
     
     /** 
+     * Get the email for the user.
+     * 
      * @return String
      */
     public String getEmail() {
@@ -154,15 +195,18 @@ public class ApiUser {
 
     
     /** 
-     * @param type
+     * Set the type of user.
+     * 
+     * @param type new type
      */
     public void setType(String type) {
-        // TODO add code to check for valid types
         this.type = type;
     }
 
     
     /** 
+     * Get the type of the user.
+     * 
      * @return String
      */
     public String getType() {
@@ -171,6 +215,8 @@ public class ApiUser {
 
     
     /** 
+     * Set the creation date for the user.
+     * 
      * @param creationDate
      */
     public void setCreationDate(Date creationDate) {
@@ -179,6 +225,8 @@ public class ApiUser {
 
     
     /** 
+     * Get the creation date for the user.
+     * 
      * @return Date
      */
     public Date getCreationDate() {

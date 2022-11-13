@@ -14,6 +14,14 @@ public class ApiCodeRunResult {
     // what the code actually outputted
     private String actualOutput;
 
+    /**
+     * Constructor.
+     * 
+     * @param pass whether or not the code run passed
+     * @param message any message with associated with the run
+     * @param expectedOutput expected output for the run
+     * @param actualOutput actual output for the run
+     */
     public ApiCodeRunResult(boolean pass, String message, String expectedOutput, String actualOutput) {
         this.pass = pass;
         this.message = message;
@@ -23,7 +31,9 @@ public class ApiCodeRunResult {
 
     
     /** 
-     * @param pass
+     * Set the pass state for the code run.
+     * 
+     * @param pass new pass state
      */
     public void setPass(boolean pass) {
         this.pass = pass;
@@ -31,6 +41,8 @@ public class ApiCodeRunResult {
 
     
     /** 
+     * Get the pass state for the code run.
+     * 
      * @return boolean
      */
     public boolean getPass() {
@@ -39,7 +51,9 @@ public class ApiCodeRunResult {
     
     
     /** 
-     * @param message
+     * Set the message for the code run.
+     * 
+     * @param message new message
      */
     public void setMessage(String message) {
         this.message = message;
@@ -47,6 +61,8 @@ public class ApiCodeRunResult {
 
     
     /** 
+     * Get the message for the code run
+     * 
      * @return String
      */
     public String getMessage() {
@@ -55,7 +71,9 @@ public class ApiCodeRunResult {
 
     
     /** 
-     * @param expectedOutput
+     * Set the expected output for the code run.
+     * 
+     * @param expectedOutput new expected output
      */
     public void setExpectedOutput(String expectedOutput) {
         this.expectedOutput = expectedOutput;
@@ -63,6 +81,8 @@ public class ApiCodeRunResult {
 
     
     /** 
+     * Get the expected output for the code run.
+     * 
      * @return String
      */
     public String getExpectedOutput() {
@@ -71,7 +91,9 @@ public class ApiCodeRunResult {
 
     
     /** 
-     * @param actualOutput
+     * Set the actual output for the code run.
+     * 
+     * @param actualOutput new actual output
      */
     public void setActualOutput(String actualOutput) {
         this.actualOutput = actualOutput;
@@ -79,6 +101,8 @@ public class ApiCodeRunResult {
 
     
     /** 
+     * Get the actual output for the code run.
+     * 
      * @return String
      */
     public String getActualOutput() {
