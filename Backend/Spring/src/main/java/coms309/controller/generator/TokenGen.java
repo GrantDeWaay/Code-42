@@ -8,6 +8,11 @@ public class TokenGen {
 
     private static final Random r = new Random();
 
+    /**
+     * Generates unique session token to be assigned to user.
+     *
+     * @return unique session token
+     */
     public static String generateSessionToken() {
         StringBuilder sb = new StringBuilder();
         while (UserTokens.isLiveToken(String.valueOf(sb)) || sb.toString().equals("")) {

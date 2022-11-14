@@ -28,6 +28,9 @@ import coms309.database.services.AssignmentService;
 import coms309.database.services.GradeService;
 import coms309.database.services.UserService;
 
+/**
+ * Controller for running code on the backend.
+ */
 @RestController
 public class CodeRunnerController {
 
@@ -39,10 +42,20 @@ public class CodeRunnerController {
 
     @Autowired
     private UserService us;
-    
+
+    /**
+     * Send code to backend where it is compiled and ran.
+     * Put request.
+     * Path "/run/{assignmentId}".
+     *
+     * @param assignmentId   assignment's id
+     * @param codeSubmission code submission data
+     * @param token          permission token
+     * @return code run result data
+     */
     @PutMapping("/run/{assignmentId}")
     public ResponseEntity<ApiCodeRunResult> runAssignment(@PathVariable long assignmentId, @RequestBody ApiCodeSubmission codeSubmission, @RequestParam String token) {
-        if(!UserTokens.isStudent(token)) return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        if (!UserTokens.isStudent(token)) return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 
         Long studentId = UserTokens.getID(token);
 
@@ -50,11 +63,12 @@ public class CodeRunnerController {
 
         Optional<Assignment> a = as.findById(assignmentId);
 
-        if(!a.isPresent()) return new ResponseEntity<>(new ApiCodeRunResult(false, "Assignment not found", "", ""), HttpStatus.NOT_FOUND);
+        if (!a.isPresent())
+            return new ResponseEntity<>(new ApiCodeRunResult(false, "Assignment not found", "", ""), HttpStatus.NOT_FOUND);
 
         AssignmentFile af = a.get().getAssignmentFile();
 
-        if(af == null) af = new AssignmentFile(); // initialize to empty
+        if (af == null) af = new AssignmentFile(); // initialize to empty
 
         // TODO move this stuff to a service of some kind??
         TempFileManager tempFileManager = new TempFileManager("/home/gitlab-runner/tempfiles/users/", studentId, a.get().getId());
@@ -72,20 +86,20 @@ public class CodeRunnerController {
 
             writer.close();
 
-            if(runner.isCompiledRunner()) {
-                if(!runner.compile()) {
+            if (runner.isCompiledRunner()) {
+                if (!runner.compile()) {
                     return new ResponseEntity<>(new ApiCodeRunResult(false, "Compilation failed", "", ""), HttpStatus.ACCEPTED);
                 }
             }
 
-            if(!runner.run()) {
+            if (!runner.run()) {
                 return new ResponseEntity<>(new ApiCodeRunResult(false, "Run failed", "", ""), HttpStatus.ACCEPTED);
             }
 
-            if(!runner.getStdOutData().equals(a.get().getExpectedOutput())) {
+            if (!runner.getStdOutData().equals(a.get().getExpectedOutput())) {
                 Grade g = gs.findByUserAndAssignment(studentId, assignmentId);
-                
-                if(g == null) {
+
+                if (g == null) {
                     g = new Grade(0.0, Calendar.getInstance().getTime());
                     g.setAssignment(a.get());
                     a.get().getGrades().add(g);
@@ -98,8 +112,8 @@ public class CodeRunnerController {
             }
 
             Grade g = gs.findByUserAndAssignment(studentId, assignmentId);
-            
-            if(g == null) {
+
+            if (g == null) {
                 g = new Grade(0.0, Calendar.getInstance().getTime());
                 g.setAssignment(a.get());
                 a.get().getGrades().add(g);
@@ -109,12 +123,12 @@ public class CodeRunnerController {
                 g.setGrade(100.0);
                 g.setUpdateDate(Calendar.getInstance().getTime());
             }
-            
+
             gs.create(g);
 
             return new ResponseEntity<>(new ApiCodeRunResult(true, "Expected output matches", a.get().getExpectedOutput(), runner.getStdOutData()), HttpStatus.ACCEPTED);
 
-        // TODO make this better
+            // TODO make this better
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
