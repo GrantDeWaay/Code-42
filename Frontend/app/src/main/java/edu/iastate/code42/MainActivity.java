@@ -126,8 +126,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             /*Toast.makeText(getApplicationContext(), response.toString(),
                                     Toast.LENGTH_LONG).show();*/
                             try {
-                                //userSessionEditor.putString("token", response.getString("token"));
-                                userSessionEditor.putString("token", "test");
+                                userSessionEditor.putString("token", response.getString("token"));
+                                //userSessionEditor.putString("token", "test");
                                 userSessionEditor.commit();
                                 loginSuccess(response);
                             } catch (JSONException jsonException) {

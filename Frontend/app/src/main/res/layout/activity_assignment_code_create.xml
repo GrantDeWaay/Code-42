@@ -10,18 +10,30 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/unitTestText"
+        <TextView
+            android:id="@+id/textView6"
             android:layout_width="match_parent"
-            android:layout_height="238dp"
-            android:ems="10"
-            android:gravity="start|top"
-            android:inputType="textMultiLine" />
+            android:layout_height="wrap_content"
+            android:text="Enter Code that Student Will Start With:" />
 
         <EditText
             android:id="@+id/baseCode"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="372dp"
+            android:ems="10"
+            android:gravity="start|top"
+            android:inputType="textMultiLine" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Enter the expected out:" />
+
+        <EditText
+            android:id="@+id/unitTestText"
+            android:layout_width="match_parent"
+            android:layout_height="238dp"
             android:ems="10"
             android:gravity="start|top"
             android:inputType="textMultiLine" />

@@ -40,12 +40,6 @@
             android:layout_height="75dp"
             android:text="Statement" />
 
-        <TextView
-            android:id="@+id/varsInitTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="x is an integer given by the compiler" />
-
         <EditText
             android:id="@+id/codeEditText"
             android:layout_width="match_parent"

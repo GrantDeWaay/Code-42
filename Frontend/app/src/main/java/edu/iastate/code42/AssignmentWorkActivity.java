@@ -2,6 +2,7 @@ package edu.iastate.code42;
 
 import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -11,15 +12,22 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.concurrent.atomic.AtomicInteger;
 
 import edu.iastate.code42.app.AppController;
 import edu.iastate.code42.objects.User;
@@ -42,7 +50,9 @@ public class AssignmentWorkActivity extends AppCompatActivity implements View.On
     private JSONObject assignmentData;
     private String descText;
     private String baseCode;
-
+    private TextView testingCodeTitleStatusTextView;
+    private RelativeLayout popupRelativeLayout;
+    private ProgressBar progressBar;
     User user;
     SharedPreferences userSession;
 
@@ -68,7 +78,11 @@ public class AssignmentWorkActivity extends AppCompatActivity implements View.On
         infoPopup = new PopupWindow(infoPUV, width, height, true);
 
         testPUV = inflater.inflate(R.layout.popup_window, null);
+
+        testingCodeTitleStatusTextView = testPUV.findViewById(R.id.testingCodeTitleStatusTextView);
+        popupRelativeLayout = testPUV.findViewById(R.id.popupRelativeLayout);
         results = testPUV.findViewById(R.id.testResultsTextView);
+        progressBar = testPUV.findViewById(R.id.progressBar);
 
         user = User.get(getApplicationContext());
         userSession = getSharedPreferences(getString(R.string.session_shared_pref), MODE_PRIVATE);
@@ -85,13 +99,11 @@ public class AssignmentWorkActivity extends AppCompatActivity implements View.On
                         assignmentName.setText(assignmentData.getString("title"));
                         statementTextView.setText(assignmentData.getString("problemStatement"));
                         descText = assignmentData.getString("description");
-                        Log.i("testing", descText);
                         results.setText("Loadin' doot doot doot datt...");
                         description.setText(descText);
                         assignmentNamePopupText.setText(assignmentData.getString("title"));
-                        ide.setText(assignmentData.getString("template"));
                         baseCode = assignmentData.getString("template");
-
+                        ide.setText(baseCode);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -122,6 +134,10 @@ public class AssignmentWorkActivity extends AppCompatActivity implements View.On
             });
         }
         else if (view.getId() == submitId) {
+            popupRelativeLayout.setBackgroundColor(Color.parseColor("#673AB7"));
+            String loadingString = "Performing Tests...";
+            results.setText(loadingString);
+            progressBar.setVisibility(View.VISIBLE);
             Log.i("ok",userSession.getString("token", ""));
             String urlw = String.format(Const.SOURCE + "run/%s" + Const.TOKEN, id, userSession.getString("token", ""));
             Log.i("url", urlw);
@@ -136,18 +152,48 @@ public class AssignmentWorkActivity extends AppCompatActivity implements View.On
             Log.i("json", obj.toString());
             JsonObjectRequest req = new JsonObjectRequest(Request.Method.PUT, urlw,obj,
                     response -> {
-                        results.setText(response.toString());
-                        Log.i("result", response.toString());
+                Log.i("Return", response.toString());
+                        try {
+                            String message;
+                            if(response.getBoolean("pass")){
+                                testingCodeTitleStatusTextView.setText("PASSED");
+                                popupRelativeLayout.setBackgroundColor(Color.parseColor("#008000"));
+                                message = "Expected : " + response.getString("expectedOutput") + " " +
+                                        "Actual : " + response.getString("actualOutput");
+                            }
+                            else{
+                                testingCodeTitleStatusTextView.setText("FAIL");
+                                popupRelativeLayout.setBackgroundColor(Color.parseColor("#D2042D"));
+                                message = "Expected : " + response.getString("expectedOutput") + " " +
+                                        "Actual : " + response.getString("actualOutput");
+                                if (response.getString("message").equals("Compilation failed")) {
+                                    message = "Compile Error!";
+                                }
+                            }
+                            results.setText(message);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        progressBar.setVisibility(View.INVISIBLE);
                     }, error -> {
-                results.setText(error.toString());
-            });
+                        testingCodeTitleStatusTextView.setText("FAIL");
+                        popupRelativeLayout.setBackgroundColor(Color.RED);
+                        results.setText("That didn't work!");
+                        progressBar.setVisibility(View.INVISIBLE);
+                    });
 
             AppController.getInstance().addToRequestQueue(req);
+
             testPopup.showAtLocation(view, Gravity.CENTER, 0, 0);
+            testPopup.setFocusable(true);
+            testPopup.update();
             testPUV.setOnTouchListener((v, event) -> {
-                v.performClick();
-                testPopup.dismiss();
-                return true;
+                if(progressBar.getVisibility() == View.INVISIBLE){
+                    v.performClick();
+                    testPopup.dismiss();
+                    return true;
+                }
+                return false;
             });
         }
     }
