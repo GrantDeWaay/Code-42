@@ -99,13 +99,11 @@ public class AssignmentWorkActivity extends AppCompatActivity implements View.On
                         assignmentName.setText(assignmentData.getString("title"));
                         statementTextView.setText(assignmentData.getString("problemStatement"));
                         descText = assignmentData.getString("description");
-                        Log.i("testing", descText);
                         results.setText("Loadin' doot doot doot datt...");
                         description.setText(descText);
                         assignmentNamePopupText.setText(assignmentData.getString("title"));
-                        ide.setText(assignmentData.getString("template"));
                         baseCode = assignmentData.getString("template");
-
+                        ide.setText(baseCode);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -146,8 +144,6 @@ public class AssignmentWorkActivity extends AppCompatActivity implements View.On
             JSONObject obj = new JSONObject();
             try {
                 obj.put("name", "name" + ".java");
-                // The line below is the fix, it did not like how I passed quotes
-                // without them being character escaped
                 obj.put("contents", ide.getText().toString().replaceAll("\"", ("\\" + "\"")));
                 obj.put("language", "Java");
             } catch (JSONException e) {
@@ -155,35 +151,36 @@ public class AssignmentWorkActivity extends AppCompatActivity implements View.On
             }
             Log.i("json", obj.toString());
             JsonObjectRequest req = new JsonObjectRequest(Request.Method.PUT, urlw,obj,
-                    new Response.Listener<JSONObject>() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            // Display the first 500 characters of the response string.
-                            results.setText("Response is: " + response.toString());
-                            try {
-                                if(response.getBoolean("pass")){
-                                    testingCodeTitleStatusTextView.setText("PASSED");
-                                    popupRelativeLayout.setBackgroundColor(Color.parseColor("#008000"));
-                                }
-                                else{
-                                    testingCodeTitleStatusTextView.setText("FAIL");
-                                    popupRelativeLayout.setBackgroundColor(Color.parseColor("#D2042D"));
-                                }
-                                //results.setText("Expected : " + response.getString("expectedOut") + "Actual : " + response.getString("actualOut"));
-                            } catch (JSONException e) {
-                                e.printStackTrace();
+                    response -> {
+                Log.i("Return", response.toString());
+                        try {
+                            String message;
+                            if(response.getBoolean("pass")){
+                                testingCodeTitleStatusTextView.setText("PASSED");
+                                popupRelativeLayout.setBackgroundColor(Color.parseColor("#008000"));
+                                message = "Expected : " + response.getString("expectedOutput") + " " +
+                                        "Actual : " + response.getString("actualOutput");
                             }
-                            progressBar.setVisibility(View.INVISIBLE);
+                            else{
+                                testingCodeTitleStatusTextView.setText("FAIL");
+                                popupRelativeLayout.setBackgroundColor(Color.parseColor("#D2042D"));
+                                message = "Expected : " + response.getString("expectedOutput") + " " +
+                                        "Actual : " + response.getString("actualOutput");
+                                if (response.getString("message").equals("Compilation failed")) {
+                                    message = "Compile Error!";
+                                }
+                            }
+                            results.setText(message);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
-                    }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    testingCodeTitleStatusTextView.setText("FAIL");
-                    popupRelativeLayout.setBackgroundColor(Color.RED);
-                    results.setText("That didn't work!");
-                    progressBar.setVisibility(View.INVISIBLE);
-                }
-            });
+                        progressBar.setVisibility(View.INVISIBLE);
+                    }, error -> {
+                        testingCodeTitleStatusTextView.setText("FAIL");
+                        popupRelativeLayout.setBackgroundColor(Color.RED);
+                        results.setText("That didn't work!");
+                        progressBar.setVisibility(View.INVISIBLE);
+                    });
 
             AppController.getInstance().addToRequestQueue(req);
 
@@ -191,7 +188,6 @@ public class AssignmentWorkActivity extends AppCompatActivity implements View.On
             testPopup.setFocusable(true);
             testPopup.update();
             testPUV.setOnTouchListener((v, event) -> {
-                Log.i("T", progressBar.getVisibility() +"");
                 if(progressBar.getVisibility() == View.INVISIBLE){
                     v.performClick();
                     testPopup.dismiss();
