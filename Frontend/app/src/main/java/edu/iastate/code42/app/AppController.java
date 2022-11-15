@@ -10,6 +10,10 @@ import com.android.volley.toolbox.Volley;
 
 import edu.iastate.code42.utils.LruBitmapCache;
 
+/**
+ * AppController
+ * Android Volley Controller for HTTP Requests
+ */
 public class AppController extends Application {
 
 	public static final String TAG = AppController.class

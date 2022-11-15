@@ -6,6 +6,10 @@ import androidx.collection.LruCache;
 
 import com.android.volley.toolbox.ImageLoader.ImageCache;
 
+/**
+ * LruBitmapCahce class
+ * Android Volley class from tutorial
+ */
 public class LruBitmapCache extends LruCache<String, Bitmap> implements ImageCache {
 	public static int getDefaultLruCacheSize() {
 		final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);

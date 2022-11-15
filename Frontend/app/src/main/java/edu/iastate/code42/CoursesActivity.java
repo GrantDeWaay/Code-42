@@ -36,6 +36,11 @@ import edu.iastate.code42.utils.BaseDrawer;
 import edu.iastate.code42.utils.Const;
 import edu.iastate.code42.utils.CourseListAdapter;
 
+/**
+ * CoursesActivity class
+ * View with a list of Courses for that User
+ * Layout: activity_courses
+ */
 public class CoursesActivity extends BaseDrawer implements AdapterView.OnItemClickListener, View.OnClickListener {
 
     ActivityCoursesBinding activityBaseDrawerBinding;
@@ -47,6 +52,11 @@ public class CoursesActivity extends BaseDrawer implements AdapterView.OnItemCli
     ArrayList<Course> courses;
     CourseListAdapter courseAdapter;
 
+    /**
+     * Creates and draws the view; initializes the objects
+     * Performs GET_COURSES and GET_COURSES_FOR_USER HTTP Requests
+     * @param savedInstanceState Application Bundle
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -131,6 +141,13 @@ public class CoursesActivity extends BaseDrawer implements AdapterView.OnItemCli
         AppController.getInstance().addToRequestQueue(courseListReq, "course_get_course");
     }
 
+    /**
+     * Event Handler for when item in the ListView selected; Opens CourseViewActivity for selected Course
+     * @param adapterView AdaperView for ListView
+     * @param view ListView of item selected
+     * @param i Position of item selected
+     * @param l
+     */
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         Intent viewCourse = new Intent(CoursesActivity.this, CourseViewActivity.class);
@@ -139,6 +156,10 @@ public class CoursesActivity extends BaseDrawer implements AdapterView.OnItemCli
         startActivity(viewCourse);
     }
 
+    /**
+     * Event handler for when Add button pressed; Opens CourseCreationActivity
+     * @param view Button View that is Pressed
+     */
     @Override
     public void onClick(View view) {
         Intent creation = new Intent(CoursesActivity.this, CourseCreationActivity.class);

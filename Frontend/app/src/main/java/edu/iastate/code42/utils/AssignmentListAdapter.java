@@ -18,15 +18,28 @@ import edu.iastate.code42.R;
 import edu.iastate.code42.objects.Assignment;
 import edu.iastate.code42.objects.Course;
 
+/**
+ * AssignmentListAdapter class
+ * Extends ArrayAdapter with type of Assignment to create dynamic list view rows of Assignments
+ * Layout: row_assignment
+ */
 public class AssignmentListAdapter extends ArrayAdapter<Assignment> {
 
     private ArrayList<Assignment> assignments;
     Context mContext;
 
+    /**
+     * Helper class to store the elements of the view
+     */
     private static class ViewHolder{
         TextView title;
     }
 
+    /**
+     * Creates a new adapter using super constructor, hardcoded the layout
+     * @param context Application or activity context
+     * @param objects List of Assignment objects to display
+     */
     public AssignmentListAdapter(@NonNull Context context, @NonNull List<Assignment> objects) {
         super(context, R.layout.row_assignment, objects);
         this.assignments = (ArrayList<Assignment>) objects;
@@ -35,6 +48,13 @@ public class AssignmentListAdapter extends ArrayAdapter<Assignment> {
 
     private int lastPosition = -1;
 
+    /**
+     * Create and draw the dynamic view for the list row
+     * @param position Position of row in list
+     * @param convertView View of the row
+     * @param parent View of the ListView parent
+     * @return View of the row
+     */
     public View getView(int position, View convertView, ViewGroup parent) {
         // Get the data item for this position
         Assignment a = getItem(position);

@@ -17,16 +17,29 @@ import java.util.List;
 import edu.iastate.code42.R;
 import edu.iastate.code42.objects.Course;
 
+/**
+ * CourseListAdapter class
+ * Extends ArrayAdapter with type of Course to create dynamic list view rows of Courses
+ * Layout: row_course
+ */
 public class CourseListAdapter extends ArrayAdapter<Course> {
 
     private ArrayList<Course> courses;
     Context mContext;
 
+    /**
+     * Helper class to store the elements of the view
+     */
     private static class ViewHolder{
         TextView title;
         TextView languages;
     }
 
+    /**
+     * Creates a new adapter using super constructor, hardcoded the layout
+     * @param context Application or activity context
+     * @param objects List of Course objects to display
+     */
     public CourseListAdapter(@NonNull Context context, @NonNull List<Course> objects) {
         super(context, R.layout.row_course, objects);
         this.courses = (ArrayList<Course>) objects;
@@ -35,6 +48,13 @@ public class CourseListAdapter extends ArrayAdapter<Course> {
 
     private int lastPosition = -1;
 
+    /**
+     * Create and draw the dynamic view for the list row
+     * @param position Position of row in list
+     * @param convertView View of the row
+     * @param parent View of the ListView parent
+     * @return View of the row
+     */
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         // Get the data item for this position

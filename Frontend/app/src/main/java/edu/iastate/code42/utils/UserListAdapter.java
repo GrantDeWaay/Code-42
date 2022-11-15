@@ -19,16 +19,29 @@ import edu.iastate.code42.R;
 import edu.iastate.code42.objects.Course;
 import edu.iastate.code42.objects.User;
 
+/**
+ * UserListAdapter class
+ * Extends ArrayAdapter with type of User to create dynamic list view rows of User
+ * Layout: row_user
+ */
 public class UserListAdapter extends ArrayAdapter<User> {
 
     private ArrayList<User> users;
     Context mContext;
 
+    /**
+     * Helper class to store the elements of the view
+     */
     private static class ViewHolder{
         TextView fullName;
         TextView username;
     }
 
+    /**
+     * Creates a new adapter using super constructor, hardcoded the layout
+     * @param context Application or activity context
+     * @param objects List of User objects to display
+     */
     public UserListAdapter(@NonNull Context context, @NonNull List<User> objects) {
         super(context, R.layout.row_user, objects);
         this.users = (ArrayList<User>) objects;
@@ -37,6 +50,13 @@ public class UserListAdapter extends ArrayAdapter<User> {
 
     private int lastPosition = -1;
 
+    /**
+     * Create and draw the dynamic view for the list row
+     * @param position Position of row in list
+     * @param convertView View of the row
+     * @param parent View of the ListView parent
+     * @return View of the row
+     */
     @SuppressLint("ResourceAsColor")
     public View getView(int position, View convertView, ViewGroup parent) {
         // Get the data item for this position

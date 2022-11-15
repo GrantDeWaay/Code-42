@@ -42,6 +42,12 @@ import edu.iastate.code42.utils.BaseDrawer;
 import edu.iastate.code42.utils.Const;
 import edu.iastate.code42.utils.UserListAdapter;
 
+/**
+ * CourseViewActivity class
+ * Screen to view details about individual course
+ * Layout: activity_course_view
+ * Extends BaseDrawer
+ */
 public class CourseViewActivity extends BaseDrawer implements View.OnClickListener, AdapterView.OnItemClickListener {
 
     ActivityCourseViewBinding activityBaseDrawerBinding;
@@ -78,6 +84,12 @@ public class CourseViewActivity extends BaseDrawer implements View.OnClickListen
     UserListAdapter studentAdapter;
     UserListAdapter teacherAdapter;
 
+    /**
+     * Creates and draws the view; initializes the objects
+     * Performs GET_COURSE, GET_ASSIGNMENTS_FOR_COURSE, GET_TEACHERS_FOR_COURSE, and
+     * GET_STUDENTS_FOR_COURSE HTTP Requests
+     * @param savedInstanceState Application Bundle
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -351,6 +363,10 @@ public class CourseViewActivity extends BaseDrawer implements View.OnClickListen
         }
     }
 
+    /**
+     * Event handler for when any button is pressed; Opens various activities depending on button
+     * @param view Button View that is Pressed
+     */
     @Override
     public void onClick(View view) {
         switch(view.getId()){
@@ -405,6 +421,13 @@ public class CourseViewActivity extends BaseDrawer implements View.OnClickListen
         }
     }
 
+    /**
+     * Event Handler for when item in a ListView selected; Opens various activities depending on ListView
+     * @param adapterView AdaperView for ListView
+     * @param view ListView of item selected
+     * @param i Position of item selected
+     * @param l
+     */
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         switch(view.getId()){
