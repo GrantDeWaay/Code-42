@@ -36,6 +36,7 @@ import edu.iastate.code42.utils.Const;
  * AssignmentListActivity class
  * View with a list of Assignments for a certain Course
  * Layout: activity_assignment_list
+ * @author Andrew
  */
 public class AssignmentListActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, View.OnClickListener {
     ListView assignmentList;

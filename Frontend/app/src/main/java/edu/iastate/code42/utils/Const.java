@@ -5,6 +5,8 @@ package edu.iastate.code42.utils;
  * Contains all of the API call paths stored as static final Strings;
  * Used in the respective activities using the <code>String.format()</code> function to fill the
  * path variables
+ * @author Andrew
+ * @author Grant
  */
 public class Const {
 	public static final String SOURCE = "http://coms-309-028.class.las.iastate.edu:8080/";

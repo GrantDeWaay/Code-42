@@ -39,6 +39,7 @@ import edu.iastate.code42.utils.UserListAdapter;
  * UserListActivity class
  * View with a list of Users, multiple configurations and uses based on User type and Intent type
  * Layout: activity_user_list
+ * @author Andrew
  */
 public class UserListActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, View.OnClickListener {
     ListView userList;

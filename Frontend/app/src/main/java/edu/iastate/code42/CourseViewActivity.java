@@ -47,6 +47,7 @@ import edu.iastate.code42.utils.UserListAdapter;
  * Screen to view details about individual course
  * Layout: activity_course_view
  * Extends BaseDrawer
+ * @author Andrew
  */
 public class CourseViewActivity extends BaseDrawer implements View.OnClickListener, AdapterView.OnItemClickListener {
 

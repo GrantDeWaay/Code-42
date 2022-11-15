@@ -44,6 +44,7 @@ import edu.iastate.code42.objects.User;
  * BaseDrawer class
  * Parent class to utilize the Drawer Navigation View
  * Layout: activity_base_drawer
+ * @author Andrew
  */
 public class BaseDrawer extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 

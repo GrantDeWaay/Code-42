@@ -31,6 +31,7 @@ import edu.iastate.code42.utils.Const;
  * CourseCreationActivity class
  * Create course screen
  * Layout: activity_course_creation
+ * @author Andrew
  */
 public class CourseCreationActivity extends AppCompatActivity implements View.OnClickListener {
 

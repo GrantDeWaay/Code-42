@@ -40,6 +40,7 @@ import edu.iastate.code42.utils.CourseListAdapter;
  * CoursesActivity class
  * View with a list of Courses for that User
  * Layout: activity_courses
+ * @author Andrew
  */
 public class CoursesActivity extends BaseDrawer implements AdapterView.OnItemClickListener, View.OnClickListener {
 

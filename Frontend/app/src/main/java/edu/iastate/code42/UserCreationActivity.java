@@ -32,6 +32,7 @@ import edu.iastate.code42.utils.Const;
  * UserCreationActivity class
  * Create User screen
  * Layout: activity_user_creation
+ * @author Andrew
  */
 public class UserCreationActivity extends AppCompatActivity implements View.OnClickListener {
     Button create;

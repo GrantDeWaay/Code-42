@@ -33,6 +33,7 @@ import edu.iastate.code42.utils.Const;
  * MainActivity class
  * First activity of application, login screen
  * Layout: activity_main
+ * @author Andrew
  */
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 

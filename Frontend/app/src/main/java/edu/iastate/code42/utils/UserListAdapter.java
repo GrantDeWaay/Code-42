@@ -23,6 +23,7 @@ import edu.iastate.code42.objects.User;
  * UserListAdapter class
  * Extends ArrayAdapter with type of User to create dynamic list view rows of User
  * Layout: row_user
+ * @author Andrew
  */
 public class UserListAdapter extends ArrayAdapter<User> {
 

@@ -22,6 +22,7 @@ import edu.iastate.code42.objects.Course;
  * AssignmentListAdapter class
  * Extends ArrayAdapter with type of Assignment to create dynamic list view rows of Assignments
  * Layout: row_assignment
+ * @author Andrew
  */
 public class AssignmentListAdapter extends ArrayAdapter<Assignment> {
 
