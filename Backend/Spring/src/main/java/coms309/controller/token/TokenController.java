@@ -3,6 +3,7 @@ package coms309.controller.token;
 import coms309.api.dataobjects.ApiUser;
 import coms309.database.dataobjects.User;
 import coms309.database.services.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,11 +16,17 @@ import java.util.Optional;
 @RestController
 public class TokenController {
 
-    UserService us;
+    @Autowired
+    private UserService us;
 
+    /**
+     * Get user data from token
+     *
+     * @param token user's token
+     * @return HTTP response, user data
+     */
     @GetMapping("/token/user/{token}")
-    public @ResponseBody
-    ResponseEntity<ApiUser> getUserByToken(@PathVariable String token) {
+    public @ResponseBody ResponseEntity<ApiUser> getUserByToken(@PathVariable String token) {
         long id = UserTokens.getID(token);
         Optional<User> u = us.findById(id);
         if (u.isPresent()) {

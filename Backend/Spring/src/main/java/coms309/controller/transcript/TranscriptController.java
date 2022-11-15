@@ -17,19 +17,25 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.*;
 
+/**
+ * Controller to handle getting a student's transcript.
+ */
 @RestController
 public class TranscriptController {
-
-    /*
-        Input ID, and returns JSON with assignments and grades sorted by courses
-     */
-
     @Autowired
     UserService us;
 
     @Autowired
     GradeService gs;
 
+    /**
+     * Gets a students transcript.
+     * Includes student's courses, assignments, and grades.
+     *
+     * @param id    user's id
+     * @param token user's token
+     * @return HTTP response, transcript data
+     */
     @GetMapping("/transcript/{id}")
     public ResponseEntity<Transcript> getStudentTranscript(@PathVariable long id, @RequestParam String token) {
         if (!UserTokens.isLiveToken(token)) {
