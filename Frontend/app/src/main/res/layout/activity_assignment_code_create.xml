@@ -16,13 +16,38 @@
             android:layout_height="wrap_content"
             android:text="Enter Code that Student Will Start With:" />
 
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/classNameEditText"
+                android:layout_width="183dp"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:text="ClassName" />
+
+            <TextView
+                android:id="@+id/textView7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="{" />
+        </TableRow>
+
         <EditText
             android:id="@+id/baseCode"
             android:layout_width="match_parent"
-            android:layout_height="372dp"
+            android:layout_height="200dp"
             android:ems="10"
             android:gravity="start|top"
             android:inputType="textMultiLine" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="}" />
 
         <TextView
             android:id="@+id/textView3"

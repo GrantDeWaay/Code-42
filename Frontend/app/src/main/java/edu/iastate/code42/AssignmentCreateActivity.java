@@ -64,7 +64,7 @@ public class AssignmentCreateActivity extends AppCompatActivity {
             else{
                 Intent i = new Intent(this, AssignmentCodeCreateActivity.class);
 
-                Assignment cc = Assignment.get(getApplicationContext());
+                Assignment cc = new Assignment(getApplicationContext());
                 cc.setAssignmentName(assignmentTitle.getText().toString());
                 cc.setDescription(desc.getText().toString());
                 cc.setStatement(problem.getText().toString());
