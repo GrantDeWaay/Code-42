@@ -41,6 +41,7 @@ public class AssignmentController {
      * @param token permission token
      * @return HTTP response, assignment data
      */
+    @RequestMapping(value = "/assignment/{id}", method = RequestMethod.GET)
     @GetMapping("/assignment/{id}")
     public @ResponseBody ResponseEntity<ApiAssignment> getAssignment(@PathVariable long id, @RequestParam String token) {
         if (!UserTokens.isLiveToken(token)) {
