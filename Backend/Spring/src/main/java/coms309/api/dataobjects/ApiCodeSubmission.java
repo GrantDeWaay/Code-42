@@ -8,20 +8,20 @@ public class ApiCodeSubmission {
      * Name of file that will be compiled.
      * This includes file extension.
      */
-    @ApiModelProperty(notes = "Name of the file being submitted for execution", name = "name", required = true, value = "hello.c")
+    @ApiModelProperty(value = "Name of the file being submitted for execution", name = "name", required = true)
     private String name;
 
     /**
      * Code being compiled.
      * Each line will be seperated by a newline
      */
-    @ApiModelProperty(notes = "Contents of the file being submitted", name = "contents", required = true, value = "#include <stdio.h>\n\nint main(void) {\n\tprintf(\"Hello World!\");\n\n\treturn 0\n}")
+    @ApiModelProperty(value = "Contents of the file being submitted", name = "contents", required = true)
     private String contents;
 
     /**
      * Name of coding language
      */
-    @ApiModelProperty(notes = "Name of the language being executed, used to determine what runner to call", name = "language", required = true, value = "C")
+    @ApiModelProperty(value = "Name of the language being executed, used to determine what runner to call", name = "language", required = true)
     private String language;
 
     /**

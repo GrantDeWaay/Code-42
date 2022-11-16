@@ -8,7 +8,7 @@ public class ApiUserLogin extends ApiUser {
     /**
      * Session token to enforce API permissions.
      */
-    @ApiModelProperty(notes = "Token for User to authenticate when making other API calls", name = "token", required = true, value = "AABBCCDDEEFFGGHH")
+    @ApiModelProperty(value = "Token for User to authenticate when making other API calls", name = "token", required = true)
     private String token;
 
     /**

@@ -10,31 +10,31 @@ public class ApiCourse {
     /**
      * Unique integer ID for each course.
      */
-    @ApiModelProperty(notes = "Unique ID of the Course", name = "id", required = true, value = "1")
+    @ApiModelProperty(value = "Unique ID of the Course", name = "id", required = true)
     private Long id;
 
     /**
      * Title of course.
      */
-    @ApiModelProperty(notes = "Title of the Course", name = "title", required = true, value = "Example Course")
+    @ApiModelProperty(value = "Title of the Course", name = "title", required = true)
     private String title;
 
     /**
      * Brief description of course.
      */
-    @ApiModelProperty(notes = "Description of the Course", name = "description", required = true, value = "Example Description")
+    @ApiModelProperty(value = "Description of the Course", name = "description", required = true)
     private String description;
 
     /**
      * Programming languages used in the course.
      */
-    @ApiModelProperty(notes = "Languages for the Course, comma delimited", name = "languages", required = true, value = "C")
+    @ApiModelProperty(value = "Languages for the Course, comma delimited", name = "languages", required = true)
     private String languages;
 
     /**
      * Creation date of course
      */
-    @ApiModelProperty(notes = "Creation date of the Course", name = "creationDate", required = true, value = "1970-01-01T00:00:00.00")
+    @ApiModelProperty(value = "Creation date of the Course", name = "creationDate", required = true)
     private Date creationDate;
 
     /**

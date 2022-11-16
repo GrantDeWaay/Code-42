@@ -10,49 +10,49 @@ public class ApiUser {
     /**
      * Unique integer ID for each user.
      */
-    @ApiModelProperty(notes = "Unique ID for the User", name = "id", required = true, value = "1")
+    @ApiModelProperty(value = "Unique ID for the User", name = "id", required = true)
     private Long id;
 
     /**
      * Username associated with user.
      */
-    @ApiModelProperty(notes = "Username for the User", name = "username", required = true, value = "jdoe")
+    @ApiModelProperty(value = "Username for the User", name = "username", required = true)
     private String username;
 
     /**
      * First name of user.
      */
-    @ApiModelProperty(notes = "First name of the User", name = "firstName", required = true, value = "John")
+    @ApiModelProperty(value = "First name of the User", name = "firstName", required = true)
     private String firstName;
 
     /**
      * Last name of user.
      */
-    @ApiModelProperty(notes = "Last name of the User", name = "lastName", required = true, value = "Doe")
+    @ApiModelProperty(value = "Last name of the User", name = "lastName", required = true)
     private String lastName;
 
     /**
      * Hash of user password used to authenticate.
      */
-    @ApiModelProperty(notes = "Password for the User to login", name = "password", required = true, value = "password")
+    @ApiModelProperty(value = "Password for the User to login", name = "password", required = true)
     private String password;
 
     /**
      * Email associated with user account.
      */
-    @ApiModelProperty(notes = "Email for the User", name = "email", required = true, value = "jdoe@example.com")
+    @ApiModelProperty(value = "Email for the User", name = "email", required = true)
     private String email;
 
     /**
      * Type of user.
      */
-    @ApiModelProperty(notes = "Type of User (student, teacher, or admin)", name = "type", required = true, value = "student")
+    @ApiModelProperty(value = "Type of User (student, teacher, or admin)", name = "type", required = true)
     private String type;
 
     /**
      * Time of user creation.
      */
-    @ApiModelProperty(notes = "Creation date for User", name = "creationDate", required = true, value = "1970-01-01T00:00:00.00")
+    @ApiModelProperty(value = "Creation date for User", name = "creationDate", required = true)
     private Date creationDate;
 
     /**
