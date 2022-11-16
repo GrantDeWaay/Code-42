@@ -27,6 +27,12 @@ import edu.iastate.code42.app.AppController;
 import edu.iastate.code42.objects.User;
 import edu.iastate.code42.utils.Const;
 
+/**
+ * CourseCreationActivity class
+ * Create course screen
+ * Layout: activity_course_creation
+ * @author Andrew
+ */
 public class CourseCreationActivity extends AppCompatActivity implements View.OnClickListener {
 
     Button create;
@@ -37,6 +43,10 @@ public class CourseCreationActivity extends AppCompatActivity implements View.On
     User user;
     SharedPreferences userSession;
 
+    /**
+     * Creates and draws the view; initializes the objects
+     * @param savedInstanceState Application Bundle
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +68,10 @@ public class CourseCreationActivity extends AppCompatActivity implements View.On
         create.setOnClickListener(this);
     }
 
+    /**
+     * Event handler for when Create button pressed; Performs CREATE_COURSE HTTP Request
+     * @param view Button View that is Pressed
+     */
     @Override
     public void onClick(View view) {
         if (title.getText() != null && !(title.getText().toString().isEmpty()) &&

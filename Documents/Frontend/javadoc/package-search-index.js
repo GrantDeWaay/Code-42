@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"edu.iastate.code42"},{"l":"edu.iastate.code42.app"},{"l":"edu.iastate.code42.objects"},{"l":"edu.iastate.code42.utils"}]

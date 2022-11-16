@@ -40,12 +40,22 @@ import edu.iastate.code42.R;
 import edu.iastate.code42.app.AppController;
 import edu.iastate.code42.objects.User;
 
+/**
+ * BaseDrawer class
+ * Parent class to utilize the Drawer Navigation View
+ * Layout: activity_base_drawer
+ * @author Andrew
+ */
 public class BaseDrawer extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     DrawerLayout drawerLayout;
     TextView headerName;
     User user;
 
+    /**
+     * Method to create and draw Navigation Menu
+     * @param view Main content view to draw Menu on top of
+     */
     @Override
     public void setContentView(View view) {
         drawerLayout = (DrawerLayout) getLayoutInflater().inflate(R.layout.activity_base_drawer,null);
@@ -74,6 +84,11 @@ public class BaseDrawer extends AppCompatActivity implements NavigationView.OnNa
 
     }
 
+    /**
+     * Event Handler for when MenuItem from Menu is Selected; Changes screen to selected screen
+     * @param item Selected MenuItem from list
+     * @return false
+     */
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         drawerLayout.closeDrawer(GravityCompat.START);
@@ -149,6 +164,10 @@ public class BaseDrawer extends AppCompatActivity implements NavigationView.OnNa
         return false;
     }
 
+    /**
+     * Sets title of screen next to Navigation Drawer Button
+     * @param titleString String to set title of activity to
+     */
     protected void allocateActivityTitle(String titleString){
         if(getSupportActionBar() != null){
             getSupportActionBar().setTitle(titleString);

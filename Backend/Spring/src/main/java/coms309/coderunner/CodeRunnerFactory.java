@@ -9,6 +9,8 @@ public class CodeRunnerFactory {
 
 
     /**
+     * Create a code runner with the given parameters.  Language is determined automatically from the code submission.
+     * 
      * @param af
      * @param acs
      * @param tfm

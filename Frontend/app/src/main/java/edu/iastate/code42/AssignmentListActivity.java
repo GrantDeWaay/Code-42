@@ -32,6 +32,12 @@ import edu.iastate.code42.objects.User;
 import edu.iastate.code42.utils.AssignmentListAdapter;
 import edu.iastate.code42.utils.Const;
 
+/**
+ * AssignmentListActivity class
+ * View with a list of Assignments for a certain Course
+ * Layout: activity_assignment_list
+ * @author Andrew
+ */
 public class AssignmentListActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, View.OnClickListener {
     ListView assignmentList;
     FloatingActionButton addAssignment;
@@ -44,6 +50,11 @@ public class AssignmentListActivity extends AppCompatActivity implements Adapter
 
     int courseId;
 
+    /**
+     * Creates and draws the view; initializes the objects
+     * Performs GET_ASSIGNMENTS_FOR_COURSE HTTP Request
+     * @param savedInstanceState Application Bundle
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -118,6 +129,13 @@ public class AssignmentListActivity extends AppCompatActivity implements Adapter
         AppController.getInstance().addToRequestQueue(courseAssignmentsReq, "course_get_assignments");
     }
 
+    /**
+     * Event Handler for when item in the ListView selected; Opens AssignmentWorkActivity for selected Assignment
+     * @param adapterView AdaperView for ListView
+     * @param view ListView of item selected
+     * @param i Position of item selected
+     * @param l
+     */
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         Intent assignmentView = new Intent(this, AssignmentWorkActivity.class);
@@ -126,6 +144,10 @@ public class AssignmentListActivity extends AppCompatActivity implements Adapter
         startActivity(assignmentView);
     }
 
+    /**
+     * Event handler for when Add button pressed; Opens AssignmentCreateActivity
+     * @param view Button View that is Pressed
+     */
     @Override
     public void onClick(View view) {
         Intent assignmentCreate = new Intent(this, AssignmentCreateActivity.class);

@@ -35,6 +35,12 @@ import edu.iastate.code42.objects.User;
 import edu.iastate.code42.utils.Const;
 import edu.iastate.code42.utils.UserListAdapter;
 
+/**
+ * UserListActivity class
+ * View with a list of Users, multiple configurations and uses based on User type and Intent type
+ * Layout: activity_user_list
+ * @author Andrew
+ */
 public class UserListActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, View.OnClickListener {
     ListView userList;
     FloatingActionButton add;
@@ -53,6 +59,11 @@ public class UserListActivity extends AppCompatActivity implements AdapterView.O
     int courseId;
     String url;
 
+    /**
+     * Creates and draws the view; initializes the objects
+     * Performs GET_USERS, GET_TEACHERS_FOR_COURSE, and GET_STUDENTS_FOR_COURSE HTTP Requests
+     * @param savedInstanceState Application Bundle
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -269,6 +280,13 @@ public class UserListActivity extends AppCompatActivity implements AdapterView.O
         }
     }
 
+    /**
+     * Event Handler for when item in the ListView selected
+     * @param adapterView AdaperView for ListView
+     * @param view ListView of item selected
+     * @param i Position of item selected
+     * @param l
+     */
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         switch(type) {
@@ -304,6 +322,10 @@ public class UserListActivity extends AppCompatActivity implements AdapterView.O
         }
     }
 
+    /**
+     * Event handler for when any button is pressed; Opens various activities depending on button
+     * @param view Button View that is Pressed
+     */
     @Override
     public void onClick(View view) {
         switch (view.getId()){

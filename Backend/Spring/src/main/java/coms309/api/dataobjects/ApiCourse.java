@@ -3,28 +3,53 @@ package coms309.api.dataobjects;
 import java.util.Date;
 
 import coms309.database.dataobjects.Course;
+import io.swagger.annotations.ApiModelProperty;
 
 public class ApiCourse {
-    
-    // unique integer ID for each course
+
+    /**
+     * Unique integer ID for each course.
+     */
+    @ApiModelProperty(value = "Unique ID of the Course", name = "id", required = true)
     private Long id;
 
-    // title of course
+    /**
+     * Title of course.
+     */
+    @ApiModelProperty(value = "Title of the Course", name = "title", required = true)
     private String title;
 
-    // brief description of course
+    /**
+     * Brief description of course.
+     */
+    @ApiModelProperty(value = "Description of the Course", name = "description", required = true)
     private String description;
 
-    // programming languages used in the course
+    /**
+     * Programming languages used in the course.
+     */
+    @ApiModelProperty(value = "Languages for the Course, comma delimited", name = "languages", required = true)
     private String languages;
 
-    // creation date of course
+    /**
+     * Creation date of course
+     */
+    @ApiModelProperty(value = "Creation date of the Course", name = "creationDate", required = true)
     private Date creationDate;
-    
+
+    /**
+     * Default constructor.
+     * All fields initialize to null.
+     */
     public ApiCourse() {
 
     }
 
+    /**
+     * Constructor.  Creates an ApiCourse from a database course.  Used when returning data to client.
+     *
+     * @param c database course to create from
+     */
     public ApiCourse(Course c) {
         this.id = c.getId();
         this.title = c.getTitle();
@@ -33,6 +58,15 @@ public class ApiCourse {
         this.creationDate = c.getCreationDate();
     }
 
+    /**
+     * Constructor.  Creates an ApiCourse with set values for all fields.
+     *
+     * @param id           id for the course
+     * @param title        title for the course
+     * @param description  description for the course
+     * @param languages    languages used in the course
+     * @param creationDate creation date of the course
+     */
     public ApiCourse(Long id, String title, String description, String languages, Date creationDate) {
         this.id = id;
         this.title = title;
@@ -41,81 +75,89 @@ public class ApiCourse {
         this.creationDate = creationDate;
     }
 
-    
-    /** 
-     * @param id
+    /**
+     * Get the unique id for the course.
+     *
+     * @return Long
+     */
+    public Long getId() {
+        return id;
+    }
+
+    /**
+     * Set the unique id for the course.
+     *
+     * @param id new id
      */
     public void setId(Long id) {
         this.id = id;
     }
 
-    
-    /** 
-     * @return Long
-     */
-    // returns the ID of the user
-    public Long getId() {
-        return id;
-    }
-
-    
-    /** 
-     * @param title
-     */
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    
-    /** 
+    /**
+     * Get the title for the course.
+     *
      * @return String
      */
     public String getTitle() {
         return title;
     }
 
-    
-    /** 
-     * @param description
+    /**
+     * Set the title for the course.
+     *
+     * @param title new title
      */
-    public void setDescription(String description) {
-        this.description = description;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    
-    /** 
+    /**
+     * Get the description for the course.
+     *
      * @return String
      */
     public String getDescription() {
         return description;
     }
 
-    
-    /** 
-     * @param languages
+    /**
+     * Set the description for the course.
+     *
+     * @param description new description
      */
-    public void setLanguages(String languages) {
-        this.languages = languages;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    
-    /** 
+    /**
+     * Get the languages for the course.
+     *
      * @return String
      */
     public String getLanguages() {
         return languages;
     }
 
-    
-    /** 
-     * @param language
-     * @return boolean
+    /**
+     * Set the languages for the course.  This should be a comma-delimited string.
+     *
+     * @param languages
+     */
+    public void setLanguages(String languages) {
+        this.languages = languages;
+    }
+
+    /**
+     * Check if the course uses a given language.
+     *
+     * @param language language to check
+     * @return true if the language is used, false otherwise
      */
     public boolean usesLanguage(String language) {
         String[] languageArray = languages.split(",");
 
-        for(String s : languageArray) {
-            if(s.equals(language)) {
+        for (String s : languageArray) {
+            if (s.equals(language)) {
                 return true;
             }
         }
@@ -123,20 +165,22 @@ public class ApiCourse {
         return false;
     }
 
-    
-    /** 
-     * @param creationDate
-     */
-    public void setCreationDate(Date creationDate) {
-        this.creationDate = creationDate;
-    }
-
-    
-    /** 
+    /**
+     * Get the creation date of the course.
+     *
      * @return Date
      */
     public Date getCreationDate() {
         return creationDate;
+    }
+
+    /**
+     * Set the creation date of the course.
+     *
+     * @param creationDate new creation date
+     */
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
     }
 
 }

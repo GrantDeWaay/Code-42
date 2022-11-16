@@ -1,19 +1,41 @@
 package coms309.api.dataobjects;
 
+import io.swagger.annotations.ApiModelProperty;
+
 public class ApiCodeRunResult {
-    
-    // whether or not the result was a success
+
+    /**
+     * Whether the result was a success.
+     */
+    @ApiModelProperty(value = "Whether or not the run resulted in a pass", name = "pass", required = true)
     private boolean pass;
 
-    // message to user (e.x. if compilation or run failed)
+    /**
+     * Response message to the user containing details on running code.
+     */
+    @ApiModelProperty(value = "Message associated with run, such as compilation failure or other error", name = "message", required = true)
     private String message;
 
-    // what the code was supposed to output
+    /**
+     * Expected output of the assignment.
+     */
+    @ApiModelProperty(value = "Expected output from the Assignment", name = "expectedOutput", required = true)
     private String expectedOutput;
 
-    // what the code actually outputted
+    /**
+     * What the code actually outputted.
+     */
+    @ApiModelProperty(value = "Actual output from the run", name = "actualOutput", required = true)
     private String actualOutput;
 
+    /**
+     * Constructor.
+     *
+     * @param pass           whether the code run passed
+     * @param message        any message with associated with the run
+     * @param expectedOutput expected output for the run
+     * @param actualOutput   actual output for the run
+     */
     public ApiCodeRunResult(boolean pass, String message, String expectedOutput, String actualOutput) {
         this.pass = pass;
         this.message = message;
@@ -21,68 +43,76 @@ public class ApiCodeRunResult {
         this.actualOutput = actualOutput;
     }
 
-    
-    /** 
-     * @param pass
-     */
-    public void setPass(boolean pass) {
-        this.pass = pass;
-    }
-
-    
-    /** 
+    /**
+     * Get the pass state for the code run.
+     *
      * @return boolean
      */
     public boolean getPass() {
         return pass;
     }
-    
-    
-    /** 
-     * @param message
+
+    /**
+     * Set the pass state for the code run.
+     *
+     * @param pass new pass state
      */
-    public void setMessage(String message) {
-        this.message = message;
+    public void setPass(boolean pass) {
+        this.pass = pass;
     }
 
-    
-    /** 
+    /**
+     * Get the message for the code run
+     *
      * @return String
      */
     public String getMessage() {
         return message;
     }
 
-    
-    /** 
-     * @param expectedOutput
+    /**
+     * Set the message for the code run.
+     *
+     * @param message new message
      */
-    public void setExpectedOutput(String expectedOutput) {
-        this.expectedOutput = expectedOutput;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
-    
-    /** 
+    /**
+     * Get the expected output for the code run.
+     *
      * @return String
      */
     public String getExpectedOutput() {
         return expectedOutput;
     }
 
-    
-    /** 
-     * @param actualOutput
+    /**
+     * Set the expected output for the code run.
+     *
+     * @param expectedOutput new expected output
      */
-    public void setActualOutput(String actualOutput) {
-        this.actualOutput = actualOutput;
+    public void setExpectedOutput(String expectedOutput) {
+        this.expectedOutput = expectedOutput;
     }
 
-    
-    /** 
+    /**
+     * Get the actual output for the code run.
+     *
      * @return String
      */
     public String getActualOutput() {
         return actualOutput;
     }
- 
+
+    /**
+     * Set the actual output for the code run.
+     *
+     * @param actualOutput new actual output
+     */
+    public void setActualOutput(String actualOutput) {
+        this.actualOutput = actualOutput;
+    }
+
 }

@@ -29,6 +29,12 @@ import edu.iastate.code42.app.AppController;
 import edu.iastate.code42.objects.User;
 import edu.iastate.code42.utils.Const;
 
+/**
+ * MainActivity class
+ * First activity of application, login screen
+ * Layout: activity_main
+ * @author Andrew
+ */
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     Button login;
@@ -39,6 +45,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     SharedPreferences appSetting;
     SharedPreferences.Editor userSessionEditor;
 
+    /**
+     * Creates and draws the view; initializes the objects
+     * @param savedInstanceState Application Bundle
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -104,6 +114,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         login.setOnClickListener(this);
     }
 
+    /**
+     * Helper method for when login is successful; Stores user data locally and goes to Dashboard
+     * @param response
+     * @throws JSONException
+     * @throws ParseException
+     */
     private void loginSuccess(JSONObject response) throws JSONException, ParseException {
         User user = User.get(getApplicationContext());
         user.fromJson(response);
@@ -112,6 +128,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         startActivity(dashboard);
     }
 
+    /**
+     * Event handler for when Login button pressed; Performs LOGIN HTTP Request
+     * @param view Button View that is Pressed
+     */
     @Override
     public void onClick(View view) {
                 if(password.getText() != null && !(password.getText().toString().isEmpty()) &&

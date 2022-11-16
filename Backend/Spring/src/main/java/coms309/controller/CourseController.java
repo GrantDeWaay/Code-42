@@ -11,6 +11,10 @@ import coms309.database.services.AssignmentService;
 import coms309.database.services.CourseService;
 import coms309.database.services.UserService;
 
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.ApiResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,21 +22,42 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
+/**
+ * Controller for course endpoints <p>
+ * HTTP 200 = good request. <p>
+ * HTTP 202 = good request and data has been changed. <p>
+ * HTTP 403 = incorrect permission. <p>
+ * HTTP 404 = user or data not found. <p>
+ */
 @RestController
 public class CourseController {
 
     @Autowired
-    CourseService cs;
+    private CourseService cs;
 
     @Autowired
-    AssignmentService as;
+    private AssignmentService as;
 
     @Autowired
-    UserService us;
+    private UserService us;
 
+    /**
+     * Get list of all courses.
+     * <p>
+     * Client must be teacher or admin.
+     * <p>
+     * Get request, path "/course".
+     *
+     * @param token permission token
+     * @return HTTP response, list of all courses
+     */
+    @ApiOperation(value = "Get a list of all Courses in the system", response = Iterable.class, tags = "course-controller")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "OK"),
+        @ApiResponse(code = 403, message = "FORBIDDEN")
+    })
     @GetMapping("/course")
-    public @ResponseBody
-    ResponseEntity<List<ApiCourse>> getCourseList(@RequestParam String token) {
+    public @ResponseBody ResponseEntity<List<ApiCourse>> getCourseList(@RequestParam String token) {
         if (!UserTokens.isTeacher(token) && !UserTokens.isAdmin(token)) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
@@ -48,9 +73,25 @@ public class CourseController {
         return new ResponseEntity<List<ApiCourse>>(courses, HttpStatus.OK);
     }
 
+    /**
+     * Get course by id.
+     * <p>
+     * Client must be student, teacher or admin.
+     * <p>
+     * Get request, path "/course/{id}".
+     *
+     * @param id    course's id
+     * @param token permission token
+     * @return HTTP response, course data
+     */
+    @ApiOperation(value = "Get a Course by ID", response = ApiCourse.class, tags = "course-controller")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "OK"),        
+        @ApiResponse(code = 403, message = "FORBIDDEN"),
+        @ApiResponse(code = 404, message = "NOT FOUND")
+    })
     @GetMapping("/course/{id}")
-    public @ResponseBody
-    ResponseEntity<ApiCourse> getCourse(@PathVariable long id, @RequestParam String token) {
+    public @ResponseBody ResponseEntity<ApiCourse> getCourse(@PathVariable long id, @RequestParam String token) {
         if (!UserTokens.isLiveToken(token)) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
@@ -61,9 +102,25 @@ public class CourseController {
         return new ResponseEntity<ApiCourse>(new ApiCourse(c.get()), HttpStatus.OK);
     }
 
+    /**
+     * Get list of assignments for a course.
+     * <p>
+     * Client must be student, teacher or admin.
+     * <p>
+     * Get request, path "/course/{id}/assignments".
+     *
+     * @param id    course's id
+     * @param token permission token
+     * @return HTTP response, assignment list
+     */
+    @ApiOperation(value = "Get a list of all Assignments for a Course", response = Iterable.class, tags = "course-controller")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "OK"),        
+        @ApiResponse(code = 403, message = "FORBIDDEN"),
+        @ApiResponse(code = 404, message = "NOT FOUND")
+    })
     @GetMapping("/course/{id}/assignments")
-    public @ResponseBody
-    ResponseEntity<Set<ApiAssignment>> getCourseAssignmentList(@PathVariable long id, @RequestParam String token) {
+    public @ResponseBody ResponseEntity<Set<ApiAssignment>> getCourseAssignmentList(@PathVariable long id, @RequestParam String token) {
         if (!UserTokens.isLiveToken(token)) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
@@ -82,9 +139,25 @@ public class CourseController {
         return new ResponseEntity<Set<ApiAssignment>>(assignments, HttpStatus.OK);
     }
 
+    /**
+     * Get list of users enrolled in course.
+     * <p>
+     * Client must be student, teacher or admin.
+     * <p>
+     * Get request, path "/course/{id}/users".
+     *
+     * @param id    course's id
+     * @param token permission token
+     * @return HTTP response, list of users
+     */
+    @ApiOperation(value = "Get a list of all Users in a Course", response = Iterable.class, tags = "course-controller")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "OK"),        
+        @ApiResponse(code = 403, message = "FORBIDDEN"),
+        @ApiResponse(code = 404, message = "NOT FOUND")
+    })
     @GetMapping("/course/{id}/users")
-    public @ResponseBody
-    ResponseEntity<Set<ApiUser>> getCourseUserList(@PathVariable long id, @RequestParam String token) {
+    public @ResponseBody ResponseEntity<Set<ApiUser>> getCourseUserList(@PathVariable long id, @RequestParam String token) {
         if (!UserTokens.isLiveToken(token)) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
@@ -103,19 +176,33 @@ public class CourseController {
         return new ResponseEntity<Set<ApiUser>>(users, HttpStatus.OK);
     }
 
+    /**
+     * Get list of students enrolled in course.
+     * <p>
+     * Get request, path "/course/{id}/students".
+     *
+     * @param id course's id
+     * @return HTTP response, list of students
+     */
+    @ApiOperation(value = "Get a list of all Users of type student in a Course", response = Iterable.class, tags = "course-controller")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "OK"),        
+        @ApiResponse(code = 403, message = "FORBIDDEN"),
+        @ApiResponse(code = 404, message = "NOT FOUND")
+    })
     @GetMapping("/course/{id}/students")
     public @ResponseBody ResponseEntity<Set<ApiUser>> getCourseStudentList(@PathVariable long id) {
         Optional<Course> result = cs.findById(id);
 
-        if(!result.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        if (!result.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
         Set<ApiUser> users = new HashSet<>();
 
         Iterator<User> iter = result.get().getStudents().iterator();
 
-        while(iter.hasNext()) {
+        while (iter.hasNext()) {
             User u = iter.next();
-            if(u.getType().equals("student")) {
+            if (u.getType().equals("student")) {
                 users.add(new ApiUser(u));
             }
         }
@@ -123,19 +210,33 @@ public class CourseController {
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
+    /**
+     * Get list of teachers enrolled in course.
+     * <p>
+     * Get request, path "/course/{id}/teachers".
+     *
+     * @param id course's id
+     * @return HTTP response, list of teachers
+     */
+    @ApiOperation(value = "Get a list of all Users of type teacher in a Course", response = Iterable.class, tags = "course-controller")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "OK"),        
+        @ApiResponse(code = 403, message = "FORBIDDEN"),
+        @ApiResponse(code = 404, message = "NOT FOUND")
+    })
     @GetMapping("/course/{id}/teachers")
     public @ResponseBody ResponseEntity<Set<ApiUser>> getCourseTeacherList(@PathVariable long id) {
         Optional<Course> result = cs.findById(id);
 
-        if(!result.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        if (!result.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
         Set<ApiUser> users = new HashSet<>();
 
         Iterator<User> iter = result.get().getStudents().iterator();
 
-        while(iter.hasNext()) {
+        while (iter.hasNext()) {
             User u = iter.next();
-            if(u.getType().equals("teacher")) {
+            if (u.getType().equals("teacher")) {
                 users.add(new ApiUser(u));
             }
         }
@@ -143,19 +244,33 @@ public class CourseController {
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
+    /**
+     * Get list of admins enrolled in course.
+     * <p>
+     * Get request, path "/course/{id}/admins".
+     *
+     * @param id course's id
+     * @return HTTP response, list of admins
+     */
+    @ApiOperation(value = "Get a list of all Users of type admin in a Course", response = Iterable.class, tags = "course-controller")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "OK"),        
+        @ApiResponse(code = 403, message = "FORBIDDEN"),
+        @ApiResponse(code = 404, message = "NOT FOUND")
+    })
     @GetMapping("/course/{id}/admins")
     public @ResponseBody ResponseEntity<Set<ApiUser>> getCourseAdminList(@PathVariable long id) {
         Optional<Course> result = cs.findById(id);
 
-        if(!result.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        if (!result.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
         Set<ApiUser> users = new HashSet<>();
 
         Iterator<User> iter = result.get().getStudents().iterator();
 
-        while(iter.hasNext()) {
+        while (iter.hasNext()) {
             User u = iter.next();
-            if(u.getType().equals("admin")) {
+            if (u.getType().equals("admin")) {
                 users.add(new ApiUser(u));
             }
         }
@@ -163,9 +278,25 @@ public class CourseController {
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
+    /**
+     * Create a new courses.
+     * <p>
+     * Client must be admin.
+     * <p>
+     * Post request, path "/course/create".
+     *
+     * @param c     course data
+     * @param token permission token
+     * @return HTTP response, course data with generated id
+     */
+    @ApiOperation(value = "Create a new Course", response = ApiCourse.class, tags = "course-controller")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "OK"),        
+        @ApiResponse(code = 403, message = "FORBIDDEN"),
+        @ApiResponse(code = 404, message = "NOT FOUND")
+    })
     @PostMapping("/course/create")
-    public @ResponseBody
-    ResponseEntity<ApiCourse> createCourse(@RequestBody ApiCourse c, @RequestParam String token) {
+    public @ResponseBody ResponseEntity<ApiCourse> createCourse(@RequestBody ApiCourse c, @RequestParam String token) {
         if (!UserTokens.isAdmin(token)) {
             return new ResponseEntity<>(HttpStatus.OK);
         }
@@ -177,9 +308,26 @@ public class CourseController {
         return new ResponseEntity<ApiCourse>(new ApiCourse(course), HttpStatus.OK);
     }
 
+    /**
+     * Update a course.
+     * <p>
+     * Client must be admin.
+     * <p>
+     * Put request, path "/course/{id}/update".
+     *
+     * @param id    course's id
+     * @param c     course data
+     * @param token permission token
+     * @return HTTP response, course data
+     */
+    @ApiOperation(value = "Update an existing Course", response = HttpStatus.class, tags = "course-controller")
+    @ApiResponses(value = {
+        @ApiResponse(code = 202, message = "ACCEPTED"),        
+        @ApiResponse(code = 403, message = "FORBIDDEN"),
+        @ApiResponse(code = 404, message = "NOT FOUND")
+    })
     @PutMapping("/course/{id}/update")
-    public @ResponseBody
-    HttpStatus updateCourse(@PathVariable long id, @RequestBody ApiCourse c, @RequestParam String token) {
+    public @ResponseBody HttpStatus updateCourse(@PathVariable long id, @RequestBody ApiCourse c, @RequestParam String token) {
         if (!UserTokens.isAdmin(token)) {
             return HttpStatus.FORBIDDEN;
         }
@@ -198,9 +346,25 @@ public class CourseController {
         return HttpStatus.ACCEPTED;
     }
 
+    /**
+     * Delete an assignment.
+     * <p>
+     * Client must be admin.
+     * <p>
+     * Delete request, path "/course/{id}/delete".
+     *
+     * @param id    course's id
+     * @param token permission token
+     * @return HTTP response
+     */
+    @ApiOperation(value = "Delete a Course from the system", response = HttpStatus.class, tags = "course-controller")
+    @ApiResponses(value = {
+        @ApiResponse(code = 202, message = "ACCEPTED"),        
+        @ApiResponse(code = 403, message = "FORBIDDEN"),
+        @ApiResponse(code = 404, message = "NOT FOUND")
+    })
     @DeleteMapping("/course/{id}/delete")
-    public @ResponseBody
-    HttpStatus deleteAssignment(@PathVariable long id, @RequestParam String token) {
+    public @ResponseBody HttpStatus deleteAssignment(@PathVariable long id, @RequestParam String token) {
         if (!UserTokens.isAdmin(token)) {
             return HttpStatus.FORBIDDEN;
         }
@@ -209,26 +373,41 @@ public class CourseController {
             cs.delete(id);
             return HttpStatus.ACCEPTED;
         } else {
-            return HttpStatus.BAD_REQUEST;
+            return HttpStatus.NOT_FOUND;
         }
     }
 
+    /**
+     * Get a list of upcoming assignments for a course.
+     * <p>
+     * Get request, path "/course/{id}/upcoming".
+     *
+     * @param id    course's id
+     * @param token permission token
+     * @return HTTP response, list of assignments
+     */
+    @ApiOperation(value = "Get a list of all upcoming Assignments for a Course", response = Iterable.class, tags = "course-controller")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "OK"),        
+        @ApiResponse(code = 403, message = "FORBIDDEN"),
+        @ApiResponse(code = 404, message = "NOT FOUND")
+    })
     @GetMapping("/course/{id}/upcoming")
     public @ResponseBody ResponseEntity<Set<ApiAssignment>> getUpcomingAssignments(@PathVariable long id, @RequestParam String token) {
-        if(!UserTokens.isLiveToken(token)) {
+        if (!UserTokens.isLiveToken(token)) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
 
         Optional<Course> course = cs.findById(id);
 
-        if(!course.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        if (!course.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
         Date now = new Date();
 
         Set<ApiAssignment> upcomingAssignments = new HashSet<>();
 
-        for(Assignment a : course.get().getAssignments()) {
-            if(a.getDueDate().compareTo(now) < 0) {
+        for (Assignment a : course.get().getAssignments()) {
+            if (a.getDueDate().compareTo(now) < 0) {
                 upcomingAssignments.add(new ApiAssignment(a));
             }
         }
@@ -236,6 +415,22 @@ public class CourseController {
         return new ResponseEntity<>(upcomingAssignments, HttpStatus.OK);
     }
 
+    /**
+     * Assign an assignment to a course.
+     * <p>
+     * Put request, path "/course/{courseId}/assignment/{assignmentId}".
+     *
+     * @param courseId     course's id
+     * @param assignmentId assignment's id
+     * @param token        permission token
+     * @return HTTP response
+     */
+    @ApiOperation(value = "Map an existing Assignment to a Course", response = HttpStatus.class, tags = "course-controller")
+    @ApiResponses(value = {
+        @ApiResponse(code = 202, message = "ACCEPTED"),        
+        @ApiResponse(code = 403, message = "FORBIDDEN"),
+        @ApiResponse(code = 404, message = "NOT FOUND")
+    })
     @PutMapping("/course/{courseId}/assignment/{assignmentId}")
     public @ResponseBody HttpStatus addAssignmentToCourse(@PathVariable long courseId, @PathVariable long assignmentId, @RequestParam String token) {
         if (!UserTokens.isTeacher(token) && !UserTokens.isAdmin(token)) {
@@ -255,6 +450,22 @@ public class CourseController {
         return HttpStatus.ACCEPTED;
     }
 
+    /**
+     * Remove an assignment from a course.
+     * <p>
+     * Delete request, path "/course/{courseId}/assignment/{assignmentId}".
+     *
+     * @param courseId     course's id
+     * @param assignmentId assignment's id
+     * @param token        permission token
+     * @return HTTP response
+     */
+    @ApiOperation(value = "Unmap an Assignment from a Course", response = HttpStatus.class, tags = "course-controller")
+    @ApiResponses(value = {
+        @ApiResponse(code = 202, message = "ACCEPTED"),        
+        @ApiResponse(code = 403, message = "FORBIDDEN"),
+        @ApiResponse(code = 404, message = "NOT FOUND")
+    })
     @DeleteMapping("/course/{courseId}/assignment/{assignmentId}")
     public @ResponseBody HttpStatus removeAssignmentFromCourse(@PathVariable long courseId, @PathVariable long assignmentId, @RequestParam String token) {
         if (!UserTokens.isTeacher(token) && !UserTokens.isAdmin(token)) {
@@ -280,6 +491,22 @@ public class CourseController {
         return HttpStatus.ACCEPTED;
     }
 
+    /**
+     * Add a user to a course.
+     * <p>
+     * Put request, path "/course/{courseId}/user/{userId}".
+     *
+     * @param courseId course's id
+     * @param userId   user's id
+     * @param token    permission token
+     * @return HTTP response
+     */
+    @ApiOperation(value = "Map an existing User to a Course", response = HttpStatus.class, tags = "course-controller")
+    @ApiResponses(value = {
+        @ApiResponse(code = 202, message = "ACCEPTED"),        
+        @ApiResponse(code = 403, message = "FORBIDDEN"),
+        @ApiResponse(code = 404, message = "NOT FOUND")
+    })
     @PutMapping("/course/{courseId}/user/{userId}")
     public @ResponseBody HttpStatus addUserToCourse(@PathVariable long courseId, @PathVariable long userId, @RequestParam String token) {
         if (!UserTokens.isTeacher(token) && !UserTokens.isAdmin(token)) {
@@ -299,6 +526,22 @@ public class CourseController {
         return HttpStatus.ACCEPTED;
     }
 
+    /**
+     * Remove a user from a course.
+     * <p>
+     * Delete request, path "/course/{courseId}/user/{userId}".
+     *
+     * @param courseId course's id
+     * @param userId   user's id
+     * @param token    permission token
+     * @return HTTP response
+     */
+    @ApiOperation(value = "Unmap a User from a Course", response = Iterable.class, tags = "course-controller")
+    @ApiResponses(value = {
+        @ApiResponse(code = 202, message = "ACCEPTED"),        
+        @ApiResponse(code = 403, message = "FORBIDDEN"),
+        @ApiResponse(code = 404, message = "NOT FOUND")
+    })
     @DeleteMapping("/course/{courseId}/user/{userId}")
     public @ResponseBody HttpStatus removeUserFromCourse(@PathVariable long courseId, @PathVariable long userId, @RequestParam String token) {
         if (!UserTokens.isTeacher(token) && !UserTokens.isAdmin(token)) {

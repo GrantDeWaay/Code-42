@@ -29,6 +29,12 @@ public abstract class CodeRunner {
     // maximum time that a program can run for, in milliseconds
     protected long maxRuntime;
 
+    /**
+     * Constructor.  Initializes common fields for code runners.
+     * 
+     * @param codeFolder folder where code templates are stored (can be blank)
+     * @param testFolder folder where code will be run (and maybe compiled)
+     */
     protected CodeRunner(String codeFolder, String testFolder) {
         this.codeFolder = codeFolder;
         this.testFolder = testFolder;

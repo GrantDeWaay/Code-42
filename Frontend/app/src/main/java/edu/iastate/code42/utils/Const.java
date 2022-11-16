@@ -1,5 +1,13 @@
 package edu.iastate.code42.utils;
 
+/**
+ * Const class
+ * Contains all of the API call paths stored as static final Strings;
+ * Used in the respective activities using the <code>String.format()</code> function to fill the
+ * path variables
+ * @author Andrew
+ * @author Grant
+ */
 public class Const {
 	public static final String SOURCE = "http://coms-309-028.class.las.iastate.edu:8080/";
 	//public static final String SOURCE = "https://a6629e8b-03c4-4b87-882c-d92549b52f9e.mock.pstmn.io/";
