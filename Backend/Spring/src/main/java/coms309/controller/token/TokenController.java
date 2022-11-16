@@ -3,6 +3,11 @@ package coms309.controller.token;
 import coms309.api.dataobjects.ApiUser;
 import coms309.database.dataobjects.User;
 import coms309.database.services.UserService;
+
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.ApiResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +30,11 @@ public class TokenController {
      * @param token user's token
      * @return HTTP response, user data
      */
+    @ApiOperation(value = "Get the User associated with an authentication token", response = ApiUser.class, tags = "token-controller")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "OK"),        
+        @ApiResponse(code = 404, message = "NOT FOUND")
+    })
     @GetMapping("/token/user/{token}")
     public @ResponseBody ResponseEntity<ApiUser> getUserByToken(@PathVariable String token) {
         long id = UserTokens.getID(token);

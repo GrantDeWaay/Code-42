@@ -28,6 +28,10 @@ import coms309.database.services.AssignmentService;
 import coms309.database.services.GradeService;
 import coms309.database.services.UserService;
 
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+
 /**
  * Controller for running code on the backend.
  */
@@ -53,6 +57,12 @@ public class CodeRunnerController {
      * @param token          permission token
      * @return code run result data
      */
+    @ApiOperation(value = "Run a program for an assignment on the backend and grade it", response = ApiCodeRunResult.class, tags = "code-runner-controller")
+    @ApiResponses(value = {
+        @ApiResponse(code = 202, message = "ACCEPTED"),
+        @ApiResponse(code = 403, message = "FORBIDDEN"),
+        @ApiResponse(code = 404, message = "NOT FOUND")
+    })
     @PutMapping("/run/{assignmentId}")
     public ResponseEntity<ApiCodeRunResult> runAssignment(@PathVariable long assignmentId, @RequestBody ApiCodeSubmission codeSubmission, @RequestParam String token) {
         if (!UserTokens.isStudent(token)) return new ResponseEntity<>(HttpStatus.FORBIDDEN);

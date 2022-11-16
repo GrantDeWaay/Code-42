@@ -21,6 +21,10 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Optional;
 
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.ApiResponse;
+
 /**
  * Controller for user endpoints. <p>
  * HTTP 200 = good request. <p>
@@ -45,6 +49,11 @@ public class UserController {
      * @param token permission token
      * @return HTTP response, list of users
      */
+    @ApiOperation(value = "Get a list of all Users in the system", response = Iterable.class, tags = "user-controller")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "OK"),        
+        @ApiResponse(code = 404, message = "NOT FOUND")
+    })
     @GetMapping("/user")
     public @ResponseBody ResponseEntity<List<ApiUser>> getUserList(@RequestParam String token) {
         if (!UserTokens.isTeacher(token) && !UserTokens.isAdmin(token)) {
@@ -72,6 +81,12 @@ public class UserController {
      * @param token permission token
      * @return HTTP response, user data
      */
+    @ApiOperation(value = "Get a User by ID", response = ApiUser.class, tags = "user-controller")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "OK"),        
+        @ApiResponse(code = 403, message = "FORBIDDEN"),
+        @ApiResponse(code = 404, message = "NOT FOUND")
+    })
     @GetMapping("/user/{id}")
     public @ResponseBody ResponseEntity<ApiUser> getUser(@PathVariable long id, @RequestParam String token) {
         if (!UserTokens.isLiveToken(token)) {
@@ -94,6 +109,12 @@ public class UserController {
      * @param email user's email
      * @return HTTP response, user data
      */
+    @ApiOperation(value = "Get a User by email", response = ApiUser.class, tags = "user-controller")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "OK"),        
+        @ApiResponse(code = 403, message = "FORBIDDEN"),
+        @ApiResponse(code = 404, message = "NOT FOUND")
+    })
     @GetMapping("/user/{email}")
     public @ResponseBody ResponseEntity<ApiUser> getUserByEmail(@PathVariable String email) {
         Optional<User> u = us.findByEmail(email);
@@ -114,6 +135,12 @@ public class UserController {
      * @param token permission token
      * @return HTTP response, list of courses
      */
+    @ApiOperation(value = "Get a list of all Courses a User is associated with", response = Iterable.class, tags = "user-controller")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "OK"),        
+        @ApiResponse(code = 403, message = "FORBIDDEN"),
+        @ApiResponse(code = 404, message = "NOT FOUND")
+    })
     @GetMapping("/user/{id}/courses")
     public @ResponseBody ResponseEntity<Set<ApiCourse>> getUserCourseList(@PathVariable long id, @RequestParam String token) {
         if (!UserTokens.isLiveToken(token)) {
@@ -145,6 +172,12 @@ public class UserController {
      * @param token permission token
      * @return HTTP response, list of grades
      */
+    @ApiOperation(value = "Get a list of all Grades for a User", response = Iterable.class, tags = "user-controller")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "OK"),        
+        @ApiResponse(code = 403, message = "FORBIDDEN"),
+        @ApiResponse(code = 404, message = "NOT FOUND")
+    })
     @GetMapping("/user/{id}/grades")
     public @ResponseBody ResponseEntity<Set<ApiGrade>> getUserGradeList(@PathVariable long id, @RequestParam String token) {
         if (!UserTokens.isLiveToken(token)) {
@@ -177,6 +210,12 @@ public class UserController {
      * @param token        permission token
      * @return HTTP response, grade data
      */
+    @ApiOperation(value = "Get a User's grade on an Assignment", response = ApiGrade.class, tags = "user-controller")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "OK"),        
+        @ApiResponse(code = 403, message = "FORBIDDEN"),
+        @ApiResponse(code = 404, message = "NOT FOUND")
+    })
     @GetMapping("/user/{userId}/assignment/{assignmentId}/grade")
     public @ResponseBody ResponseEntity<ApiGrade> getUserGrade(@PathVariable long userId, @PathVariable long assignmentId, @RequestParam String token) {
         if (!UserTokens.isLiveToken(token)) {
@@ -211,6 +250,12 @@ public class UserController {
      * @param token permission token
      * @return HTTP response, user data with generated it
      */
+    @ApiOperation(value = "Create a new User", response = ApiUser.class, tags = "user-controller")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "OK"),        
+        @ApiResponse(code = 403, message = "FORBIDDEN"),
+        @ApiResponse(code = 404, message = "NOT FOUND")
+    })
     @PostMapping("/user/create")
     public @ResponseBody ResponseEntity<ApiUser> createUser(@RequestBody ApiUser u, @RequestParam String token) {
         if (!UserTokens.isTeacher(token) && !UserTokens.isAdmin(token)) {
@@ -236,6 +281,12 @@ public class UserController {
      * @param token permission token
      * @return HTTP response
      */
+    @ApiOperation(value = "Update an existing User", response = HttpStatus.class, tags = "user-controller")
+    @ApiResponses(value = {
+        @ApiResponse(code = 202, message = "ACCEPTED"),        
+        @ApiResponse(code = 403, message = "FORBIDDEN"),
+        @ApiResponse(code = 404, message = "NOT FOUND")
+    })
     @PutMapping("/user/{id}/update")
     public @ResponseBody HttpStatus updateUser(@PathVariable long id, @RequestBody ApiUser u, @RequestParam String token) {
         if (!UserTokens.isLiveToken(token)) {
@@ -270,6 +321,12 @@ public class UserController {
      * @param token permission token
      * @return HTTP response
      */
+    @ApiOperation(value = "Delete a User from the system", response = HttpStatus.class, tags = "user-controller")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "OK"),        
+        @ApiResponse(code = 403, message = "FORBIDDEN"),
+        @ApiResponse(code = 404, message = "NOT FOUND")
+    })
     @DeleteMapping("/user/{id}/delete")
     public @ResponseBody HttpStatus deleteUser(@PathVariable long id, @RequestParam String token) {
         if (!UserTokens.isTeacher(token) && !UserTokens.isAdmin(token)) {

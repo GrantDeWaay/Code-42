@@ -16,6 +16,10 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Optional;
 import java.util.Random;
 
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.ApiResponse;
+
 @RestController
 public class LoginController {
 
@@ -31,6 +35,11 @@ public class LoginController {
      * @param password user's password
      * @return HTTP response, user data, and session token
      */
+    @ApiOperation(value = "Login as a user with the given username and password", response = ApiUserLogin.class, tags = "login-controller")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "OK"),        
+        @ApiResponse(code = 404, message = "NOT FOUND")
+    })
     @GetMapping("/login/{username}/{password}")
     public @ResponseBody ResponseEntity<ApiUserLogin> userLogin(@PathVariable String username, @PathVariable String password) {
         Optional<User> u = us.findByUsername(username);
@@ -60,6 +69,12 @@ public class LoginController {
      * @param token    users token
      * @return HTTP response
      */
+    @ApiOperation(value = "Log a User out", response = HttpStatus.class, tags = "login-controller")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "OK"),        
+        @ApiResponse(code = 400, message = "BAD REQUEST"),
+        @ApiResponse(code = 404, message = "NOT FOUND")
+    })
     @GetMapping("/logout/{username}/{token}")
     public @ResponseBody HttpStatus userLogout(@PathVariable String username, @PathVariable String token) {
         Optional<User> u = us.findByUsername(username);
