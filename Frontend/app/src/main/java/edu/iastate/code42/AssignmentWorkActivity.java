@@ -82,30 +82,8 @@ public class AssignmentWorkActivity extends AppCompatActivity implements View.On
         user = User.get(getApplicationContext());
         userSession = getSharedPreferences(getString(R.string.session_shared_pref), MODE_PRIVATE);
 
-
         testPopup = new PopupWindow(testPUV, width, height, true);
-        id = getIntent().getIntExtra("id", -1);
 
-        String url = String.format(Const.GET_ASSIGNMENT, id, userSession.getString("token", ""));
-        JsonObjectRequest req = new JsonObjectRequest(Request.Method.GET, url,null,
-                response -> {
-                    assignmentData = response;
-                    try {
-                        assignmentName.setText(assignmentData.getString("title"));
-                        statementTextView.setText(assignmentData.getString("problemStatement"));
-                        descText = assignmentData.getString("description");
-                        results.setText("Loadin' doot doot doot datt...");
-                        description.setText(descText);
-                        assignmentNamePopupText.setText(assignmentData.getString("title"));
-                        baseCode = assignmentData.getString("template");
-                        ide.setText(baseCode);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }, error -> {
-            Log.i("resp", error.toString());
-        });
-        AppController.getInstance().addToRequestQueue(req);
         info = findViewById(R.id.infoButton);
         submit = findViewById(R.id.submitButton);
         loadDefault = findViewById(R.id.loadDefaultButton);
@@ -115,7 +93,16 @@ public class AssignmentWorkActivity extends AppCompatActivity implements View.On
 
         info.setOnClickListener(this);
         submit.setOnClickListener(this);
+
+        getAssignment();
     }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        getAssignment();
+    }
+
     @Override
     public void onClick(View view){
         if (view.getId() == info.getId()) {
@@ -184,4 +171,32 @@ public class AssignmentWorkActivity extends AppCompatActivity implements View.On
             });
         }
     }
+
+    private void getAssignment(){
+        id = getIntent().getIntExtra("id", -1);
+
+        String url = String.format(Const.GET_ASSIGNMENT, id, userSession.getString("token", ""));
+        JsonObjectRequest req = new JsonObjectRequest(Request.Method.GET, url,null,
+                response -> {
+                    assignmentData = response;
+                    try {
+                        assignmentName.setText(assignmentData.getString("title"));
+                        statementTextView.setText(assignmentData.getString("problemStatement"));
+                        descText = assignmentData.getString("description");
+                        Log.i("testing", descText);
+                        results.setText("Loadin' doot doot doot datt...");
+                        description.setText(descText);
+                        assignmentNamePopupText.setText(assignmentData.getString("title"));
+                        ide.setText(assignmentData.getString("template"));
+                        baseCode = assignmentData.getString("template");
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }, error -> {
+            Log.i("resp", error.toString());
+        });
+        AppController.getInstance().addToRequestQueue(req);
+    }
+
 }
