@@ -31,6 +31,7 @@ import java.util.Map;
 
 import edu.iastate.code42.app.AppController;
 import edu.iastate.code42.objects.Assignment;
+import edu.iastate.code42.objects.AssignmentCreationDataHolder;
 import edu.iastate.code42.objects.User;
 import edu.iastate.code42.utils.Const;
 
@@ -58,58 +59,10 @@ public class AssignmentCodeCreateActivity extends AppCompatActivity {
         courseId = getIntent().getIntExtra("courseId", -1);
 
         goNext.setOnClickListener(view -> {
-            cc.setUnitTests(newUnitTest.getText().toString());
-            cc.setCode(baseCode.getText().toString());
-            JSONObject x = cc.formatJSON();
-            Log.i("Mm", x.toString());
-            String url = String.format(Const.CREATE_ASSIGNMENT, userSession.getString("token", ""));
-            JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST, url,x,
-                    response -> {
-                        Log.i("resp", response.toString());
-
-                        String url2 = "";
-                        try {
-                            url2 = String.format(Const.ADD_ASSIGNMENT_TO_COURSE, courseId, response.get("id"),
-                                    userSession.getString("token", ""));
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
-                        StringRequest adAssignmentToCourse = new StringRequest(Request.Method.PUT, url2,
-                                new Response.Listener<String>() {
-                                    @Override
-                                    public void onResponse(String response) {
-
-                                    }
-                                }, new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                Log.e("Assignment to Course Mapping Error:", error.toString());
-
-                                Toast.makeText(getApplicationContext(), R.string.user_course_mapping_error,
-                                        Toast.LENGTH_LONG).show();
-                            }
-                        }) {
-                            @Override
-                            public Map<String, String> getHeaders() throws AuthFailureError {
-                                HashMap<String, String> headers = new HashMap<String, String>();
-                                headers.put("Content-Type", "application/json");
-                                return headers;
-                            }
-
-                            @Override
-                            protected Map<String, String> getParams() {
-                                Map<String, String> params = new HashMap<String, String>();
-
-                                return params;
-                            }
-                        };
-
-                        AppController.getInstance().addToRequestQueue(adAssignmentToCourse, "course_get_students");
-                    }, error -> {
-                Log.i("resp", error.toString());
-            });
-            AppController.getInstance().addToRequestQueue(req);
+            AssignmentCreationDataHolder.setExpectedOut(newUnitTest.getText().toString());
+            AssignmentCreationDataHolder.setCode(baseCode.getText().toString());
+            AssignmentCreationDataHolder.sendAssignment(userSession.getString("token", ""),
+                    getIntent().getIntExtra("courseId", -1));
         });
     }
 }
