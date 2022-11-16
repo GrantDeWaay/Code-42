@@ -45,7 +45,7 @@ public class AssignmentController {
      * @param token permission token
      * @return HTTP response, assignment data
      */
-    @ApiOperation(value = "Get an Assignment by ID", response = ApiAssignment.class, tags = "getAssignment")
+    @ApiOperation(value = "Get an Assignment by ID", response = ApiAssignment.class, tags = "assignment-controller")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "OK"),
         @ApiResponse(code = 403, message = "FORBIDDEN"),
@@ -74,7 +74,7 @@ public class AssignmentController {
      * @param token permission token
      * @return HTTP response, list of grades
      */
-    @ApiOperation(value = "Get the Grades for an Assignment", response = Iterable.class, tags = "getAssignmentGradeList")
+    @ApiOperation(value = "Get the Grades for an Assignment", response = Iterable.class, tags = "assignment-controller")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "OK"),
         @ApiResponse(code = 403, message = "FORBIDDEN"),
@@ -111,7 +111,7 @@ public class AssignmentController {
      * @param token permission token
      * @return HTTP response, course data
      */
-    @ApiOperation(value = "Get the Course an Assignment belongs to", response = ApiCourse.class, tags = "getAssignmentCourse")
+    @ApiOperation(value = "Get the Course an Assignment belongs to", response = ApiCourse.class, tags = "assignment-controller")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "OK"),
         @ApiResponse(code = 403, message = "FORBIDDEN"),
@@ -141,7 +141,7 @@ public class AssignmentController {
      * @param token permission token
      * @return HTTP response, assignment data with generated id
      */
-    @ApiOperation(value = "Create a new Assignment and add it to the system", response = ApiAssignment.class, tags = "createAssignment")
+    @ApiOperation(value = "Create a new Assignment and add it to the system", response = ApiAssignment.class, tags = "assignment-controller")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "OK"),
         @ApiResponse(code = 403, message = "FORBIDDEN")
@@ -170,7 +170,7 @@ public class AssignmentController {
      * @param token permission token
      * @return HTTP response, assignment data conformation
      */
-    @ApiOperation(value = "Update an existing assignment", response = HttpStatus.class, tags = "updateAssignment")
+    @ApiOperation(value = "Update an existing assignment", response = HttpStatus.class, tags = "assignment-controller")
     @ApiResponses(value = {
         @ApiResponse(code = 202, message = "ACCEPTED"),
         @ApiResponse(code = 403, message = "FORBIDDEN"),
@@ -209,7 +209,7 @@ public class AssignmentController {
      * @param token permission token
      * @return HTTP response
      */
-    @ApiOperation(value = "Delete an assignment from the system", response = HttpStatus.class, tags = "deleteAssignment")
+    @ApiOperation(value = "Delete an assignment from the system", response = HttpStatus.class, tags = "assignment-controller")
     @ApiResponses(value = {
         @ApiResponse(code = 202, message = "ACCEPTED"),
         @ApiResponse(code = 403, message = "FORBIDDEN"),
