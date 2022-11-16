@@ -7,6 +7,10 @@ import coms309.controller.token.UserTokens;
 import coms309.database.dataobjects.Assignment;
 import coms309.database.dataobjects.Grade;
 import coms309.database.services.AssignmentService;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,6 +45,12 @@ public class AssignmentController {
      * @param token permission token
      * @return HTTP response, assignment data
      */
+    @ApiOperation(value = "Get an Assignment by ID", response = ApiAssignment.class, tags = "getAssignment")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "OK"),
+        @ApiResponse(code = 403, message = "FORBIDDEN"),
+        @ApiResponse(code = 404, message = "NOT FOUND")
+    })
     @GetMapping("/assignment/{id}")
     public @ResponseBody ResponseEntity<ApiAssignment> getAssignment(@PathVariable long id, @RequestParam String token) {
         if (!UserTokens.isLiveToken(token)) {
@@ -64,6 +74,12 @@ public class AssignmentController {
      * @param token permission token
      * @return HTTP response, list of grades
      */
+    @ApiOperation(value = "Get the Grades for an Assignment", response = Iterable.class, tags = "getAssignmentGradeList")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "OK"),
+        @ApiResponse(code = 403, message = "FORBIDDEN"),
+        @ApiResponse(code = 404, message = "NOT FOUND")
+    })
     @GetMapping("/assignment/{id}/grades")
     public @ResponseBody ResponseEntity<Set<ApiGrade>> getAssignmentGradeList(@PathVariable long id, @RequestParam String token) {
         if (!UserTokens.isLiveToken(token)) {
@@ -95,6 +111,12 @@ public class AssignmentController {
      * @param token permission token
      * @return HTTP response, course data
      */
+    @ApiOperation(value = "Get the Course an Assignment belongs to", response = ApiCourse.class, tags = "getAssignmentCourse")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "OK"),
+        @ApiResponse(code = 403, message = "FORBIDDEN"),
+        @ApiResponse(code = 404, message = "NOT FOUND")
+    })
     @GetMapping("/assignment/{id}/course")
     public @ResponseBody ResponseEntity<ApiCourse> getAssignmentCourse(@PathVariable long id, @RequestParam String token) {
         if (!UserTokens.isLiveToken(token)) {
@@ -119,6 +141,11 @@ public class AssignmentController {
      * @param token permission token
      * @return HTTP response, assignment data with generated id
      */
+    @ApiOperation(value = "Create a new Assignment and add it to the system", response = ApiAssignment.class, tags = "createAssignment")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "OK"),
+        @ApiResponse(code = 403, message = "FORBIDDEN")
+    })
     @PostMapping("/assignment/create")
     public @ResponseBody ResponseEntity<ApiAssignment> createAssignment(@RequestBody ApiAssignment a, @RequestParam String token) {
         if (!UserTokens.isTeacher(token) && !UserTokens.isAdmin(token)) {
@@ -143,6 +170,12 @@ public class AssignmentController {
      * @param token permission token
      * @return HTTP response, assignment data conformation
      */
+    @ApiOperation(value = "Update an existing assignment", response = HttpStatus.class, tags = "updateAssignment")
+    @ApiResponses(value = {
+        @ApiResponse(code = 202, message = "ACCEPTED"),
+        @ApiResponse(code = 403, message = "FORBIDDEN"),
+        @ApiResponse(code = 404, message = "NOT FOUND"),
+    })
     @PutMapping("/assignment/{id}/update")
     public @ResponseBody HttpStatus updateAssignment(@PathVariable long id, @RequestBody ApiAssignment a, @RequestParam String token) {
         if (!UserTokens.isTeacher(token) && !UserTokens.isAdmin(token)) {
@@ -176,6 +209,12 @@ public class AssignmentController {
      * @param token permission token
      * @return HTTP response
      */
+    @ApiOperation(value = "Delete an assignment from the system", response = HttpStatus.class, tags = "deleteAssignment")
+    @ApiResponses(value = {
+        @ApiResponse(code = 202, message = "ACCEPTED"),
+        @ApiResponse(code = 403, message = "FORBIDDEN"),
+        @ApiResponse(code = 404, message = "NOT FOUND"),
+    })
     @DeleteMapping("/assignment/{id}/delete")
     public @ResponseBody HttpStatus deleteAssignment(@PathVariable long id, @RequestParam String token) {
         if (!UserTokens.isTeacher(token) && !UserTokens.isAdmin(token)) {
