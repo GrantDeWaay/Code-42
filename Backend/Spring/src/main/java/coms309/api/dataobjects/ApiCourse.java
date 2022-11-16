@@ -3,32 +3,38 @@ package coms309.api.dataobjects;
 import java.util.Date;
 
 import coms309.database.dataobjects.Course;
+import io.swagger.annotations.ApiModelProperty;
 
 public class ApiCourse {
 
     /**
      * Unique integer ID for each course.
      */
+    @ApiModelProperty(notes = "Unique ID of the Course", name = "id", required = true, value = "1")
     private Long id;
 
     /**
      * Title of course.
      */
+    @ApiModelProperty(notes = "Title of the Course", name = "title", required = true, value = "Example Course")
     private String title;
 
     /**
      * Brief description of course.
      */
+    @ApiModelProperty(notes = "Description of the Course", name = "description", required = true, value = "Example Description")
     private String description;
 
     /**
      * Programming languages used in the course.
      */
+    @ApiModelProperty(notes = "Languages for the Course, comma delimited", name = "languages", required = true, value = "C")
     private String languages;
 
     /**
      * Creation date of course
      */
+    @ApiModelProperty(notes = "Creation date of the Course", name = "creationDate", required = true, value = "1970-01-01T00:00:00.00")
     private Date creationDate;
 
     /**

@@ -1,6 +1,7 @@
 package coms309.api.dataobjects;
 
 import coms309.database.dataobjects.Grade;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.util.Date;
 
@@ -9,16 +10,19 @@ public class ApiGrade {
     /**
      * id of the grade
      */
+    @ApiModelProperty(notes = "Unique ID for the Grade", name = "id", required = true, value = "1")
     private Long id;
 
     /**
      * Grade as a decimal value.
      */
+    @ApiModelProperty(notes = "Percentage grade for the Grade", name = "grade", required = true, value = "100.0")
     private Double grade;
 
     /**
      * Date the grade was last updated.
      */
+    @ApiModelProperty(notes = "Last time the Grade was updated", name = "updateDate", required = true, value = "1970-01-01T00:00:00.00")
     private Date updateDate;
 
     /**

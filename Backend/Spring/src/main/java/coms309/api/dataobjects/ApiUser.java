@@ -1,6 +1,7 @@
 package coms309.api.dataobjects;
 
 import coms309.database.dataobjects.User;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.util.Date;
 
@@ -9,41 +10,49 @@ public class ApiUser {
     /**
      * Unique integer ID for each user.
      */
+    @ApiModelProperty(notes = "Unique ID for the User", name = "id", required = true, value = "1")
     private Long id;
 
     /**
      * Username associated with user.
      */
+    @ApiModelProperty(notes = "Username for the User", name = "username", required = true, value = "jdoe")
     private String username;
 
     /**
      * First name of user.
      */
+    @ApiModelProperty(notes = "First name of the User", name = "firstName", required = true, value = "John")
     private String firstName;
 
     /**
      * Last name of user.
      */
+    @ApiModelProperty(notes = "Last name of the User", name = "lastName", required = true, value = "Doe")
     private String lastName;
 
     /**
      * Hash of user password used to authenticate.
      */
+    @ApiModelProperty(notes = "Password for the User to login", name = "password", required = true, value = "password")
     private String password;
 
     /**
      * Email associated with user account.
      */
+    @ApiModelProperty(notes = "Email for the User", name = "email", required = true, value = "jdoe@example.com")
     private String email;
 
     /**
      * Type of user.
      */
+    @ApiModelProperty(notes = "Type of User (student, teacher, or admin)", name = "type", required = true, value = "student")
     private String type;
 
     /**
      * Time of user creation.
      */
+    @ApiModelProperty(notes = "Creation date for User", name = "creationDate", required = true, value = "1970-01-01T00:00:00.00")
     private Date creationDate;
 
     /**

@@ -3,6 +3,7 @@ package coms309.api.dataobjects;
 import java.util.Date;
 
 import coms309.database.dataobjects.Assignment;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
  * Minimized version of Assignment object used in database.
@@ -14,41 +15,49 @@ public class ApiAssignment {
     /**
      * Unique id for the assignment.
      */
+    @ApiModelProperty(notes = "Unique ID of the Assignment", name = "id", required = true, value = "1")
     private Long id;
 
     /**
      * Title of assignment.
      */
+    @ApiModelProperty(notes = "Title of the Assignment", name = "title", required = true, value = "Example Assignment")
     private String title;
 
     /**
      * Description of assignment.
      */
+    @ApiModelProperty(notes = "Description of the Assignment", name = "description", required = true, value = "Example Description")
     private String description;
 
     /**
      * Problem statement for coding challenge.
      */
+    @ApiModelProperty(notes = "Problem Statement for the Assignment", name = "problemStatement", required = true, value = "Example Problem Statement")
     private String problemStatement;
 
     /**
      * Code template containing boilerplate code given by teacher.
      */
+    @ApiModelProperty(notes = "Template code for the Assignment, sent to user to complete", name = "template", required = true, value = "#include <stdio.h>\n\nint main(void) {\n\tprintf(\"Hello World!\");\n\n\treturn 0\n}")
     private String template;
 
     /**
      * Expected output from assignment in plaintext.
      */
+    @ApiModelProperty(notes = "Expected output for the Assignment that is checked against generated output", name = "expectedOutput", required = true, value = "Example Output")
     private String expectedOutput;
 
     /**
      * Date when the assignment was created.
      */
+    @ApiModelProperty(notes = "Creation date of the Assignment", name = "creationDate", required = true, value = "1970-01-01T00:00:00.00")
     private Date creationDate;
 
     /**
      * Date assignment is due.
      */
+    @ApiModelProperty(notes = "Due date of the Assignment", name = "dueDate", required = true, value = "1970-01-01T00:00:00.00")
     private Date dueDate;
 
     /**

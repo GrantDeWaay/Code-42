@@ -1,25 +1,31 @@
 package coms309.api.dataobjects;
 
+import io.swagger.annotations.ApiModelProperty;
+
 public class ApiCodeRunResult {
 
     /**
      * Whether the result was a success.
      */
+    @ApiModelProperty(notes = "Whether or not the run resulted in a pass", name = "pass", required = true, value = "true")
     private boolean pass;
 
     /**
      * Response message to the user containing details on running code.
      */
+    @ApiModelProperty(notes = "Message associated with run, such as compilation failure or other error", name = "message", required = true, value = "Success")
     private String message;
 
     /**
      * Expected output of the assignment.
      */
+    @ApiModelProperty(notes = "Expected output from the Assignment", name = "expectedOutput", required = true, value = "Hello World!")
     private String expectedOutput;
 
     /**
      * What the code actually outputted.
      */
+    @ApiModelProperty(notes = "Actual output from the run", name = "actualOutput", required = true, value = "Hello World!")
     private String actualOutput;
 
     /**

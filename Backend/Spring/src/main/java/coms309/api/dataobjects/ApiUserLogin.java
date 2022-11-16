@@ -1,12 +1,14 @@
 package coms309.api.dataobjects;
 
 import coms309.database.dataobjects.User;
+import io.swagger.annotations.ApiModelProperty;
 
 public class ApiUserLogin extends ApiUser {
 
     /**
      * Session token to enforce API permissions.
      */
+    @ApiModelProperty(notes = "Token for User to authenticate when making other API calls", name = "token", required = true, value = "AABBCCDDEEFFGGHH")
     private String token;
 
     /**
