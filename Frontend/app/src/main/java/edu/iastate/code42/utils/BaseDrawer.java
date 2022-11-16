@@ -113,7 +113,10 @@ public class BaseDrawer extends AppCompatActivity implements NavigationView.OnNa
 
                         user.logout();
 
-                        startActivity(new Intent(BaseDrawer.this, MainActivity.class));
+                        Intent intent = new Intent(BaseDrawer.this, MainActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+                        startActivity(intent);
                         overridePendingTransition(0,0);
 
                     }
