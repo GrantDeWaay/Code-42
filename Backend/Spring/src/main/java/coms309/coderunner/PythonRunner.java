@@ -6,7 +6,7 @@ import coms309.database.dataobjects.AssignmentFile;
 import java.io.*;
 import java.util.concurrent.TimeUnit;
 
-public class PyRunner extends CodeRunner {
+public class PythonRunner extends CodeRunner {
 
     private String fileName;
 
@@ -18,7 +18,7 @@ public class PyRunner extends CodeRunner {
      * @param tfm TempFileManager object to manage temporary directory for executing file
      * @throws FileNotFoundException
      */
-    public PyRunner(AssignmentFile af, ApiCodeSubmission acs, TempFileManager tfm) throws FileNotFoundException {
+    public PythonRunner(AssignmentFile af, ApiCodeSubmission acs, TempFileManager tfm) throws FileNotFoundException {
         super(af.getCodeFolder(), tfm.getAssignmentFolderPath());
         compiledRunner = true;
         this.fileName = acs.getName();
