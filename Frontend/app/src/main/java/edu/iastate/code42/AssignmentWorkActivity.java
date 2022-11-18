@@ -68,7 +68,7 @@ public class AssignmentWorkActivity extends AppCompatActivity implements View.On
         infoPopup = new PopupWindow(infoPUV, width, height, true);
 
         testPUV = inflater.inflate(R.layout.popup_window, null);
-        results = testPUV.findViewById(R.id.testResultsTextView);
+        results = testPUV.findViewById(R.id.saveWindowMessage);
 
         user = User.get(getApplicationContext());
         userSession = getSharedPreferences(getString(R.string.session_shared_pref), MODE_PRIVATE);
