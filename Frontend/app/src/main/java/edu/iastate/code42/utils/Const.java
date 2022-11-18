@@ -35,6 +35,10 @@ public class Const {
 	public static final String GET_ASSIGNMENT = SOURCE + "assignment/%d" + TOKEN;
 	public static final String CREATE_ASSIGNMENT = SOURCE + "assignment/create" + TOKEN;
 
-	public static final String PYTHON = "http://192.168.56.1:5000/";
+	public static final String RUN_CODE = SOURCE + "run/%s" + TOKEN;
+
+	public static final String PURPLE_COLOR = "#673AB7";
+	public static final String GREEN_COLOR = "#008000";
+	public static final String RED_COLOR = "#D2042D";
 
 }

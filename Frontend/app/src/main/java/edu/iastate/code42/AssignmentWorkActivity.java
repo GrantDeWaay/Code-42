@@ -19,15 +19,10 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.concurrent.atomic.AtomicInteger;
 
 import edu.iastate.code42.app.AppController;
 import edu.iastate.code42.objects.User;
@@ -123,9 +118,7 @@ public class AssignmentWorkActivity extends AppCompatActivity implements View.On
     }
     @Override
     public void onClick(View view){
-        int infoId = info.getId();
-        int submitId = submit.getId();
-        if (view.getId() == infoId) {
+        if (view.getId() == info.getId()) {
             infoPopup.showAtLocation(view, Gravity.CENTER, 0, 0);
             infoPUV.setOnTouchListener((v, event) -> {
                 v.performClick();
@@ -133,14 +126,12 @@ public class AssignmentWorkActivity extends AppCompatActivity implements View.On
                 return true;
             });
         }
-        else if (view.getId() == submitId) {
-            popupRelativeLayout.setBackgroundColor(Color.parseColor("#673AB7"));
+        else if (view.getId() == submit.getId()) {
+            popupRelativeLayout.setBackgroundColor(Color.parseColor(Const.PURPLE_COLOR));
             String loadingString = "Performing Tests...";
             results.setText(loadingString);
             progressBar.setVisibility(View.VISIBLE);
-            Log.i("ok",userSession.getString("token", ""));
-            String urlw = String.format(Const.SOURCE + "run/%s" + Const.TOKEN, id, userSession.getString("token", ""));
-            Log.i("url", urlw);
+            String urlRun = String.format(Const.RUN_CODE, id, userSession.getString("token", ""));
             JSONObject obj = new JSONObject();
             try {
                 obj.put("name", "name" + ".java");
@@ -149,35 +140,34 @@ public class AssignmentWorkActivity extends AppCompatActivity implements View.On
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            Log.i("json", obj.toString());
-            JsonObjectRequest req = new JsonObjectRequest(Request.Method.PUT, urlw,obj,
+            JsonObjectRequest req = new JsonObjectRequest(Request.Method.PUT, urlRun,obj,
                     response -> {
-                Log.i("Return", response.toString());
+                        progressBar.setVisibility(View.INVISIBLE);
                         try {
                             String message;
                             if(response.getBoolean("pass")){
                                 testingCodeTitleStatusTextView.setText("PASSED");
-                                popupRelativeLayout.setBackgroundColor(Color.parseColor("#008000"));
+                                popupRelativeLayout.setBackgroundColor(Color.parseColor(Const.GREEN_COLOR));
                                 message = "Expected : " + response.getString("expectedOutput") + " " +
                                         "Actual : " + response.getString("actualOutput");
                             }
+                            else if (response.getString("message").equals("Compilation failed")){
+                                popupRelativeLayout.setBackgroundColor(Color.parseColor(Const.RED_COLOR));
+                                message = "Compile Error!";
+                            }
                             else{
                                 testingCodeTitleStatusTextView.setText("FAIL");
-                                popupRelativeLayout.setBackgroundColor(Color.parseColor("#D2042D"));
+                                popupRelativeLayout.setBackgroundColor(Color.parseColor(Const.RED_COLOR));
                                 message = "Expected : " + response.getString("expectedOutput") + " " +
                                         "Actual : " + response.getString("actualOutput");
-                                if (response.getString("message").equals("Compilation failed")) {
-                                    message = "Compile Error!";
-                                }
                             }
                             results.setText(message);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        progressBar.setVisibility(View.INVISIBLE);
                     }, error -> {
                         testingCodeTitleStatusTextView.setText("FAIL");
-                        popupRelativeLayout.setBackgroundColor(Color.RED);
+                        popupRelativeLayout.setBackgroundColor(Color.parseColor(Const.RED_COLOR));
                         results.setText("That didn't work!");
                         progressBar.setVisibility(View.INVISIBLE);
                     });
@@ -188,12 +178,9 @@ public class AssignmentWorkActivity extends AppCompatActivity implements View.On
             testPopup.setFocusable(true);
             testPopup.update();
             testPUV.setOnTouchListener((v, event) -> {
-                if(progressBar.getVisibility() == View.INVISIBLE){
-                    v.performClick();
-                    testPopup.dismiss();
-                    return true;
-                }
-                return false;
+                v.performClick();
+                testPopup.dismiss();
+                return true;
             });
         }
     }
