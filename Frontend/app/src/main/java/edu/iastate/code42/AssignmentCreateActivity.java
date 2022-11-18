@@ -68,6 +68,7 @@ public class AssignmentCreateActivity extends AppCompatActivity {
 
                 i.putExtra("courseId", getIntent().getIntExtra("courseId", -1));
                 startActivity(i);
+                finish();
             }
         });
     }

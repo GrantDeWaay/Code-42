@@ -1,6 +1,8 @@
 package edu.iastate.code42.objects;
 
+import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -104,7 +106,7 @@ public class AssignmentCreationDataHolder {
      * @param token
      * @param courseId
      */
-    public static void sendAssignment(String token, int courseId) {
+    public static void sendAssignment(Context screen, String token, int courseId) {
         String url = String.format(Const.CREATE_ASSIGNMENT, token);
         JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST, url, formatJSON(),
                 response1 -> {
@@ -118,10 +120,10 @@ public class AssignmentCreationDataHolder {
                         e.printStackTrace();
                     }
 
-                    StringRequest adAssignmentToCourse = new StringRequest(Request.Method.PUT, addAssignmentURL,
+                    StringRequest addAssignmentToCourse = new StringRequest(Request.Method.PUT, addAssignmentURL,
                             response2 -> {
-
-                            }, error -> Log.e("Assignment to Course Mapping Error:", error.toString())) {
+                                Toast.makeText(screen, "Added assignment to course!", Toast.LENGTH_LONG).show();
+                            }, error -> Toast.makeText(screen, "Failed to add assignment to course", Toast.LENGTH_LONG).show()) {
                         @Override
                         public Map<String, String> getHeaders() throws AuthFailureError {
                             HashMap<String, String> headers = new HashMap<String, String>();
@@ -137,9 +139,10 @@ public class AssignmentCreationDataHolder {
                         }
                     };
 
-                    AppController.getInstance().addToRequestQueue(adAssignmentToCourse, "course_get_students");
+                    AppController.getInstance().addToRequestQueue(addAssignmentToCourse, "course_get_students");
                 }, error -> {
             Log.i("resp", error.toString());
+            Toast.makeText(screen, "Failed to add assignment to course", Toast.LENGTH_LONG).show();
         });
         AppController.getInstance().addToRequestQueue(req);
     }

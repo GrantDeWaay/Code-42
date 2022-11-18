@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -15,7 +16,6 @@ public class AssignmentCodeCreateActivity extends AppCompatActivity {
     private Button goNext;
     private EditText baseCode;
     private EditText newUnitTest;
-    private Assignment cc;
 
     User user;
     SharedPreferences userSession;
@@ -36,8 +36,8 @@ public class AssignmentCodeCreateActivity extends AppCompatActivity {
         goNext.setOnClickListener(view -> {
             AssignmentCreationDataHolder.setExpectedOut(newUnitTest.getText().toString());
             AssignmentCreationDataHolder.setCode(baseCode.getText().toString());
-            AssignmentCreationDataHolder.sendAssignment(userSession.getString("token", ""),
-                    getIntent().getIntExtra("courseId", -1));
+            AssignmentCreationDataHolder.sendAssignment(getApplicationContext(),userSession.getString("token", ""), courseId);
+            finish();
         });
     }
 }
