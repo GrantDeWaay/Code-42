@@ -1,11 +1,5 @@
 package edu.iastate.code42;
 
-import static edu.iastate.code42.utils.Const.*;
-
-import androidx.appcompat.app.AppCompatActivity;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
@@ -15,11 +9,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.toolbox.JsonObjectRequest;
+import androidx.appcompat.app.AppCompatActivity;
 
-import edu.iastate.code42.app.AppController;
-import edu.iastate.code42.objects.Assignment;
 import edu.iastate.code42.objects.AssignmentCreationDataHolder;
 import edu.iastate.code42.utils.LanguageSpinnerAdapter;
 
@@ -43,11 +34,14 @@ public class AssignmentCreateActivity extends AppCompatActivity {
         langSpin = findViewById(R.id.spinner);
         score = findViewById(R.id.scoreNumber);
 
-        String[] langText = new String[]{"Python", "C", "Java"};
+
+        String[] langText = new String[]{"Python", "C", "Java", "Go"};
+
         Integer[] langIcons = new Integer[]{R.drawable.py_lang_logo,
-                R.drawable.c_lang_logo, R.drawable.java_lang_logo};
+                R.drawable.c_lang_logo, R.drawable.java_lang_logo, R.drawable.go_lang_logo};
 
         ArrayAdapter<String> adapter = new LanguageSpinnerAdapter(this, langText, langIcons);
+
         langSpin.setAdapter(adapter);
         btnClick.setOnClickListener(v -> {
 
@@ -74,24 +68,8 @@ public class AssignmentCreateActivity extends AppCompatActivity {
 
                 i.putExtra("courseId", getIntent().getIntExtra("courseId", -1));
                 startActivity(i);
+                finish();
             }
         });
     }
-/*
-    private void makeJsonObjReq() throws JSONException {
-        // Instantiate the RequestQueue.
-        JSONObject obj = new JSONObject();
-        obj.put("title", assignmentTitle.getText());
-        obj.put("description", desc.getText());
-        obj.put("problemStatement", problem.getText());
-        String url = SOURCE + CREATE_ASSIGNMENT;
-        JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST, url,obj,
-                response -> {
-                    resp = response.toString();
-                }, error -> {
-            resp = error.toString();
-        });
-        AppController.getInstance().addToRequestQueue(req);
-    }
-    */
 }
