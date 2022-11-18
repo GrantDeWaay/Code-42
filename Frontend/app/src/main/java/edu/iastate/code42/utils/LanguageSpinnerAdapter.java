@@ -1,21 +1,13 @@
 package edu.iastate.code42.utils;
 
 
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import androidx.recyclerview.widget.RecyclerView;
-
-import java.util.ArrayList;
 
 import edu.iastate.code42.R;
 
@@ -27,7 +19,7 @@ public class LanguageSpinnerAdapter extends ArrayAdapter<String> {
 
     public LanguageSpinnerAdapter(Context context, String[] objects,
                           Integer[] imageArray) {
-        super(context,  R.layout.lang_row, R.id.weekofday, objects);
+        super(context,  R.layout.lang_row, R.id.langTextView, objects);
         this.ctx = context;
         this.contentArray = objects;
         this.imageArray = imageArray;
@@ -48,7 +40,7 @@ public class LanguageSpinnerAdapter extends ArrayAdapter<String> {
         LayoutInflater inflater = (LayoutInflater)ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View row = inflater.inflate(R.layout.lang_row, parent, false);
 
-        TextView textView = (TextView) row.findViewById(R.id.weekofday);
+        TextView textView = (TextView) row.findViewById(R.id.langTextView);
         textView.setText(contentArray[position]);
 
         ImageView imageView = (ImageView)row.findViewById(R.id.lang_icon);

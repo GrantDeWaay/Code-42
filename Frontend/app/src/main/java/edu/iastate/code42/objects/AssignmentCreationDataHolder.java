@@ -1,13 +1,9 @@
 package edu.iastate.code42.objects;
 
-import android.content.Context;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 
@@ -17,7 +13,6 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-import edu.iastate.code42.R;
 import edu.iastate.code42.app.AppController;
 import edu.iastate.code42.utils.Const;
 

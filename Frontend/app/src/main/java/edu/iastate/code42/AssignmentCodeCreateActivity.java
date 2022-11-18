@@ -1,39 +1,15 @@
 package edu.iastate.code42;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TableLayout;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-
-import edu.iastate.code42.app.AppController;
 import edu.iastate.code42.objects.Assignment;
 import edu.iastate.code42.objects.AssignmentCreationDataHolder;
 import edu.iastate.code42.objects.User;
-import edu.iastate.code42.utils.Const;
 
 public class AssignmentCodeCreateActivity extends AppCompatActivity {
     private Button goNext;
