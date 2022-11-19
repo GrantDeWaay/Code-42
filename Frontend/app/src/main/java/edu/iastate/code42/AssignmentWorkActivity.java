@@ -73,6 +73,7 @@ public class AssignmentWorkActivity extends AppCompatActivity implements View.On
         infoPopup = new PopupWindow(infoPUV, width, height, true);
 
         testPUV = inflater.inflate(R.layout.popup_window, null);
+
         testingCodeTitleStatusTextView = testPUV.findViewById(R.id.testingCodeTitleStatusTextView);
         popupRelativeLayout = testPUV.findViewById(R.id.popupRelativeLayout);
         results = testPUV.findViewById(R.id.testResultsTextView);
