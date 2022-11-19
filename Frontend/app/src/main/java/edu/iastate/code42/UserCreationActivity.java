@@ -25,11 +25,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 import edu.iastate.code42.app.AppController;
+import edu.iastate.code42.databinding.ActivityCourseCreationBinding;
+import edu.iastate.code42.databinding.ActivityUserCreationBinding;
 import edu.iastate.code42.objects.User;
+import edu.iastate.code42.utils.BaseBack;
 import edu.iastate.code42.utils.Const;
 
 
-public class UserCreationActivity extends AppCompatActivity implements View.OnClickListener {
+public class UserCreationActivity extends BaseBack implements View.OnClickListener {
+    ActivityUserCreationBinding activityBaseBackBinding;
+
     Button create;
     TextView header;
     EditText firstName;
@@ -48,7 +53,10 @@ public class UserCreationActivity extends AppCompatActivity implements View.OnCl
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_user_creation);
+
+        activityBaseBackBinding = ActivityUserCreationBinding.inflate(getLayoutInflater());
+        setContentView(activityBaseBackBinding.getRoot());
+        allocateActivityTitle("");
 
         user = User.get(getApplicationContext());
         userSession = getSharedPreferences(getString(R.string.session_shared_pref), MODE_PRIVATE);
@@ -61,21 +69,28 @@ public class UserCreationActivity extends AppCompatActivity implements View.OnCl
         type = getIntent().getIntExtra("type", -1);
         courseId = getIntent().getIntExtra("courseId", -1);
 
-        header = findViewById(R.id.userCreationHeader);
+        header = activityBaseBackBinding.getRoot().findViewById(R.id.userCreationHeader);
         if(type == 1){
             header.setText("Create new Teacher user");
         }else if(type == 2){
             header.setText("Create new Student user");
         }
 
-        create = findViewById(R.id.buttonUserCreate);
+        create = activityBaseBackBinding.getRoot().findViewById(R.id.buttonUserCreate);
         create.setOnClickListener(this);
 
-        firstName = findViewById(R.id.editUserFirstName);
-        lastName = findViewById(R.id.editUserLastName);
-        email = findViewById(R.id.editUserEmail);
-        password = findViewById(R.id.editUserPassword);
-        username = findViewById(R.id.editUserUsername);
+        firstName = activityBaseBackBinding.getRoot().findViewById(R.id.editUserFirstName);
+        lastName = activityBaseBackBinding.getRoot().findViewById(R.id.editUserLastName);
+        email = activityBaseBackBinding.getRoot().findViewById(R.id.editUserEmail);
+        password = activityBaseBackBinding.getRoot().findViewById(R.id.editUserPassword);
+        username = activityBaseBackBinding.getRoot().findViewById(R.id.editUserUsername);
+
+        Intent userListReturn = new Intent(UserCreationActivity.this, UserListActivity.class);
+        userListReturn.putExtra("courseId", courseId);
+        userListReturn.putExtra("type", type);
+
+        setPreviousScreen(userListReturn);
+        setSave(true);
 
         if(appSetting.contains("isDefaultPassword") && appSetting.contains("defaultPassword")){//TODO Test in Demo 4 with Settings activity
             if(appSetting.getBoolean("isDefaultPassword",false)){

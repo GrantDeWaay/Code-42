@@ -37,7 +37,7 @@ import edu.iastate.code42.R;
 import edu.iastate.code42.app.AppController;
 import edu.iastate.code42.objects.User;
 
-public class BaseBack extends AppCompatActivity implements View.OnClickListener {
+public class BaseBack extends AppCompatActivity {
 
     DrawerLayout drawerLayout;
     FrameLayout container;
@@ -66,10 +66,21 @@ public class BaseBack extends AppCompatActivity implements View.OnClickListener 
         saveView = inflater.inflate(R.layout.popup_window_save,null);
 
         saveWindowExit = saveView.findViewById(R.id.saveWindowExitButton);
-        saveWindowExit.setOnClickListener(this);
+        saveWindowExit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(previousScreen);
+                saveWindow.dismiss();
+            }
+        });
 
         saveWindowStay = saveView.findViewById(R.id.saveWindowStayButton);
-        saveWindowStay.setOnClickListener(this);
+        saveWindowStay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                saveWindow.dismiss();
+            }
+        });
 
         saveWindow = new PopupWindow(saveView, LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT, true);
@@ -105,18 +116,5 @@ public class BaseBack extends AppCompatActivity implements View.OnClickListener 
                 return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onClick(View view) {
-        switch(view.getId()) {
-            case R.id.saveWindowExitButton:
-                startActivity(previousScreen);
-                saveWindow.dismiss();
-                break;
-            case R.id.saveWindowStayButton:
-                saveWindow.dismiss();
-                break;
-        }
     }
 }

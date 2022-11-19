@@ -10,7 +10,7 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/saveWindowHeader"
+            android:id="@+id/testingCodeTitleStatusTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="TESTING CODE"
@@ -24,7 +24,7 @@
             android:layout_height="wrap_content" />
 
         <TextView
-            android:id="@+id/saveWindowMessage"
+            android:id="@+id/testResultsTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="TextView"

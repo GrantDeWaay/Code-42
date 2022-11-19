@@ -27,12 +27,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 import edu.iastate.code42.app.AppController;
+import edu.iastate.code42.databinding.ActivityAssignmentListBinding;
+import edu.iastate.code42.databinding.ActivityUserListBinding;
 import edu.iastate.code42.objects.Assignment;
 import edu.iastate.code42.objects.User;
 import edu.iastate.code42.utils.AssignmentListAdapter;
+import edu.iastate.code42.utils.BaseBack;
+import edu.iastate.code42.utils.BaseDrawer;
 import edu.iastate.code42.utils.Const;
 
-public class AssignmentListActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, View.OnClickListener {
+public class AssignmentListActivity extends BaseBack implements AdapterView.OnItemClickListener, View.OnClickListener {
+    ActivityAssignmentListBinding activityBaseBackBinding;
+
     ListView assignmentList;
     FloatingActionButton addAssignment;
 
@@ -47,7 +53,10 @@ public class AssignmentListActivity extends AppCompatActivity implements Adapter
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_assignment_list);
+
+        activityBaseBackBinding = ActivityAssignmentListBinding.inflate(getLayoutInflater());
+        setContentView(activityBaseBackBinding.getRoot());
+        allocateActivityTitle("");
 
         user = User.get(getApplicationContext());
         userSession = getSharedPreferences(getString(R.string.session_shared_pref), MODE_PRIVATE);
@@ -58,10 +67,10 @@ public class AssignmentListActivity extends AppCompatActivity implements Adapter
         }
         courseId = getIntent().getIntExtra("courseId", -1);
 
-        assignmentList = findViewById(R.id.listAssignments);
+        assignmentList = activityBaseBackBinding.getRoot().findViewById(R.id.listAssignments);
         assignmentList.setOnItemClickListener(this);
 
-        addAssignment = findViewById(R.id.addAssignment);
+        addAssignment = activityBaseBackBinding.getRoot().findViewById(R.id.addAssignment);
         addAssignment.setOnClickListener(this);
 
         if(user.getType() == "student"){
@@ -70,8 +79,45 @@ public class AssignmentListActivity extends AppCompatActivity implements Adapter
             addAssignment.setVisibility(View.VISIBLE);
         }
 
-        String url = String.format(Const.GET_ASSIGNMENTS_FOR_COURSE, courseId, userSession.getString("token", ""));
         assignments = new ArrayList<>();
+        assignmentAdapter = new AssignmentListAdapter(getApplicationContext(), assignments);
+        assignmentList.setAdapter(assignmentAdapter);
+
+        Intent courseView = new Intent(this, CourseViewActivity.class);
+        courseView.putExtra("courseId", courseId);
+
+        setPreviousScreen(courseView);
+        setSave(false);
+
+        getAssignments();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+
+        getAssignments();
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        Intent assignmentView = new Intent(this, AssignmentWorkActivity.class);
+        assignmentView.putExtra("id", assignments.get(i).getId());
+
+        startActivity(assignmentView);
+    }
+
+    @Override
+    public void onClick(View view) {
+        Intent assignmentCreate = new Intent(this, AssignmentCreateActivity.class);
+        assignmentCreate.putExtra("courseId", courseId);
+
+        startActivity(assignmentCreate);
+    }
+
+    private void getAssignments(){
+        assignments.clear();
+        String url = String.format(Const.GET_ASSIGNMENTS_FOR_COURSE, courseId, userSession.getString("token", ""));
 
         JsonArrayRequest courseAssignmentsReq = new JsonArrayRequest(Request.Method.GET, url,
                 null, new Response.Listener<JSONArray>() {
@@ -87,8 +133,7 @@ public class AssignmentListActivity extends AppCompatActivity implements Adapter
                 }
 
                 if(assignments.size() > 0){
-                    assignmentAdapter = new AssignmentListAdapter(getApplicationContext(), assignments);
-                    assignmentList.setAdapter(assignmentAdapter);
+                    assignmentAdapter.notifyDataSetChanged();
                 }
             }
         }, new Response.ErrorListener() {
@@ -116,21 +161,5 @@ public class AssignmentListActivity extends AppCompatActivity implements Adapter
         };
 
         AppController.getInstance().addToRequestQueue(courseAssignmentsReq, "course_get_assignments");
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        Intent assignmentView = new Intent(this, AssignmentWorkActivity.class);
-        assignmentView.putExtra("id", assignments.get(i).getId());
-
-        startActivity(assignmentView);
-    }
-
-    @Override
-    public void onClick(View view) {
-        Intent assignmentCreate = new Intent(this, AssignmentCreateActivity.class);
-        assignmentCreate.putExtra("courseId", courseId);
-
-        startActivity(assignmentCreate);
     }
 }
