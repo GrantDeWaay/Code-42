@@ -32,12 +32,14 @@ import edu.iastate.code42.objects.User;
 import edu.iastate.code42.utils.BaseBack;
 import edu.iastate.code42.utils.Const;
 
+
 /**
  * CourseCreationActivity class
  * Create course screen
  * Layout: activity_course_creation
  * @author Andrew
  */
+
 public class CourseCreationActivity extends BaseBack implements View.OnClickListener {
     ActivityCourseCreationBinding activityBaseBackBinding;
 

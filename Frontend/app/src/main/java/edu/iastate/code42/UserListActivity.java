@@ -38,7 +38,6 @@ import edu.iastate.code42.utils.BaseBack;
 import edu.iastate.code42.utils.Const;
 import edu.iastate.code42.utils.UserListAdapter;
 
-
 /**
  * UserListActivity class
  * View with a list of Users, multiple configurations and uses based on User type and Intent type
@@ -90,6 +89,7 @@ public class UserListActivity extends BaseBack implements AdapterView.OnItemClic
         if(getIntent().hasExtra("courseId")){
             courseId = getIntent().getIntExtra("courseId", -1);
         }
+
 
         userList = activityBaseBackBinding.getRoot().findViewById(R.id.userList);
         userList.setOnItemClickListener(this);

@@ -36,6 +36,7 @@ import edu.iastate.code42.utils.BaseBack;
 import edu.iastate.code42.utils.BaseDrawer;
 import edu.iastate.code42.utils.Const;
 
+
 /**
  * AssignmentListActivity class
  * View with a list of Assignments for a certain Course
@@ -109,6 +110,7 @@ public class AssignmentListActivity extends BaseBack implements AdapterView.OnIt
 
         getAssignments();
     }
+
 
     /**
      * Event Handler for when item in the ListView selected; Opens AssignmentWorkActivity for selected Assignment

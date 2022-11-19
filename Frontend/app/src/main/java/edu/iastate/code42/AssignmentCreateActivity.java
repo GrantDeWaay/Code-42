@@ -41,6 +41,7 @@ public class AssignmentCreateActivity extends AppCompatActivity {
                 R.drawable.c_lang_logo, R.drawable.java_lang_logo, R.drawable.go_lang_logo};
 
 
+
         ArrayAdapter<String> adapter = new LanguageSpinnerAdapter(this, langText, langIcons);
 
         langSpin.setAdapter(adapter);
