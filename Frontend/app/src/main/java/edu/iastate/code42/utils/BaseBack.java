@@ -3,9 +3,13 @@ package edu.iastate.code42.utils;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
@@ -36,26 +40,39 @@ import edu.iastate.code42.objects.User;
 public class BaseBack extends AppCompatActivity implements View.OnClickListener {
 
     DrawerLayout drawerLayout;
+    FrameLayout container;
     Intent previousScreen;
     Boolean save;
     PopupWindow saveWindow;
     View saveView;
+    Button saveWindowExit;
+    Button saveWindowStay;
 
     @Override
     public void setContentView(View view) {
         drawerLayout = (DrawerLayout) getLayoutInflater().inflate(R.layout.activity_base_back,null);
-        FrameLayout container = drawerLayout.findViewById(R.id.activityContainer);
+        container = drawerLayout.findViewById(R.id.activityContainer);
         container.addView(view);
         super.setContentView(drawerLayout);
 
         Toolbar toolbar = drawerLayout.findViewById(R.id.toolBar);
         setSupportActionBar(toolbar);
 
-        toolbar.setNavigationOnClickListener(this);
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
+        LayoutInflater inflater = (LayoutInflater)
+                getSystemService(LAYOUT_INFLATER_SERVICE);
+        saveView = inflater.inflate(R.layout.popup_window_save,null);
+
+        saveWindowExit = saveView.findViewById(R.id.saveWindowExitButton);
+        saveWindowExit.setOnClickListener(this);
+
+        saveWindowStay = saveView.findViewById(R.id.saveWindowStayButton);
+        saveWindowStay.setOnClickListener(this);
+
+        saveWindow = new PopupWindow(saveView, LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT, true);
     }
 
     public void setPreviousScreen(Intent previousScreen) {
@@ -73,15 +90,33 @@ public class BaseBack extends AppCompatActivity implements View.OnClickListener 
     }
 
     @Override
-    public void onClick(View view) {
-        if(save){
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                if (save) {
+                    saveWindow.showAtLocation(drawerLayout.getRootView(), Gravity.CENTER, 0, 0);
+                } else {
+                    if (previousScreen != null) {
+                        startActivity(previousScreen);
+                    } else {
+                        onBackPressed();
+                    }
+                }
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
-        }else{
-            if(previousScreen != null){
+    @Override
+    public void onClick(View view) {
+        switch(view.getId()) {
+            case R.id.saveWindowExitButton:
                 startActivity(previousScreen);
-            }else{
-                onBackPressed();
-            }
+                saveWindow.dismiss();
+                break;
+            case R.id.saveWindowStayButton:
+                saveWindow.dismiss();
+                break;
         }
     }
 }
