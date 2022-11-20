@@ -140,6 +140,15 @@ public class AssignmentWorkActivity extends AppCompatActivity implements View.On
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+
+
+            /**
+             * I want it to start listening to the web socket once it sends over the
+             * code we want to test, and I want it to close once we get a message
+             * from the server saying it sent all of the tests over or something
+             *
+             *
+             */
             JsonObjectRequest req = new JsonObjectRequest(Request.Method.PUT, urlRun,obj,
                     response -> {
                         progressBar.setVisibility(View.INVISIBLE);

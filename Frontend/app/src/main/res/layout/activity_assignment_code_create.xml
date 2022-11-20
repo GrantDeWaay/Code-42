@@ -58,10 +58,15 @@
         <EditText
             android:id="@+id/unitTestText"
             android:layout_width="match_parent"
-            android:layout_height="238dp"
+            android:layout_height="137dp"
             android:ems="10"
             android:gravity="start|top"
             android:inputType="textMultiLine" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/UnitTestRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="173dp" />
 
         <Button
             android:id="@+id/goNext"

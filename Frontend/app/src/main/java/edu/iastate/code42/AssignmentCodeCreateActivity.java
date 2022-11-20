@@ -7,15 +7,19 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
 import edu.iastate.code42.objects.Assignment;
 import edu.iastate.code42.objects.AssignmentCreationDataHolder;
 import edu.iastate.code42.objects.User;
+import edu.iastate.code42.utils.UnitTestAdapter;
 
 public class AssignmentCodeCreateActivity extends AppCompatActivity {
     private Button goNext;
     private EditText baseCode;
     private EditText newUnitTest;
+    private UnitTestAdapter mUnitTestAdapter;
+    private RecyclerView UnitTestRecyclerView;
 
     User user;
     SharedPreferences userSession;
@@ -25,11 +29,15 @@ public class AssignmentCodeCreateActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_assignment_code_create);
+        UnitTestRecyclerView = findViewById(R.id.UnitTestRecyclerView);
+        mUnitTestAdapter = new UnitTestAdapter();
+        UnitTestRecyclerView.setAdapter(mUnitTestAdapter);
         goNext = findViewById(R.id.goNext);
         baseCode = findViewById(R.id.baseCode);
         newUnitTest = findViewById(R.id.unitTestText);
         user = User.get(getApplicationContext());
         userSession = getSharedPreferences(getString(R.string.session_shared_pref), MODE_PRIVATE);
+
 
         courseId = getIntent().getIntExtra("courseId", -1);
 
