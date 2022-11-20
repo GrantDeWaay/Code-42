@@ -159,7 +159,6 @@ public class CourseViewActivity extends BaseDrawer implements View.OnClickListen
             }
         }
 
-
         if(getIntent().hasExtra("courseId")){
             courseId = getIntent().getIntExtra("courseId",0);
 
@@ -172,195 +171,46 @@ public class CourseViewActivity extends BaseDrawer implements View.OnClickListen
             students = new ArrayList<>();
             teachers = new ArrayList<>();
 
-            String url = String.format(Const.GET_COURSE, courseId, userSession.getString("token", ""));
+            assignmentAdapter = new AssignmentListAdapter(getApplicationContext(), assignments);
+            assignmentList.setAdapter(assignmentAdapter);
 
-            JsonObjectRequest courseDetailReq = new JsonObjectRequest(Request.Method.GET, url,
-                    null,  new Response.Listener<JSONObject>() {
-                @Override
-                public void onResponse(JSONObject response) {
-                    try {
-                        title.setText(response.getString("title"));
-                        description.setText(response.getString("description"));
-                        language.setText(response.getString("languages"));
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Log.e("Volley Login Auth Error:", error.toString());
+            studentAdapter = new UserListAdapter(getApplicationContext(), students);
+            studentList.setAdapter(studentAdapter);
 
-                    Toast.makeText(getApplicationContext(), R.string.login_volley_error,
-                            Toast.LENGTH_LONG).show();
-                }
-            }){
-                /**
-                 * Passing some request headers
-                 * */
-                @Override
-                public Map<String, String> getHeaders() throws AuthFailureError {
-                    HashMap<String, String> headers = new HashMap<String, String>();
-                    headers.put("Content-Type", "application/json");
-                    return headers;
-                }
+            teacherAdapter = new UserListAdapter(getApplicationContext(), teachers);
+            teacherList.setAdapter(teacherAdapter);
 
-                @Override
-                protected Map<String, String> getParams() {
-                    Map<String, String> params = new HashMap<String, String>();
+            getCourseDetails();
 
-                    return params;
-                }
-            };
-
-            AppController.getInstance().addToRequestQueue(courseDetailReq, "course_get_req");
-
-            url = String.format(Const.GET_ASSIGNMENTS_FOR_COURSE, courseId, userSession.getString("token", ""));
-
-            JsonArrayRequest courseAssignmentsReq = new JsonArrayRequest(Request.Method.GET, url,
-                    null, new Response.Listener<JSONArray>() {
-                @Override
-                public void onResponse(JSONArray response) {
-                    for(int i = 0; i < response.length(); i++){
-                        try {
-                            Assignment a = new Assignment(response.getJSONObject(i));
-                            assignments.add(a);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                    if(assignments.size() > 0){
-                        assignmentAdapter = new AssignmentListAdapter(getApplicationContext(), assignments);
-                        assignmentList.setAdapter(assignmentAdapter);
-                    }
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Log.e("Volley Login Auth Error:", error.toString());
-
-                    Toast.makeText(getApplicationContext(), R.string.login_volley_error,
-                            Toast.LENGTH_LONG).show();
-                }
-            }){
-                @Override
-                public Map<String, String> getHeaders() throws AuthFailureError {
-                    HashMap<String, String> headers = new HashMap<String, String>();
-                    headers.put("Content-Type", "application/json");
-                    return headers;
-                }
-
-                @Override
-                protected Map<String, String> getParams() {
-                    Map<String, String> params = new HashMap<String, String>();
-
-                    return params;
-                }
-            };
-
-            AppController.getInstance().addToRequestQueue(courseAssignmentsReq, "course_get_assignments");
+            getCourseAssignments();
 
             if(!user.getType().equals("student")) {
-                url = String.format(Const.GET_STUDENTS_FOR_COURSE, courseId, userSession.getString("token", ""));
-
-                JsonArrayRequest courseStudentsReq = new JsonArrayRequest(Request.Method.GET, url,
-                        null, new Response.Listener<JSONArray>() {
-                    @Override
-                    public void onResponse(JSONArray response) {
-                        for(int i = 0; i < response.length(); i++){
-                            try {
-                                User u = new User(response.getJSONObject(i));
-
-                                students.add(u);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-
-                        if(students.size() > 0){
-                            studentAdapter = new UserListAdapter(getApplicationContext(), students);
-                            studentList.setAdapter(studentAdapter);
-                        }
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.e("Volley Login Auth Error:", error.toString());
-
-                        Toast.makeText(getApplicationContext(), R.string.login_volley_error,
-                                Toast.LENGTH_LONG).show();
-                    }
-                }) {
-                    @Override
-                    public Map<String, String> getHeaders() throws AuthFailureError {
-                        HashMap<String, String> headers = new HashMap<String, String>();
-                        headers.put("Content-Type", "application/json");
-                        return headers;
-                    }
-
-                    @Override
-                    protected Map<String, String> getParams() {
-                        Map<String, String> params = new HashMap<String, String>();
-
-                        return params;
-                    }
-                };
-
-                AppController.getInstance().addToRequestQueue(courseStudentsReq, "course_get_students");
+                getCourseStudents();
 
                 if(user.getType().equals("admin")) {
-                    url = String.format(Const.GET_TEACHERS_FOR_COURSE, courseId, userSession.getString("token", ""));
-
-                    JsonArrayRequest courseTeacherReq = new JsonArrayRequest(Request.Method.GET, url,
-                            null, new Response.Listener<JSONArray>() {
-                        @Override
-                        public void onResponse(JSONArray response) {
-                            for(int i = 0; i < response.length(); i++){
-                                try {
-                                    User u = new User(response.getJSONObject(i));
-
-                                    teachers.add(u);
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-
-                            if(teachers.size() > 0){
-                                teacherAdapter = new UserListAdapter(getApplicationContext(), teachers);
-                                teacherList.setAdapter(teacherAdapter);
-                            }
-                        }
-                    }, new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            Log.e("Volley Login Auth Error:", error.toString());
-
-                            Toast.makeText(getApplicationContext(), R.string.login_volley_error,
-                                    Toast.LENGTH_LONG).show();
-                        }
-                    }) {
-                        @Override
-                        public Map<String, String> getHeaders() throws AuthFailureError {
-                            HashMap<String, String> headers = new HashMap<String, String>();
-                            headers.put("Content-Type", "application/json");
-                            return headers;
-                        }
-
-                        @Override
-                        protected Map<String, String> getParams() {
-                            Map<String, String> params = new HashMap<String, String>();
-
-                            return params;
-                        }
-                    };
-
-                    AppController.getInstance().addToRequestQueue(courseTeacherReq, "course_get_teachers");
+                    getCourseTeachers();
                 }
             }
         }else{
             Intent courseList = new Intent(this, CoursesActivity.class);
             startActivity(courseList);
+        }
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+
+        getCourseDetails();
+
+        getCourseAssignments();
+
+        if(!user.getType().equals("student")) {
+            getCourseStudents();
+
+            if(user.getType().equals("admin")) {
+                getCourseTeachers();
+            }
         }
     }
 
@@ -445,5 +295,189 @@ public class CourseViewActivity extends BaseDrawer implements View.OnClickListen
             case R.id.studentList:
                 break;
         }
+    }
+
+    private void getCourseDetails(){
+        String url = String.format(Const.GET_COURSE, courseId, userSession.getString("token", ""));
+
+        JsonObjectRequest courseDetailReq = new JsonObjectRequest(Request.Method.GET, url,
+                null,  new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    title.setText(response.getString("title"));
+                    description.setText(response.getString("description"));
+                    language.setText(response.getString("languages"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("Volley Login Auth Error:", error.toString());
+
+                Toast.makeText(getApplicationContext(), R.string.login_volley_error,
+                        Toast.LENGTH_LONG).show();
+            }
+        }){
+            /**
+             * Passing some request headers
+             * */
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                headers.put("Content-Type", "application/json");
+                return headers;
+            }
+
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+
+                return params;
+            }
+        };
+
+        AppController.getInstance().addToRequestQueue(courseDetailReq, "course_get_req");
+    }
+
+    private void getCourseAssignments(){
+        assignments.clear();
+        String url = String.format(Const.GET_ASSIGNMENTS_FOR_COURSE, courseId, userSession.getString("token", ""));
+
+        JsonArrayRequest courseAssignmentsReq = new JsonArrayRequest(Request.Method.GET, url,
+                null, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                for(int i = 0; i < response.length(); i++){
+                    try {
+                        Assignment a = new Assignment(response.getJSONObject(i));
+                        assignments.add(a);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                assignmentAdapter.notifyDataSetChanged();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("Volley Login Auth Error:", error.toString());
+
+                Toast.makeText(getApplicationContext(), R.string.login_volley_error,
+                        Toast.LENGTH_LONG).show();
+            }
+        }){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                headers.put("Content-Type", "application/json");
+                return headers;
+            }
+
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+
+                return params;
+            }
+        };
+
+        AppController.getInstance().addToRequestQueue(courseAssignmentsReq, "course_get_assignments");
+    }
+
+    private void getCourseStudents(){
+        students.clear();
+        String url = String.format(Const.GET_STUDENTS_FOR_COURSE, courseId, userSession.getString("token", ""));
+
+        JsonArrayRequest courseStudentsReq = new JsonArrayRequest(Request.Method.GET, url,
+                null, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                for(int i = 0; i < response.length(); i++){
+                    try {
+                        User u = new User(response.getJSONObject(i));
+
+                        students.add(u);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                studentAdapter.notifyDataSetChanged();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("Volley Login Auth Error:", error.toString());
+
+                Toast.makeText(getApplicationContext(), R.string.login_volley_error,
+                        Toast.LENGTH_LONG).show();
+            }
+        }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                headers.put("Content-Type", "application/json");
+                return headers;
+            }
+
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+
+                return params;
+            }
+        };
+
+        AppController.getInstance().addToRequestQueue(courseStudentsReq, "course_get_students");
+    }
+
+    private void getCourseTeachers(){
+        teachers.clear();
+        String url = String.format(Const.GET_TEACHERS_FOR_COURSE, courseId, userSession.getString("token", ""));
+
+        JsonArrayRequest courseTeacherReq = new JsonArrayRequest(Request.Method.GET, url,
+                null, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                for(int i = 0; i < response.length(); i++){
+                    try {
+                        User u = new User(response.getJSONObject(i));
+
+                        teachers.add(u);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                teacherAdapter.notifyDataSetChanged();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("Volley Login Auth Error:", error.toString());
+
+                Toast.makeText(getApplicationContext(), R.string.login_volley_error,
+                        Toast.LENGTH_LONG).show();
+            }
+        }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                headers.put("Content-Type", "application/json");
+                return headers;
+            }
+
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+
+                return params;
+            }
+        };
+
+        AppController.getInstance().addToRequestQueue(courseTeacherReq, "course_get_teachers");
     }
 }

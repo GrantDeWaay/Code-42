@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="300dp"
+    android:layout_height="150dp"
+    android:background="#673AB7">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/saveWindowHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Confirm Exit?"
+            android:textAlignment="center"
+            android:textColor="@color/white" />
+
+        <TextView
+            android:id="@+id/saveWindowMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="You are working with data that is unsaved. Leaving will not save. "
+            android:textAlignment="center"
+            android:textColor="@color/white" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/saveWindowExitButton"
+                android:layout_width="100dp"
+                android:layout_height="80dp"
+                android:layout_marginStart="10dp"
+                android:layout_weight="1"
+                android:text="Exit without Saving" />
+
+            <Button
+                android:id="@+id/saveWindowStayButton"
+                android:layout_width="100dp"
+                android:layout_height="70dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="10dp"
+                android:layout_weight="1"
+                android:text="Continue editing" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>
