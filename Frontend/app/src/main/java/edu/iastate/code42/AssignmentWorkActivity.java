@@ -170,17 +170,14 @@ public class AssignmentWorkActivity extends AppCompatActivity implements View.On
             AppController.getInstance().addToRequestQueue(req);
 
             //WebSocketRunUnitTests.sendMessage();
-            testPopup.showAtLocation(view, Gravity.CENTER, 0, 0);
+            testPopup.setTouchable(true);
             testPopup.setFocusable(true);
-            testPopup.update();
-
+            testPopup.setOnDismissListener(() -> {
+                if (cc.isOpen()){
+                    cc.close();
+                }});
+            testPopup.showAtLocation(view, Gravity.CENTER, 0, 0);
             startTests();
-            testPUV.setOnTouchListener((v, event) -> {
-                v.performClick();
-                testPopup.dismiss();
-                cc.close();
-                return true;
-            });
         }
     }
 
@@ -256,18 +253,11 @@ public class AssignmentWorkActivity extends AppCompatActivity implements View.On
 
 
 
-    public int sendMessage(String msg){
-        if (cc.isClosed()){
-            return 1;
-        }
+    public void sendMessage(String msg){
         try {
             cc.send(msg);
         } catch (Exception e) {
             Log.d("ExceptionSendMessage:", ""+e.getMessage());
         }
-        return 0;
     }
 }
-
-
-

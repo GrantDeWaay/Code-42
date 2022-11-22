@@ -16,7 +16,6 @@ import java.util.ArrayList;
 
 public class UnitTestCustomAdapter extends RecyclerView.Adapter<UnitTestCustomAdapter.ViewHolder> {
 
-    private String[] localDataSet;
     private static ArrayList<String> data1 = new ArrayList<String>();
     private static ArrayList<String> data2 = new ArrayList<String>();
     private static int instanceCount = 0;
@@ -27,14 +26,7 @@ public class UnitTestCustomAdapter extends RecyclerView.Adapter<UnitTestCustomAd
      */
     @SuppressLint("NotifyDataSetChanged")
     public void add(String x) {
-        int n = getItemCount();
-        String newarr[] = new String[n + 1];
-        for (int i = 0; i < n; i++)
-            newarr[i] = this.localDataSet[i];
 
-        newarr[n] = x;
-
-        this.localDataSet = newarr;
         notifyDataSetChanged();
     }
 
@@ -96,11 +88,8 @@ public class UnitTestCustomAdapter extends RecyclerView.Adapter<UnitTestCustomAd
     /**
      * Initialize the dataset of the Adapter.
      *
-     * @param dataSet String[] containing the data to populate views to be used
-     *                by RecyclerView.
      */
-    public UnitTestCustomAdapter(String[] dataSet) {
-        localDataSet = dataSet;
+    public UnitTestCustomAdapter() {
     }
 
     // Create new views (invoked by the layout manager)
@@ -129,7 +118,7 @@ public class UnitTestCustomAdapter extends RecyclerView.Adapter<UnitTestCustomAd
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return localDataSet.length;
+        return 3;
     }
 
     public String[] getDataEquals(){

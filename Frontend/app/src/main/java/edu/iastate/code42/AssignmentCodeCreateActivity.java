@@ -7,18 +7,18 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import edu.iastate.code42.objects.Assignment;
 import edu.iastate.code42.objects.AssignmentCreationDataHolder;
 import edu.iastate.code42.objects.User;
-import edu.iastate.code42.utils.UnitTestAdapter;
 
 public class AssignmentCodeCreateActivity extends AppCompatActivity {
     private Button goNext;
     private EditText baseCode;
     private EditText newUnitTest;
-    private UnitTestAdapter mUnitTestAdapter;
+    private UnitTestCustomAdapter mAppAdapter;
     private RecyclerView UnitTestRecyclerView;
 
     User user;
@@ -30,8 +30,11 @@ public class AssignmentCodeCreateActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_assignment_code_create);
         UnitTestRecyclerView = findViewById(R.id.UnitTestRecyclerView);
-        mUnitTestAdapter = new UnitTestAdapter();
-        UnitTestRecyclerView.setAdapter(mUnitTestAdapter);
+        UnitTestRecyclerView = findViewById(R.id.UnitTestRecyclerView);
+        mAppAdapter = new UnitTestCustomAdapter();
+        UnitTestRecyclerView.setAdapter(mAppAdapter);
+        UnitTestRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mAppAdapter.add("");
         goNext = findViewById(R.id.goNext);
         baseCode = findViewById(R.id.baseCode);
         newUnitTest = findViewById(R.id.unitTestText);
