@@ -13,6 +13,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import edu.iastate.code42.app.AppController;
@@ -114,8 +115,8 @@ public class AssignmentCreationDataHolder {
 
                     String addAssignmentURL = "";
                     try {
-                        addAssignmentURL = String.format(Const.ADD_ASSIGNMENT_TO_COURSE, courseId, response1.get("id"),
-                                token);
+                        addAssignmentURL = String.format(Locale.ENGLISH,Const.ADD_ASSIGNMENT_TO_COURSE, courseId,
+                                response1.getInt("id"), token);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
