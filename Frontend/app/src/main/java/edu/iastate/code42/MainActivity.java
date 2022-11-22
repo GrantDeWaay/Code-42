@@ -77,6 +77,52 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
         }
 
+        if(userSession.contains("token")) {
+            String url = String.format(Const.SESSION, userSession.getString("token",""));
+
+            JsonObjectRequest loginReq = new JsonObjectRequest(Request.Method.GET, url,
+                    null,  new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    try {
+                        response.put("token", userSession.getString("token",""));
+                        loginSuccess(response);
+                    } catch (JSONException jsonException) {
+                        jsonException.printStackTrace();
+                    } catch (ParseException parseException) {
+                        parseException.printStackTrace();
+                    }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.e("Volley Token Auth Error:", error.toString());
+
+                    Toast.makeText(getApplicationContext(), "Token expired, login with username and password",
+                            Toast.LENGTH_LONG).show();
+                }
+            }){
+                /**
+                 * Passing some request headers
+                 * */
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    HashMap<String, String> headers = new HashMap<String, String>();
+                    headers.put("Content-Type", "application/json");
+                    return headers;
+                }
+
+                @Override
+                protected Map<String, String> getParams() {
+                    Map<String, String> params = new HashMap<String, String>();
+
+                    return params;
+                }
+            };
+
+            AppController.getInstance().addToRequestQueue(loginReq, "login_req");
+        }
+
         login = findViewById(R.id.loginButton);
         password = findViewById(R.id.loginPasswordEntryField);
         username = findViewById(R.id.loginUsernameEntryField);

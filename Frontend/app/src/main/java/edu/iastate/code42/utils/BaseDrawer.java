@@ -125,7 +125,7 @@ public class BaseDrawer extends AppCompatActivity implements NavigationView.OnNa
                         new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        userSessionEditor.remove("sessionID");
+                        userSessionEditor.remove("token");
                         userSessionEditor.commit();
 
                         user.logout();
