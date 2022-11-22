@@ -1,6 +1,8 @@
 package edu.iastate.code42;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.preference.PreferenceManager;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -44,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     SharedPreferences userSession;
     SharedPreferences appSetting;
     SharedPreferences.Editor userSessionEditor;
+    SharedPreferences.Editor settingEditor;
 
     /**
      * Creates and draws the view; initializes the objects
@@ -55,57 +58,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         userSession = getSharedPreferences(getString(R.string.session_shared_pref), MODE_PRIVATE);
-        appSetting = getSharedPreferences(getString(R.string.app_shared_pref), MODE_PRIVATE);
+        appSetting = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
         userSessionEditor = userSession.edit();
+        settingEditor = appSetting.edit();
 
-        /*if(userSession.contains("token")){
-            String url = Const.SOURCE + Const.SESSION + userSession.getString("sessionID", "");
+        settingEditor.putBoolean("admin", false);
+        settingEditor.commit();
 
-            JsonObjectRequest loginReq = new JsonObjectRequest(Request.Method.GET, url,
-                    null, new Response.Listener<JSONObject>() {
-                @Override
-                public void onResponse(JSONObject response) {
-                    try {
-                        loginSuccess(response);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Log.e("Volley Login Auth Error:", error.toString());
-                    if(error.networkResponse.statusCode == 401){
-                        Toast.makeText(getApplicationContext(), R.string.login_volley_session,
-                                Toast.LENGTH_LONG).show();
-                    }else {
-                        Toast.makeText(getApplicationContext(), R.string.login_volley_error,
-                                Toast.LENGTH_LONG).show();
-                    }
-                    Toast.makeText(getApplicationContext(), R.string.login_volley_error,
-                            Toast.LENGTH_LONG).show();
-                }
-            }){
-                @Override
-                public Map<String, String> getHeaders() throws AuthFailureError {
-                    HashMap<String, String> headers = new HashMap<String, String>();
-                    headers.put("Content-Type", "application/json");
-                    return headers;
-                }
-
-                @Override
-                protected Map<String, String> getParams() {
-                    Map<String, String> params = new HashMap<String, String>();
-
-                    return params;
-                }
-            };
-
-            AppController.getInstance().addToRequestQueue(loginReq, "session_req");
-        }*/
+        if(appSetting.contains("theme")){
+            if(appSetting.getString("theme", "").equals(getString(R.string.theme_options_1))){
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+            }else if(appSetting.getString("theme", "").trim().equals(getString(R.string.theme_options_2))){
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+            }
+        } else{
+            settingEditor.putString("theme", getString(R.string.theme_options_0));
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+        }
 
         login = findViewById(R.id.loginButton);
         password = findViewById(R.id.loginPasswordEntryField);
@@ -123,6 +93,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void loginSuccess(JSONObject response) throws JSONException, ParseException {
         User user = User.get(getApplicationContext());
         user.fromJson(response);
+
+        if(user.getType().equals("student")){
+            settingEditor.putBoolean("admin", false);
+        }else{
+            settingEditor.putBoolean("admin", true);
+        }
+        settingEditor.commit();
+
+        userSessionEditor.putString("token", response.getString("token"));
+        userSessionEditor.commit();
 
         Intent dashboard = new Intent(MainActivity.this, DashboardActivity.class);
         startActivity(dashboard);
@@ -146,9 +126,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             /*Toast.makeText(getApplicationContext(), response.toString(),
                                     Toast.LENGTH_LONG).show();*/
                             try {
-                                userSessionEditor.putString("token", response.getString("token"));
-                                //userSessionEditor.putString("token", "test");
-                                userSessionEditor.commit();
                                 loginSuccess(response);
                             } catch (JSONException jsonException) {
                                 jsonException.printStackTrace();
