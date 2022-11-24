@@ -37,6 +37,7 @@ import edu.iastate.code42.CoursesActivity;
 import edu.iastate.code42.DashboardActivity;
 import edu.iastate.code42.MainActivity;
 import edu.iastate.code42.R;
+import edu.iastate.code42.SettingsActivity;
 import edu.iastate.code42.app.AppController;
 import edu.iastate.code42.objects.User;
 
@@ -109,7 +110,8 @@ public class BaseDrawer extends AppCompatActivity implements NavigationView.OnNa
 
                 break;
             case R.id.nav_settings:
-
+                startActivity(new Intent(this, SettingsActivity.class));
+                overridePendingTransition(0,0);
                 break;
             case R.id.nav_logout:
                 SharedPreferences userSession = getSharedPreferences(getString(R.string.session_shared_pref), MODE_PRIVATE);
@@ -123,7 +125,7 @@ public class BaseDrawer extends AppCompatActivity implements NavigationView.OnNa
                         new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        userSessionEditor.remove("sessionID");
+                        userSessionEditor.remove("token");
                         userSessionEditor.commit();
 
                         user.logout();

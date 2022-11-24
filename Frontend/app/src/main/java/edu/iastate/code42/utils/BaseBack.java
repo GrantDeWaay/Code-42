@@ -61,6 +61,8 @@ public class BaseBack extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
+        save = false;
+
         LayoutInflater inflater = (LayoutInflater)
                 getSystemService(LAYOUT_INFLATER_SERVICE);
         saveView = inflater.inflate(R.layout.popup_window_save,null);

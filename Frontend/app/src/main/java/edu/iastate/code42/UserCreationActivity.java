@@ -1,6 +1,7 @@
 package edu.iastate.code42;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -17,6 +18,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -33,7 +35,7 @@ import edu.iastate.code42.utils.Const;
 
 /**
  * UserCreationActivity class
- * Create User screen
+ * Screen to create User
  * Layout: activity_user_creation
  * @author Andrew
  */
@@ -52,7 +54,7 @@ public class UserCreationActivity extends BaseBack implements View.OnClickListen
     SharedPreferences userSession;
     SharedPreferences appSetting;
 
-    int type;
+    int type;//1 for Teacher, 2 for Student
     int courseId;
 
     /**
@@ -69,7 +71,7 @@ public class UserCreationActivity extends BaseBack implements View.OnClickListen
 
         user = User.get(getApplicationContext());
         userSession = getSharedPreferences(getString(R.string.session_shared_pref), MODE_PRIVATE);
-        appSetting = getSharedPreferences(getString(R.string.app_shared_pref), MODE_PRIVATE);
+        appSetting = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
         if(!(getIntent().hasExtra("type")) || !(userSession.contains("token"))){
             Intent dash = new Intent(this, DashboardActivity.class);
@@ -101,9 +103,9 @@ public class UserCreationActivity extends BaseBack implements View.OnClickListen
         setPreviousScreen(userListReturn);
         setSave(true);
 
-        if(appSetting.contains("isDefaultPassword") && appSetting.contains("defaultPassword")){//TODO Test in Demo 4 with Settings activity
-            if(appSetting.getBoolean("isDefaultPassword",false)){
-                password.setText(appSetting.getString("defaultPassword", ""));
+        if(appSetting.contains("is_default_pass") && appSetting.contains("default_pass")){
+            if(appSetting.getBoolean("is_default_pass",false)){
+                password.setText(appSetting.getString("default_pass", ""));
             }
         }
     }
@@ -123,10 +125,10 @@ public class UserCreationActivity extends BaseBack implements View.OnClickListen
             JSONObject jsonBody = new JSONObject();
 
             try {
-                jsonBody.put("firstName", firstName.getText());
-                jsonBody.put("lastName", lastName.getText());
-                jsonBody.put("username", username.getText());
-                jsonBody.put("email", email.getText());
+                jsonBody.put("firstName", firstName.getText().toString().trim());
+                jsonBody.put("lastName", lastName.getText().toString().trim());
+                jsonBody.put("username", username.getText().toString().trim());
+                jsonBody.put("email", email.getText().toString().trim());
                 jsonBody.put("password", password.getText());
 
                 if(type == 1){
@@ -142,11 +144,8 @@ public class UserCreationActivity extends BaseBack implements View.OnClickListen
                     jsonBody, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
-                    Toast.makeText(getApplicationContext(), response.toString(),
-                            Toast.LENGTH_LONG).show();
-
-                    if(appSetting.getBoolean("isAutoAddUserToCourse", false)){
-                        //TODO in Demo 4 with Settings activity
+                    if(appSetting.getBoolean("is_auto_add", false)){
+                        addUsertoCourse(response);
                     }else{
                         Intent userListReturn = new Intent(UserCreationActivity.this, UserListActivity.class);
                         try {
@@ -164,10 +163,7 @@ public class UserCreationActivity extends BaseBack implements View.OnClickListen
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    Log.e("Volley Login Auth Error:", error.toString());
-
-                    Toast.makeText(getApplicationContext(), R.string.login_volley_error,
-                            Toast.LENGTH_LONG).show();
+                    Log.e("User Creation Error", error.toString());
                 }
             }) {
                 /**
@@ -191,4 +187,48 @@ public class UserCreationActivity extends BaseBack implements View.OnClickListen
             AppController.getInstance().addToRequestQueue(createReq, "create_user_req");
         }
     }
+
+    private void addUsertoCourse(JSONObject response){
+        String url = "";
+        try {
+             url = String.format(Const.ADD_USER_TO_COURSE, courseId, response.getInt("id"),
+                    userSession.getString("token", ""));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        StringRequest addUserToCourse = new StringRequest(Request.Method.PUT, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Intent userListIntent = new Intent(UserCreationActivity.this, UserListActivity.class);
+                        userListIntent.putExtra("courseId", courseId);
+                        userListIntent.putExtra("type", type - 2);
+
+                        startActivity(userListIntent);
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("User to Course Mapping Error:", error.toString());
+            }
+        }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                headers.put("Content-Type", "application/json");
+                return headers;
+            }
+
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+
+                return params;
+            }
+        };
+
+        AppController.getInstance().addToRequestQueue(addUserToCourse, "course_get_students");
+    }
+
 }
