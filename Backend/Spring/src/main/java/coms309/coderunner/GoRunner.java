@@ -4,7 +4,6 @@ import coms309.api.dataobjects.ApiCodeSubmission;
 import coms309.database.dataobjects.AssignmentFile;
 
 import java.io.*;
-import java.util.concurrent.TimeUnit;
 
 public class GoRunner extends CodeRunner {
 
@@ -18,48 +17,43 @@ public class GoRunner extends CodeRunner {
 
     @Override
     public boolean compile() throws IOException {
-        Process process = Runtime.getRuntime().exec("go build -o " + testFolder + "/out " + testFolder + "/" + fileName);
-        try {
-            if (process.waitFor(5, TimeUnit.SECONDS)) {
-                return process.exitValue() == 0;
-            }
-        } catch (InterruptedException e) {
-            return false;
+        ProcessBuilder processBuilder = new ProcessBuilder("go", "build", "-o", testFolder + "/out", testFolder + "/" + fileName);
+
+        ProcessManager processManager = new ProcessManager(processBuilder);
+        if(processManager.runForTime(5000)) {
+            stdOutData = processManager.getOutputData();
+            stdErrData = processManager.getErrorData();
+            return processManager.getExitValue() == 0;
         }
+        
+        processManager.terminateProcess();
+        
+        stdOutData = processManager.getOutputData();
+        stdErrData = processManager.getErrorData();
+
         return false;
     }
 
     @Override
     public boolean run() throws IOException {
         String executableName = fileName.substring(0, fileName.indexOf('.'));
-        Process process = Runtime.getRuntime().exec(testFolder + "/out/" + executableName);
+        
+        ProcessBuilder processBuilder = new ProcessBuilder(testFolder + "/out/" + executableName);
+        ProcessManager processManager = new ProcessManager(processBuilder);
 
-        stdout = process.getInputStream();
-        stderr = process.getErrorStream();
+        if(processManager.runForTime(maxRuntime)) {
+            stdOutData = processManager.getOutputData();
+            stdErrData = processManager.getErrorData();
 
-        long startTime = System.currentTimeMillis();
-
-        byte[] buff = new byte[1024];
-
-        while(process.isAlive() && System.currentTimeMillis() - startTime < maxRuntime) {
-            while(stdout.available() > 0) {
-                int n = stdout.read(buff);
-                stdOutData = stdOutData.concat(new String(buff, 0, n));
-            }
-
-            while(stderr.available() > 0) {
-                int n = stderr.read(buff);
-                stdErrData = stdErrData.concat(new String(buff, 0, n));
-            }
+            return processManager.getExitValue() == 0;
         }
 
+        processManager.terminateProcess();
 
-        if(process.isAlive()){
-            process.destroyForcibly();
-            return false;
-        }
+        stdOutData = processManager.getOutputData();
+        stdErrData = processManager.getErrorData();
 
-        return true;
+        return false;
     }
 
 }
