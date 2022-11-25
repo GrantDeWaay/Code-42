@@ -125,4 +125,11 @@ public class ProcessManager {
         stdin.write(input.getBytes());
     }
 
+    /**
+     * Get the exit value of the process.
+     */
+    public int getExitValue() {
+        return process.exitValue();
+    }
+
 }

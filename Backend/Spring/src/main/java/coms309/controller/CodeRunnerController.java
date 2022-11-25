@@ -74,7 +74,7 @@ public class CodeRunnerController {
 
             if(runner.isCompiledRunner()) {
                 if(!runner.compile()) {
-                    return new ResponseEntity<>(new ApiCodeRunResult(false, "Compilation failed", "", ""), HttpStatus.ACCEPTED);
+                    return new ResponseEntity<>(new ApiCodeRunResult(false, "Compilation failed", "", runner.getStdErrData()), HttpStatus.ACCEPTED);
                 }
             }
 
