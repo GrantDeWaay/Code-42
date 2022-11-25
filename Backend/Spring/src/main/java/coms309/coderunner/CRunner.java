@@ -41,8 +41,6 @@ public class CRunner extends CodeRunner {
     @Override
     public boolean compile() throws IOException {
 
-        // Process process;
-
         ProcessBuilder processBuilder;
         
         if(codeFolder.equals("")) {
@@ -50,10 +48,8 @@ public class CRunner extends CodeRunner {
             String executableName = mainName.substring(0, mainName.indexOf('.'));
             File outDir = new File(testFolder + "/out/");
             outDir.mkdirs();
-            // process = Runtime.getRuntime().exec("gcc " + testFolder + "/" + mainName + " -o " + testFolder + "/out/" + executableName);
             processBuilder = new ProcessBuilder("gcc", testFolder + "/" + mainName, "-o", testFolder + "/out/" + executableName);
         } else {
-            // process = Runtime.getRuntime().exec(testFolder + "/compile.sh " + mainName);
             processBuilder = new ProcessBuilder(testFolder + "/compile.sh" + mainName);
         }
 
@@ -69,14 +65,6 @@ public class CRunner extends CodeRunner {
 
         stdOutData = processManager.getOutputData();
         stdErrData = processManager.getErrorData();
-        
-        // try {
-        //     if(process.waitFor(5, TimeUnit.SECONDS)) {
-        //         return process.exitValue() == 0;
-        //     }
-        // } catch (InterruptedException e) {
-        //     e.printStackTrace();
-        // }
 
         return false;
     }
@@ -92,33 +80,7 @@ public class CRunner extends CodeRunner {
     public boolean run() throws IOException {
         String executableName = mainName.substring(0, mainName.indexOf('.'));
 
-        // Process process = Runtime.getRuntime().exec(testFolder + "/out/" + executableName);
         ProcessManager processManager = new ProcessManager(new ProcessBuilder(testFolder + "/out/" + executableName));
-
-        // stdout = process.getInputStream();
-        // stderr = process.getErrorStream();
-
-        // long startTime = System.currentTimeMillis();
-
-        // byte[] buff = new byte[1024];
-
-        // run while process is alive and we have not hit a timeout
-        // while(process.isAlive() && System.currentTimeMillis() - startTime < maxRuntime) {
-        //     while(stdout.available() > 0) {
-        //         int n = stdout.read(buff);
-        //         stdOutData = stdOutData.concat(new String(buff, 0, n));
-        //     }
-
-        //     while(stderr.available() > 0) {
-        //         int n = stderr.read(buff);
-        //         stdErrData = stdErrData.concat(new String(buff, 0, n));
-        //     }
-        // }
-
-        // if(process.isAlive()){
-        //     process.destroyForcibly();
-        //     return false;
-        // }
 
         if(!processManager.runForTime(maxRuntime)) processManager.terminateProcess();
 
