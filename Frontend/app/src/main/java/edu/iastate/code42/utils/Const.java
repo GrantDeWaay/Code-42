@@ -26,6 +26,8 @@ public class Const {
 	public static final String GET_COURSES = SOURCE + "course" + TOKEN;
 	public static final String CREATE_COURSE = SOURCE + "course/create" + TOKEN;
 	public static final String GET_COURSE = SOURCE + "course/%d" + TOKEN;
+	public static final String UPDATE_COURSE = SOURCE + "course/%d/update" + TOKEN;
+	public static final String DELETE_COURSE = SOURCE + "course/%d/delete" + TOKEN;
 	public static final String GET_ASSIGNMENTS_FOR_COURSE = SOURCE + "course/%d/assignments" + TOKEN;
 	public static final String GET_STUDENTS_FOR_COURSE = SOURCE + "course/%d/students" + TOKEN;
 	public static final String GET_TEACHERS_FOR_COURSE = SOURCE + "course/%d/teachers" + TOKEN;

@@ -21,12 +21,14 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -56,7 +58,9 @@ public class CourseViewActivity extends BaseDrawer implements View.OnClickListen
     EditText description;
     EditText language;
     FloatingActionButton edit;
+    Button delete;
 
+    TableLayout assignmentLayout;
     ListView assignmentList;
     Button addAssignment;
     Button moreAssigment;
@@ -111,7 +115,9 @@ public class CourseViewActivity extends BaseDrawer implements View.OnClickListen
         description = activityBaseDrawerBinding.getRoot().findViewById(R.id.courseDescriptionView);
         language = activityBaseDrawerBinding.getRoot().findViewById(R.id.courseLanguagesView);
         edit = activityBaseDrawerBinding.getRoot().findViewById(R.id.floatingEditCourse);
+        delete = activityBaseDrawerBinding.getRoot().findViewById(R.id.courseDelete);
 
+        assignmentLayout = activityBaseDrawerBinding.getRoot().findViewById(R.id.assignmentLayout);
         assignmentList = activityBaseDrawerBinding.getRoot().findViewById(R.id.assignmentList);
         addAssignment = activityBaseDrawerBinding.getRoot().findViewById(R.id.addAssignmentButton);
         moreAssigment = activityBaseDrawerBinding.getRoot().findViewById(R.id.moreAssignmentButton);
@@ -128,6 +134,7 @@ public class CourseViewActivity extends BaseDrawer implements View.OnClickListen
 
 
         edit.setOnClickListener(this);
+        delete.setOnClickListener(this);
         addAssignment.setOnClickListener(this);
         moreAssigment.setOnClickListener(this);
 
@@ -141,31 +148,12 @@ public class CourseViewActivity extends BaseDrawer implements View.OnClickListen
         studentList.setOnItemClickListener(this);
         teacherList.setOnItemClickListener(this);
 
-        if(user.getType().equals("student")){
-            edit.setVisibility(View.INVISIBLE);
-            edit.setEnabled(false);
-            studentLayout.setVisibility(View.INVISIBLE);
-            teacherLayout.setVisibility(View.INVISIBLE);
-            addAssignment.setVisibility(View.INVISIBLE);
-        }else{
-            edit.setVisibility(View.VISIBLE);
-            edit.setEnabled(true);
-            studentLayout.setVisibility(View.VISIBLE);
-            addAssignment.setVisibility(View.VISIBLE);
-            if(user.getType().equals("admin")){
-                teacherLayout.setVisibility(View.VISIBLE);
-            }else{
-                teacherLayout.setVisibility(View.INVISIBLE);
-            }
-        }
+        viewState = true;
+
+        updateViewState(viewState);
 
         if(getIntent().hasExtra("courseId")){
             courseId = getIntent().getIntExtra("courseId",0);
-
-            title.setEnabled(false);
-            description.setEnabled(false);
-            language.setEnabled(false);
-            viewState = true;
 
             assignments = new ArrayList<>();
             students = new ArrayList<>();
@@ -222,6 +210,19 @@ public class CourseViewActivity extends BaseDrawer implements View.OnClickListen
     public void onClick(View view) {
         switch(view.getId()){
             case R.id.floatingEditCourse:
+                if(viewState){
+                    viewState = false;
+                }else{
+                    updateCourseDetails();
+
+                    viewState = true;
+                }
+
+                updateViewState(viewState);
+                break;
+
+            case R.id.courseDelete:
+                deleteCourse();
                 break;
 
             case R.id.addAssignmentButton:
@@ -295,6 +296,142 @@ public class CourseViewActivity extends BaseDrawer implements View.OnClickListen
             case R.id.studentList:
                 break;
         }
+    }
+
+    private void updateViewState(Boolean state){
+        if(state){
+            title.setEnabled(false);
+            description.setEnabled(false);
+            language.setEnabled(false);
+            delete.setVisibility(View.INVISIBLE);
+
+            assignmentLayout.setVisibility(View.VISIBLE);
+            edit.setImageDrawable(getDrawable(R.drawable.ic_edit_foreground));
+
+            if(user.getType().equals("student")){
+                edit.setVisibility(View.INVISIBLE);
+                edit.setEnabled(false);
+                studentLayout.setVisibility(View.INVISIBLE);
+                teacherLayout.setVisibility(View.INVISIBLE);
+                addAssignment.setVisibility(View.INVISIBLE);
+            }else{
+                edit.setVisibility(View.VISIBLE);
+                edit.setEnabled(true);
+                studentLayout.setVisibility(View.VISIBLE);
+                addAssignment.setVisibility(View.VISIBLE);
+                if(user.getType().equals("admin")){
+                    teacherLayout.setVisibility(View.VISIBLE);
+                }else{
+                    teacherLayout.setVisibility(View.INVISIBLE);
+                }
+            }
+        }else{
+            title.setEnabled(true);
+            description.setEnabled(true);
+            language.setEnabled(true);
+
+            delete.setVisibility(View.VISIBLE);
+            edit.setImageDrawable(getDrawable(R.drawable.ic_save_foreground));
+
+            studentLayout.setVisibility(View.INVISIBLE);
+            teacherLayout.setVisibility(View.INVISIBLE);
+            assignmentLayout.setVisibility(View.INVISIBLE);
+        }
+
+    }
+
+    private void deleteCourse(){
+        String url = String.format(Const.DELETE_COURSE, courseId,
+                userSession.getString("token", ""));
+
+        StringRequest deleteReq = new StringRequest(Request.Method.DELETE, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Intent courseList = new Intent(CourseViewActivity.this, CoursesActivity.class);
+                        startActivity(courseList);
+                        finish();
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("Volley Delete Course Error", error.toString());
+
+                Toast.makeText(getApplicationContext(), "Error saving changes, try again later",
+                        Toast.LENGTH_LONG).show();
+            }
+        }){
+            /**
+             * Passing some request headers
+             * */
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+
+                return headers;
+            }
+
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+
+                return params;
+            }
+        };
+
+        AppController.getInstance().addToRequestQueue(deleteReq, "delete_course_req");
+    }
+
+    private void updateCourseDetails(){
+        String url = String.format(Const.UPDATE_COURSE,courseId, userSession.getString("token", ""));
+        JSONObject jsonBody = new JSONObject();
+
+        try {
+            jsonBody.put("id", courseId);
+            jsonBody.put("title", title.getText());
+            jsonBody.put("description", description.getText());
+            jsonBody.put("languages", language.getText());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        JsonObjectRequest updateReq = new JsonObjectRequest(Request.Method.PUT, url,
+                jsonBody, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                if(!error.toString().equals("com.android.volley.ParseError: org.json.JSONException: Value ACCEPTED of type java.lang.String cannot be converted to JSONObject")) {
+                    Log.e("Volley Course Update Error", error.toString());
+                    viewState = false;
+                    updateViewState(viewState);
+
+                    Toast.makeText(getApplicationContext(), "Error saving changes, try again",
+                            Toast.LENGTH_LONG).show();
+                }
+            }
+        }) {
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                headers.put("Content-Type", "application/json");
+                return headers;
+            }
+
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+
+                return params;
+            }
+        };
+
+        AppController.getInstance().addToRequestQueue(updateReq, "update_course_req");
     }
 
     private void getCourseDetails(){
