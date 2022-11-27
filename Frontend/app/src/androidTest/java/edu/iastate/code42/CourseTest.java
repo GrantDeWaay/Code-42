@@ -3,6 +3,7 @@ package edu.iastate.code42;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
+import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
@@ -19,14 +20,16 @@ import android.support.test.runner.AndroidJUnit4;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.FixMethodOrder;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-@Ignore
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class CourseTest {
     private static final int SIMULATED_DELAY_MS = 1000;
 
@@ -92,10 +95,19 @@ public class CourseTest {
     }
 
     @Test
-    public void courseViewFromList(){
+    public void courseEdit(){
         courseListActivityRule.launchActivity(new Intent());
-
         onView(withText("Test Title")).perform(click());
+        // Put thread to sleep to allow volley to handle the request
+        try {
+            Thread.sleep(SIMULATED_DELAY_MS);
+        } catch (InterruptedException e) {
+        }
+
+        onView(withId(R.id.floatingEditCourse)).perform(click());
+        onView(withId(R.id.courseTitleHeader)).perform(replaceText("Test 101"), closeSoftKeyboard());
+        onView(withId(R.id.courseLanguagesView)).perform(replaceText("Python"), closeSoftKeyboard());
+        onView(withId(R.id.floatingEditCourse)).perform(click());
 
         // Put thread to sleep to allow volley to handle the request
         try {
@@ -103,18 +115,50 @@ public class CourseTest {
         } catch (InterruptedException e) {
         }
 
-        onView(withId(R.id.courseTitleHeader)).check(matches(withText("Test Title")));
+        onView(withId(R.id.courseTitleHeader)).check(matches(withText("Test 101")));
         onView(withId(R.id.courseDescriptionView)).check(matches(withText("Test Description")));
+
+        courseListActivityRule.launchActivity(new Intent());
+        onView(withText("Test Lang")).check(doesNotExist());
     }
 
     @Test
-    public void editCourse(){
+    public void courseViewFromList(){
+        courseListActivityRule.launchActivity(new Intent());
 
+        onView(withText("Test 101")).perform(click());
+
+        // Put thread to sleep to allow volley to handle the request
+        try {
+            Thread.sleep(SIMULATED_DELAY_MS);
+        } catch (InterruptedException e) {
+        }
+
+        onView(withId(R.id.courseTitleHeader)).check(matches(withText("Test 101")));
+        onView(withId(R.id.courseDescriptionView)).check(matches(withText("Test Description")));
+        onView(withId(R.id.courseLanguagesView)).check(matches(withText("Python")));
     }
 
     @Test
     public void deleteCourse(){
+        courseListActivityRule.launchActivity(new Intent());
+        onView(withText("Test 101")).perform(click());
+        // Put thread to sleep to allow volley to handle the request
+        try {
+            Thread.sleep(SIMULATED_DELAY_MS);
+        } catch (InterruptedException e) {
+        }
 
+        onView(withId(R.id.floatingEditCourse)).perform(click());
+        onView(withId(R.id.courseDelete)).perform(click());
+
+        try {
+            Thread.sleep(SIMULATED_DELAY_MS);
+        } catch (InterruptedException e) {
+        }
+
+        courseListActivityRule.launchActivity(new Intent());
+        onView(withText("Test 101")).check(doesNotExist());
     }
 
 }
