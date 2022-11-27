@@ -44,7 +44,7 @@ import edu.iastate.code42.utils.UserListAdapter;
 
 /**
  * CourseViewActivity class
- * Screen to view details about individual course
+ * Screen to view and edit details about individual Course
  * Layout: activity_course_view
  * Extends BaseDrawer
  * @author Andrew
