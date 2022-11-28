@@ -45,11 +45,45 @@ public class AssignmentCodeCreateActivity extends AppCompatActivity {
         user = User.get(getApplicationContext());
         userSession = getSharedPreferences(getString(R.string.session_shared_pref), MODE_PRIVATE);
         String className = AssignmentCreationDataHolder.getName()
-                .replaceAll(" ", "_").toLowerCase()+
-                " {\n\tpublic static void main(String[] args) {\n\tSystem.out.print();\n\t}\n}";
-
-        if (AssignmentCreationDataHolder.getLang().equals("Java")){
-            baseCode.setText(className);
+                .replaceAll(" ", "_").toLowerCase();
+        String lang = AssignmentCreationDataHolder.getLang();
+        String startingCode;
+        switch (lang) {
+            case "Java":
+                startingCode = "import java.util.Scanner;\n\n" +
+                                className + " {\n" +
+                                "\tpublic static void main(String[] args) {\n" +
+                                "\t\tScanner myObj = new Scanner(System.in);\n" +
+                                "\t\tint x = myObj.nextInt();\n" +
+                                "\t\tSystem.out.println(\"Value: \" + x)\n" +
+                                "\t}\n" +
+                                "}";
+                baseCode.setText(startingCode);
+                break;
+            case "Go":
+                startingCode = "package main\n\n" +
+                        "import \"fmt\"\n\n" +
+                        "func main() {\n" +
+                        "\tvar x int\n" +
+                        "\tfmt.Scanln(&x)\n" +
+                        "\tfmt.Print(\"print output here!\")\n" +
+                        "}";
+                baseCode.setText(startingCode);
+                break;
+            case "C":
+                startingCode = "#include <stdio.h>\n\n" +
+                                "void main() {\n" +
+                                "\tint x;\n" +
+                                "\tscanf(\"%d\", &x);\n" +
+                                "\tprintf(\"print output here!\");\n" +
+                                "}";
+                baseCode.setText(startingCode);
+                break;
+            case "Python":
+                startingCode = "x = input(\"Enter your value: \")\n" +
+                                "print(\"print output here!\")";
+                baseCode.setText(startingCode);
+                break;
         }
 
         courseId = getIntent().getIntExtra("courseId", -1);
