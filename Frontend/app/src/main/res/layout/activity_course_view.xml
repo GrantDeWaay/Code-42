@@ -15,9 +15,11 @@
         android:clickable="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@android:drawable/ic_menu_edit" />
+        app:maxImageSize="50dp"
+        app:srcCompat="@drawable/ic_edit_foreground" />
 
     <ScrollView
+        android:id="@+id/view_scoll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:layout_editor_absoluteX="1dp"
@@ -112,7 +114,7 @@
                     <ListView
                         android:id="@+id/assignmentList"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"/>
+                        android:layout_height="match_parent" />
                 </TableRow>
 
             </TableLayout>
@@ -165,7 +167,7 @@
                     <ListView
                         android:id="@+id/studentList"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"/>
+                        android:layout_height="match_parent" />
                 </TableRow>
 
             </TableLayout>
@@ -218,10 +220,20 @@
                     <ListView
                         android:id="@+id/teacherList"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"/>
+                        android:layout_height="match_parent" />
                 </TableRow>
 
             </TableLayout>
+
+            <Button
+                android:id="@+id/courseDelete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="50dp"
+                android:text="Delete"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/courseLanguagesView" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
