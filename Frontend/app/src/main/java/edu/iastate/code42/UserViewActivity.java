@@ -7,12 +7,16 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
+
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -45,10 +49,15 @@ public class UserViewActivity extends BaseBack implements View.OnClickListener {
     EditText username;
     EditText email;
 
+    EditText currentPass;
+    EditText newPass;
+    EditText confirmPass;
+
     FloatingActionButton edit;
     Button delete;
     Button remove;
     Button changePass;
+    LinearLayout passView;
 
     User user;
     User viewUser;
@@ -82,7 +91,21 @@ public class UserViewActivity extends BaseBack implements View.OnClickListener {
             startActivity(login);
         }
 
-        //TODO Initialize view objects
+        firstName = activityBaseDrawerBinding.getRoot().findViewById(R.id.firstNameView);
+        lastName = activityBaseDrawerBinding.getRoot().findViewById(R.id.lastNameView);
+        username = activityBaseDrawerBinding.getRoot().findViewById(R.id.usernameView);
+        email = activityBaseDrawerBinding.getRoot().findViewById(R.id.emailView);
+
+        currentPass = activityBaseDrawerBinding.getRoot().findViewById(R.id.currentPassword);
+        newPass = activityBaseDrawerBinding.getRoot().findViewById(R.id.newPassword);
+        confirmPass = activityBaseDrawerBinding.getRoot().findViewById(R.id.confirmPassword);
+
+        edit = activityBaseDrawerBinding.getRoot().findViewById(R.id.floatingEditUser);
+        delete = activityBaseDrawerBinding.getRoot().findViewById(R.id.deleteUserButton);
+        remove = activityBaseDrawerBinding.getRoot().findViewById(R.id.removeMappingButton);
+        changePass = activityBaseDrawerBinding.getRoot().findViewById(R.id.changePasswordButton);
+        passView = activityBaseDrawerBinding.getRoot().findViewById(R.id.passwordContainer);
+
         edit.setOnClickListener(this);
         delete.setOnClickListener(this);
         remove.setOnClickListener(this);
@@ -106,6 +129,18 @@ public class UserViewActivity extends BaseBack implements View.OnClickListener {
 
             setPreviousScreen(new Intent(UserViewActivity.this, DashboardActivity.class));
         }
+        viewState = false;
+        updateViewState();
+
+        getUserDetails();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+
+        viewState = false;
+        updateViewState();
 
         getUserDetails();
     }
@@ -113,7 +148,7 @@ public class UserViewActivity extends BaseBack implements View.OnClickListener {
     @Override
     public void onClick(View view) {
         switch (view.getId()){
-            case 1://Edit
+            case R.id.floatingEditUser://Edit
                 if(viewState){
                     viewState = false;
                 }else{
@@ -122,33 +157,89 @@ public class UserViewActivity extends BaseBack implements View.OnClickListener {
                     viewState = true;
                 }
 
-                updateViewState(viewState);
+                updateViewState();
 
                 break;
 
-            case 2://Delete
+            case R.id.deleteUserButton://Delete
                 deleteUser();
                 break;
 
-            case 3://Remove
+            case R.id.removeMappingButton://Remove
                 removeFromCourse();
                 break;
 
-            case 4://Change Pass
+            case R.id.changePasswordButton://Change Pass
+                changePassword = true;
+
+                updatePasswordView();
                 break;
         }
 
     }
 
-    private void updateViewState(Boolean state){//TODO Add object visibility logic
-        if(state){
+    private void updateViewState(){
+        if(viewState){
             setSave(false);
+
+            firstName.setEnabled(false);
+            lastName.setEnabled(false);
+            username.setEnabled(false);
+            email.setEnabled(false);
+
+            delete.setVisibility(View.INVISIBLE);
+            remove.setVisibility(View.INVISIBLE);
+
+            updatePasswordView();
 
             edit.setImageDrawable(getDrawable(R.drawable.ic_edit_foreground));
         }else{
             setSave(true);
 
+            firstName.setEnabled(true);
+            lastName.setEnabled(true);
+            username.setEnabled(true);
+            email.setEnabled(true);
+
+            if(viewType == 0) {
+                delete.setVisibility(View.INVISIBLE);
+                remove.setVisibility(View.INVISIBLE);
+            }else{
+                delete.setVisibility(View.VISIBLE);
+                remove.setVisibility(View.VISIBLE);
+            }
+
+            updatePasswordView();
+
             edit.setImageDrawable(getDrawable(R.drawable.ic_save_foreground));
+        }
+    }
+
+    private void updatePasswordView(){
+        if(viewState){
+            changePass.setVisibility(View.INVISIBLE);
+
+            passView.setVisibility(View.INVISIBLE);
+        }else{
+            if(changePassword){
+                changePass.setVisibility(View.INVISIBLE);
+
+                passView.setVisibility(View.VISIBLE);
+
+                if(viewType == 0){
+                    currentPass.setVisibility(View.VISIBLE);
+                    newPass.setVisibility(View.VISIBLE);
+                    confirmPass.setVisibility(View.VISIBLE);
+                }else{
+                    currentPass.setVisibility(View.INVISIBLE);
+                    newPass.setVisibility(View.VISIBLE);
+                    confirmPass.setVisibility(View.VISIBLE);
+                }
+            }else{
+                changePass.setVisibility(View.VISIBLE);
+
+                passView.setVisibility(View.INVISIBLE);
+            }
         }
     }
 
@@ -160,7 +251,11 @@ public class UserViewActivity extends BaseBack implements View.OnClickListener {
             @Override
             public void onResponse(JSONObject response) {
                 try {
-                    //TODO Set content to view objects
+                    firstName.setText(response.getString("firstName"));
+                    lastName.setText(response.getString("lastName"));
+                    username.setText(response.getString("username"));
+                    email.setText(response.getString("email"));
+
                     if(viewType == 0){
                         user.fromJson(response);
                     }else{
@@ -228,7 +323,7 @@ public class UserViewActivity extends BaseBack implements View.OnClickListener {
                 if(!error.toString().equals("com.android.volley.ParseError: org.json.JSONException: Value ACCEPTED of type java.lang.String cannot be converted to JSONObject")) {
                     Log.e("Volley Course Update Error", error.toString());
                     viewState = false;
-                    updateViewState(viewState);
+                    updateViewState();
 
                     Toast.makeText(getApplicationContext(), "Error saving changes, try again",
                             Toast.LENGTH_LONG).show();
@@ -255,19 +350,33 @@ public class UserViewActivity extends BaseBack implements View.OnClickListener {
     }
 
     private JSONObject update() throws JSONException {
-        User u = new User();
+        JSONObject object = new JSONObject();
+
+        object.put("id", userId);
 
         if(changePassword){
             if(viewType == 0){
-                //TODO Update password if current matches user.getPassword &&
-                //     new pass matches confirm box
+                if(!currentPass.getText().toString().isEmpty() &&
+                        !newPass.getText().toString().isEmpty() &&
+                        !confirmPass.getText().toString().isEmpty() &&
+                        currentPass.getText().toString().equals(user.getPassword()) &&
+                        newPass.getText().toString().equals(confirmPass.getText().toString())){
+                    object.put("password", newPass.getText().toString());
+                }
             }else{
-                //TODO Update password if new pass matches confirm box
+                if(!newPass.getText().toString().isEmpty() &&
+                        !confirmPass.getText().toString().isEmpty() &&
+                        newPass.getText().toString().equals(confirmPass.getText().toString())){
+                    object.put("password", newPass.getText().toString());
+                }
             }
         }
-        //TODO Set variables to values of text boxes
+        object.put("firstName", firstName.getText().toString());
+        object.put("lastName", lastName.getText().toString());
+        object.put("username", username.getText().toString());
+        object.put("email", email.getText().toString());
 
-        return u.getJson();
+        return object;
     }
 
 
@@ -353,6 +462,6 @@ public class UserViewActivity extends BaseBack implements View.OnClickListener {
             }
         };
 
-        AppController.getInstance().addToRequestQueue(removeUserFromCourse, "course_get_students");
+        AppController.getInstance().addToRequestQueue(removeUserFromCourse, "user_to_course_mapping");
     }
 }
