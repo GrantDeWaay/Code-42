@@ -41,6 +41,10 @@ import edu.iastate.code42.utils.UserListAdapter;
 /**
  * UserListActivity class
  * View with a list of Users, multiple configurations and uses based on User type and Intent type
+ * Type = 1: Show list of all Users of type Teacher not in Course to add to Course
+ * Type = 2: Show list of all Users of type Student not in Course to add to Course
+ * Type = 3: Show list of all Users of type Teacher in Course
+ * Type = 4: Show list of all Users of type Student in Course
  * Layout: activity_user_list
  * @author Andrew
  */
@@ -133,6 +137,21 @@ public class UserListActivity extends BaseBack implements AdapterView.OnItemClic
     @Override
     protected void onRestart() {
         super.onRestart();
+
+        if(type == 1 || type == 2){
+            Intent userListIntent = new Intent(this, UserListActivity.class);
+            userListIntent.putExtra("courseId", courseId);
+            userListIntent.putExtra("type", type + 2);
+
+            setPreviousScreen(userListIntent);
+            setSave(true);
+        }else if(type == 3 || type == 4){
+            Intent courseView = new Intent(this, CourseViewActivity.class);
+            courseView.putExtra("courseId", courseId);
+
+            setPreviousScreen(courseView);
+            setSave(false);
+        }
 
         getUsers();
     }

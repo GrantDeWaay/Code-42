@@ -13,7 +13,6 @@
     <string name="login_volley_incorrect">Incorrect username or password</string>
     <string name="login_volley_session">Incorrect or expired session, please login normally</string>
     <string name="session_shared_pref">userSharedFile</string>
-    <string name="app_shared_pref">appSharedFile</string>
     <string name="menu_drawer_open">Drawer Open</string>
     <string name="menu_drawer_close">Drawer Close</string>
     <string name="user_course_mapping_error">Error when mapping user to course, retry later</string>
@@ -26,4 +25,14 @@
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="element_text">yoo</string>
+
+    <string name="theme_options_0">Use system defaults</string>
+    <string name="theme_options_1">Light</string>
+    <string name="theme_options_2">Dark</string>
+    <string-array name="theme_options">
+        <item>Use system defaults</item>
+        <item>Light</item>
+        <item>Dark</item>
+    </string-array>
+
 </resources>
