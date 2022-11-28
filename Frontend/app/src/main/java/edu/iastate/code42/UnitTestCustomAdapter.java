@@ -14,10 +14,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
+import edu.iastate.code42.objects.UnitTestPair;
+
 public class UnitTestCustomAdapter extends RecyclerView.Adapter<UnitTestCustomAdapter.ViewHolder> {
 
-    private static ArrayList<String> data1 = new ArrayList<String>();
-    private static ArrayList<String> data2 = new ArrayList<String>();
+    private String[] localDataSet;
+    private static ArrayList<UnitTestPair> UnitTests = new ArrayList<>();
     private static int instanceCount = 0;
 
     /**
@@ -26,14 +28,21 @@ public class UnitTestCustomAdapter extends RecyclerView.Adapter<UnitTestCustomAd
      */
     @SuppressLint("NotifyDataSetChanged")
     public void add(String x) {
+        int n = getItemCount();
+        String newarr[] = new String[n + 1];
+        for (int i = 0; i < n; i++)
+            newarr[i] = this.localDataSet[i];
 
+        newarr[n] = x;
+
+        this.localDataSet = newarr;
         notifyDataSetChanged();
     }
 
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        private final EditText UnitTestValEditText;
-        private final EditText UnitTestOutEditText;
+        private final EditText valEditText;
+        private final EditText outEditText;
         private final int count;
 
         public ViewHolder(View view) {
@@ -42,54 +51,22 @@ public class UnitTestCustomAdapter extends RecyclerView.Adapter<UnitTestCustomAd
 
             count = instanceCount;
             instanceCount++;
-            data1.add("value");
-            data2.add("output");
-            TextWatcher updateData1 = new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+            valEditText = view.findViewById(R.id.UnitTestValEditText);
+            outEditText = view.findViewById(R.id.UnitTestOutEditText);
 
-                @Override
-                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                    data1.set(count, charSequence.toString());
-                }
+            UnitTests.add(new UnitTestPair(valEditText, outEditText));
 
-                @Override
-                public void afterTextChanged(Editable editable) {}
-            };
-            TextWatcher updateData2 = new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-                }
-
-                @Override
-                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                    data2.set(count, charSequence.toString());
-                }
-
-                @Override
-                public void afterTextChanged(Editable editable) {
-
-                }
-            };
-
-            UnitTestValEditText = view.findViewById(R.id.UnitTestValEditText);
-            UnitTestOutEditText = view.findViewById(R.id.UnitTestOutEditText);
-
-            UnitTestValEditText.addTextChangedListener(updateData1);
-            UnitTestOutEditText.addTextChangedListener(updateData2);
-
-        }
-        public EditText[] getEditText(){
-            return new EditText[]{UnitTestValEditText, UnitTestOutEditText};
         }
     }
 
     /**
      * Initialize the dataset of the Adapter.
      *
+     * @param dataSet String[] containing the data to populate views to be used
+     *                by RecyclerView.
      */
-    public UnitTestCustomAdapter() {
+    public UnitTestCustomAdapter(String[] dataSet) {
+        localDataSet = dataSet;
     }
 
     // Create new views (invoked by the layout manager)
@@ -103,32 +80,19 @@ public class UnitTestCustomAdapter extends RecyclerView.Adapter<UnitTestCustomAd
     }
 
     // Replace the contents of a view (invoked by the layout manager)
-    public void onBindViewHolder(ViewHolder viewHolder, final int position) {
-
-        // Get element from your dataset at this position and replace the
-        // contents of the view with that element
-        /*
-        viewHolder.getTextView().setText(localDataSet[position]);
-
-        viewHolder.getTextView2().setText(localDataSet[position]);
-
-         */
-    }
+    public void onBindViewHolder(ViewHolder viewHolder, final int position) {}
 
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return 3;
+        return localDataSet.length;
     }
 
-    public String[] getDataEquals(){
-        String[] temp = new String[0];
-        data2.toArray(temp);
-        return temp;
-    }
-    public String[] getDataExpect() {
-        String[] temp = new String[0];
-        data2.toArray(temp);
-        return temp;
+    public static String[] getUnitTests(){
+        String[] UnitTestsReturn = new String[UnitTests.size()];
+        for(int i = 0; i < UnitTests.size(); i++){
+            UnitTestsReturn[i] = UnitTests.get(i).toString();
+        }
+        return UnitTestsReturn;
     }
 }

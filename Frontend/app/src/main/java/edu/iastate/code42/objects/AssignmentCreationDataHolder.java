@@ -149,6 +149,10 @@ public class AssignmentCreationDataHolder {
     }
 
 
+    public static String getLang() {
+        return lang;
+    }
+
     /**
      * takes the variables from this class and compiles them in a JSONObject
      * for an assignment to be added to the backend

@@ -36,7 +36,6 @@ import java.util.Locale;
 import edu.iastate.code42.app.AppController;
 import edu.iastate.code42.objects.User;
 import edu.iastate.code42.utils.Const;
-import edu.iastate.code42.utils.WebSocketRunUnitTests;
 
 public class AssignmentWorkActivity extends AppCompatActivity implements View.OnClickListener {
     private Button submit, info, loadDefault;
@@ -168,8 +167,6 @@ public class AssignmentWorkActivity extends AppCompatActivity implements View.On
             });
 
             AppController.getInstance().addToRequestQueue(req);
-
-            //WebSocketRunUnitTests.sendMessage();
             testPopup.setTouchable(true);
             testPopup.setFocusable(true);
             testPopup.setOnDismissListener(() -> {
@@ -192,7 +189,6 @@ public class AssignmentWorkActivity extends AppCompatActivity implements View.On
                         assignmentName.setText(assignmentData.getString("title"));
                         statementTextView.setText(assignmentData.getString("problemStatement"));
                         descText = assignmentData.getString("description");
-                        results.setText("Loadin' doot doot doot datt...");
                         description.setText(descText);
                         assignmentNamePopupText.setText(assignmentData.getString("title"));
                         ide.setText(assignmentData.getString("template"));
@@ -212,17 +208,14 @@ public class AssignmentWorkActivity extends AppCompatActivity implements View.On
                 new Draft_6455()
         };
         try{
-            cc = new WebSocketClient(new URI(webs), (Draft) drafts[0]) {
+            cc = new WebSocketClient(new URI(webs), drafts[0]) {
                 @Override
                 public void onMessage(String message) {
                     Log.d("", "run() returned: " + message);
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            String s = results.getText().toString();
-                            results.setText(s + "\nServer:" + message);
-                            // This code will always run on the UI thread, therefore is safe to modify UI elements.
-                        }
+                    runOnUiThread(() -> {
+                        String s = results.getText().toString();
+                        results.setText(s + "\nServer:" + message);
+                        // This code will always run on the UI thread, therefore is safe to modify UI elements.
                     });
 
                 }
