@@ -26,7 +26,6 @@ import org.junit.runner.RunWith;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-@Ignore
 public class CourseTest {
     private static final int SIMULATED_DELAY_MS = 1000;
 

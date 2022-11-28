@@ -1,6 +1,5 @@
 package edu.iastate.code42;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
 
 import android.content.Intent;
@@ -11,7 +10,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -27,7 +25,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import edu.iastate.code42.app.AppController;
-import edu.iastate.code42.databinding.ActivityCourseCreationBinding;
 import edu.iastate.code42.databinding.ActivityUserCreationBinding;
 import edu.iastate.code42.objects.User;
 import edu.iastate.code42.utils.BaseBack;
@@ -191,7 +188,7 @@ public class UserCreationActivity extends BaseBack implements View.OnClickListen
     private void addUsertoCourse(JSONObject response){
         String url = "";
         try {
-             url = String.format(Const.ADD_USER_TO_COURSE, courseId, response.getInt("id"),
+             url = String.format(Const.USER_TO_COURSE, courseId, response.getInt("id"),
                     userSession.getString("token", ""));
         } catch (JSONException e) {
             e.printStackTrace();

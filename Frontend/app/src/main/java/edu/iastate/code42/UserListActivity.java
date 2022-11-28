@@ -1,8 +1,5 @@
 package edu.iastate.code42;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -27,11 +24,9 @@ import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import edu.iastate.code42.app.AppController;
-import edu.iastate.code42.databinding.ActivityCourseCreationBinding;
 import edu.iastate.code42.databinding.ActivityUserListBinding;
 import edu.iastate.code42.objects.User;
 import edu.iastate.code42.utils.BaseBack;
@@ -225,7 +220,7 @@ public class UserListActivity extends BaseBack implements AdapterView.OnItemClic
 
             case R.id.addSelectButton:
                 for(i = 0; i < selected.size(); i++){
-                    url = String.format(Const.ADD_USER_TO_COURSE, courseId, selected.get(i).getId(),
+                    url = String.format(Const.USER_TO_COURSE, courseId, selected.get(i).getId(),
                             userSession.getString("token", ""));
 
                     StringRequest addUserToCourse = new StringRequest(Request.Method.PUT, url,

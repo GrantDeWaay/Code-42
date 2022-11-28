@@ -21,6 +21,8 @@ public class Const {
 	public static final String GET_USERS = SOURCE + "user" + TOKEN;
 	public static final String CREATE_USER = SOURCE + "user/create" + TOKEN;
 	public static final String GET_USER = SOURCE + "user/%d" + TOKEN;
+	public static final String UPDATE_USER = SOURCE + "user/%d/update" + TOKEN;
+	public static final String DELETE_USER = SOURCE + "user/%d/delete" + TOKEN;
 	public static final String GET_COURSES_FOR_USER = SOURCE + "user/%d/courses" + TOKEN;
 
 	public static final String GET_COURSES = SOURCE + "course" + TOKEN;
@@ -29,7 +31,7 @@ public class Const {
 	public static final String GET_ASSIGNMENTS_FOR_COURSE = SOURCE + "course/%d/assignments" + TOKEN;
 	public static final String GET_STUDENTS_FOR_COURSE = SOURCE + "course/%d/students" + TOKEN;
 	public static final String GET_TEACHERS_FOR_COURSE = SOURCE + "course/%d/teachers" + TOKEN;
-	public static final String ADD_USER_TO_COURSE = SOURCE + "course/%d/user/%d" + TOKEN;
+	public static final String USER_TO_COURSE = SOURCE + "course/%d/user/%d" + TOKEN;
 	public static final String ADD_ASSIGNMENT_TO_COURSE = SOURCE + "course/%d/assignment/%d" + TOKEN;
 
 	public static final String GET_ASSIGNMENT = SOURCE + "assignment/%d" + TOKEN;
