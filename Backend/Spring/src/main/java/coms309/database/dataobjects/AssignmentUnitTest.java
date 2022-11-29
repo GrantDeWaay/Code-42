@@ -9,6 +9,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import coms309.api.dataobjects.ApiAssignmentUnitTest;
+
 @Entity
 @Table(name = "assignment_unit_tests")
 public class AssignmentUnitTest {
@@ -29,6 +31,12 @@ public class AssignmentUnitTest {
 
     public AssignmentUnitTest() {
 
+    }
+
+    public AssignmentUnitTest(ApiAssignmentUnitTest aaut) {
+        this.id = aaut.getId();
+        this.input = aaut.getInput();
+        this.expectedOutput = aaut.getExpectedOutput();
     }
 
     public void setId(Long id) {
