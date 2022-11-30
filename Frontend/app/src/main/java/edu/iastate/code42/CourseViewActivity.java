@@ -282,14 +282,27 @@ public class CourseViewActivity extends BaseBack implements View.OnClickListener
             case R.id.assignmentList:
                 Intent assignmentView = new Intent(this, AssignmentWorkActivity.class);
                 assignmentView.putExtra("id", assignments.get(i).getId());
+                assignmentView.putExtra("courseId", courseId);
 
                 startActivity(assignmentView);
                 break;
 
             case R.id.teacherList:
+                Intent userView = new Intent(CourseViewActivity.this, UserViewActivity.class);
+                userView.putExtra("courseId", courseId);
+                userView.putExtra("type", 3);
+                userView.putExtra("userId", teachers.get(i).getId());
+
+                startActivity(userView);
                 break;
 
             case R.id.studentList:
+                Intent userView2 = new Intent(CourseViewActivity.this, UserViewActivity.class);
+                userView2.putExtra("courseId", courseId);
+                userView2.putExtra("type", 4);
+                userView2.putExtra("userId", students.get(i).getId());
+
+                startActivity(userView2);
                 break;
         }
     }

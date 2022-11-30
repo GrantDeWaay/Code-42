@@ -184,11 +184,13 @@ public class UserListActivity extends BaseBack implements AdapterView.OnItemClic
                 break;
 
             case 3://TEACHERS in COURSE
-                //TODO when UserProfile/UserEdit complete
-                break;
-
             case 4://STUDENTS in COURSE
-                //TODO when UserProfile/UserEdit complete
+                Intent userView = new Intent(UserListActivity.this, UserViewActivity.class);
+                userView.putExtra("courseId", courseId);
+                userView.putExtra("type", type);
+                userView.putExtra("userId", userAdapter.getItem(i).getId());
+
+                startActivity(userView);
                 break;
         }
     }
