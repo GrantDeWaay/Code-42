@@ -293,10 +293,9 @@ public class AssignmentController {
         }
 
         for(AssignmentUnitTest aut : a.get().getUnitTests()) {
+            a.get().getUnitTests().remove(aut);
             auts.delete(aut.getId());
         }
-
-        a.get().getUnitTests().clear();
 
         as.update(a.get());
 
