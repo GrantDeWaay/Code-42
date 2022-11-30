@@ -2,6 +2,7 @@ package coms309.coderunner;
 
 import coms309.api.dataobjects.ApiCodeSubmission;
 import coms309.database.dataobjects.AssignmentFile;
+import coms309.database.dataobjects.AssignmentUnitTest;
 
 import java.io.*;
 import java.util.concurrent.TimeUnit;
@@ -18,8 +19,8 @@ public class PythonRunner extends CodeRunner {
      * @param tfm TempFileManager object to manage temporary directory for executing file
      * @throws FileNotFoundException
      */
-    public PythonRunner(AssignmentFile af, ApiCodeSubmission acs, TempFileManager tfm) throws FileNotFoundException {
-        super(af.getCodeFolder(), tfm.getAssignmentFolderPath());
+    public PythonRunner(AssignmentFile af, ApiCodeSubmission acs, TempFileManager tfm, Iterable<AssignmentUnitTest> unitTests) throws FileNotFoundException {
+        super(af.getCodeFolder(), tfm.getAssignmentFolderPath(), unitTests);
         compiledRunner = true;
         this.fileName = acs.getName();
     }
@@ -52,7 +53,7 @@ public class PythonRunner extends CodeRunner {
      * @throws IOException
      */
     @Override
-    public boolean run() throws IOException {
+    public Iterable<AssignmentUnitTestResult> run() throws IOException {
         //String executableName = fileName.substring(0, fileName.indexOf('.'));
         Process process = Runtime.getRuntime().exec("python " + testFolder + "/out/" + fileName);
 
@@ -78,10 +79,9 @@ public class PythonRunner extends CodeRunner {
 
         if(process.isAlive()){
             process.destroyForcibly();
-            return false;
         }
 
-        return true;
+        return null;
     }
 
 }

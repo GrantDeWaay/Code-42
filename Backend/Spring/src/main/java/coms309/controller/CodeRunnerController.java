@@ -3,7 +3,10 @@ package coms309.controller;
 import java.io.File;
 import java.io.FileWriter;
 import java.util.Calendar;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,12 +19,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import coms309.api.dataobjects.ApiCodeRunResult;
 import coms309.api.dataobjects.ApiCodeSubmission;
+import coms309.coderunner.AssignmentUnitTestResult;
 import coms309.coderunner.CodeRunner;
 import coms309.coderunner.CodeRunnerFactory;
 import coms309.coderunner.TempFileManager;
 import coms309.controller.token.UserTokens;
 import coms309.database.dataobjects.Assignment;
 import coms309.database.dataobjects.AssignmentFile;
+import coms309.database.dataobjects.AssignmentUnitTest;
 import coms309.database.dataobjects.Grade;
 import coms309.database.dataobjects.User;
 import coms309.database.services.AssignmentService;
@@ -64,7 +69,7 @@ public class CodeRunnerController {
         @ApiResponse(code = 404, message = "NOT FOUND")
     })
     @PutMapping("/run/{assignmentId}")
-    public ResponseEntity<ApiCodeRunResult> runAssignment(@PathVariable long assignmentId, @RequestBody ApiCodeSubmission codeSubmission, @RequestParam String token) {
+    public ResponseEntity<Iterable<AssignmentUnitTestResult>> runAssignment(@PathVariable long assignmentId, @RequestBody ApiCodeSubmission codeSubmission, @RequestParam String token) {
         if (!UserTokens.isStudent(token)) return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 
         Long studentId = UserTokens.getID(token);
@@ -74,9 +79,11 @@ public class CodeRunnerController {
         Optional<Assignment> a = as.findById(assignmentId);
 
         if (!a.isPresent())
-            return new ResponseEntity<>(new ApiCodeRunResult(false, "Assignment not found", "", ""), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
         AssignmentFile af = a.get().getAssignmentFile();
+
+        Set<AssignmentUnitTest> unitTests = a.get().getUnitTests();
 
         if (af == null) af = new AssignmentFile(); // initialize to empty
 
@@ -86,7 +93,7 @@ public class CodeRunnerController {
 
         try {
             CodeRunnerFactory factory = new CodeRunnerFactory();
-            CodeRunner runner = factory.createCodeRunner(af, codeSubmission, tempFileManager);
+            CodeRunner runner = factory.createCodeRunner(af, codeSubmission, tempFileManager, unitTests);
 
             File codeFile = new File(tempFileManager.getAssignmentFolderPath() + "/" + codeSubmission.getName());
 
@@ -98,46 +105,48 @@ public class CodeRunnerController {
 
             if (runner.isCompiledRunner()) {
                 if (!runner.compile()) {
-                    return new ResponseEntity<>(new ApiCodeRunResult(false, "Compilation failed", "", ""), HttpStatus.ACCEPTED);
+                    AssignmentUnitTestResult result = new AssignmentUnitTestResult(null, "", "Compilation failed", false);
+                    List<AssignmentUnitTestResult> results = new LinkedList<>();
+                    results.add(result);
+                    return new ResponseEntity<>(results, HttpStatus.ACCEPTED);
                 }
             }
 
-            if (!runner.run()) {
-                return new ResponseEntity<>(new ApiCodeRunResult(false, "Run failed", "", ""), HttpStatus.ACCEPTED);
-            }
+            Iterable<AssignmentUnitTestResult> results = runner.run();
 
-            if (!runner.getStdOutData().equals(a.get().getExpectedOutput())) {
-                Grade g = gs.findByUserAndAssignment(studentId, assignmentId);
+            return new ResponseEntity<>(results, HttpStatus.ACCEPTED);
 
-                if (g == null) {
-                    g = new Grade(0.0, Calendar.getInstance().getTime());
-                    g.setAssignment(a.get());
-                    a.get().getGrades().add(g);
-                    g.setUser(u.get());
-                    u.get().getGrades().add(g);
+            // if (!runner.getStdOutData().equals(a.get().getExpectedOutput())) {
+            //     Grade g = gs.findByUserAndAssignment(studentId, assignmentId);
 
-                    gs.create(g);
-                }
-                return new ResponseEntity<>(new ApiCodeRunResult(false, "Expected output differs", a.get().getExpectedOutput(), runner.getStdOutData()), HttpStatus.ACCEPTED);
-            }
+            //     if (g == null) {
+            //         g = new Grade(0.0, Calendar.getInstance().getTime());
+            //         g.setAssignment(a.get());
+            //         a.get().getGrades().add(g);
+            //         g.setUser(u.get());
+            //         u.get().getGrades().add(g);
 
-            Grade g = gs.findByUserAndAssignment(studentId, assignmentId);
+            //         gs.create(g);
+            //     }
+            //     return new ResponseEntity<>(new ApiCodeRunResult(false, "Expected output differs", a.get().getExpectedOutput(), runner.getStdOutData()), HttpStatus.ACCEPTED);
+            // }
 
-            if (g == null) {
-                g = new Grade(0.0, Calendar.getInstance().getTime());
-                g.setAssignment(a.get());
-                a.get().getGrades().add(g);
-                g.setUser(u.get());
-                u.get().getGrades().add(g);
-            } else {
-                g.setGrade(100.0);
-                g.setUpdateDate(Calendar.getInstance().getTime());
-            }
+            // Grade g = gs.findByUserAndAssignment(studentId, assignmentId);
 
-            gs.create(g);
+            // if (g == null) {
+            //     g = new Grade(100.0, Calendar.getInstance().getTime());
+            //     g.setAssignment(a.get());
+            //     a.get().getGrades().add(g);
+            //     g.setUser(u.get());
+            //     u.get().getGrades().add(g);
+            // } else {
+            //     g.setGrade(100.0);
+            //     g.setUpdateDate(Calendar.getInstance().getTime());
+            // }
 
-            return new ResponseEntity<>(new ApiCodeRunResult(true, "Expected output matches", a.get().getExpectedOutput(), runner.getStdOutData()), HttpStatus.ACCEPTED);
+            // gs.create(g);
 
+            // return new ResponseEntity<>(new ApiCodeRunResult(true, "Expected output matches", a.get().getExpectedOutput(), runner.getStdOutData()), HttpStatus.ACCEPTED);
             // TODO make this better
         } catch (Exception e) {
             e.printStackTrace();
