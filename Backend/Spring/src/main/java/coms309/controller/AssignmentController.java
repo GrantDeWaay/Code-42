@@ -273,9 +273,10 @@ public class AssignmentController {
             aut.setAssignment(a.get());
             a.get().getUnitTests().add(aut);
 
-            as.create(a.get());
             auts.create(aut);
         }
+
+        as.update(a.get());
 
         return HttpStatus.ACCEPTED;
     }
