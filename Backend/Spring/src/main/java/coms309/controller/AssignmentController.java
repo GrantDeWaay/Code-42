@@ -9,6 +9,7 @@ import coms309.database.dataobjects.Assignment;
 import coms309.database.dataobjects.AssignmentUnitTest;
 import coms309.database.dataobjects.Grade;
 import coms309.database.services.AssignmentService;
+import coms309.database.services.AssignmentUnitTestService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -35,6 +36,9 @@ public class AssignmentController {
 
     @Autowired
     private AssignmentService as;
+
+    @Autowired
+    private AssignmentUnitTestService auts;
 
     /**
      * Get an assignment from its id.
@@ -268,6 +272,9 @@ public class AssignmentController {
 
             aut.setAssignment(a.get());
             a.get().getUnitTests().add(aut);
+
+            as.create(a.get());
+            auts.create(aut);
         }
 
         return HttpStatus.ACCEPTED;
@@ -284,7 +291,13 @@ public class AssignmentController {
             return HttpStatus.NOT_FOUND;
         }
 
+        for(AssignmentUnitTest aut : a.get().getUnitTests()) {
+            auts.delete(aut.getId());
+        }
+
         a.get().getUnitTests().clear();
+
+        as.update(a.get());
 
         return HttpStatus.ACCEPTED;
     }
