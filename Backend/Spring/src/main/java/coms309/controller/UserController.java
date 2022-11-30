@@ -13,13 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import coms309.api.dataobjects.*;
 
-import java.util.List;
-import java.util.LinkedList;
-import java.util.Set;
-import java.util.Calendar;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Optional;
+import java.util.*;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponses;
@@ -51,8 +45,8 @@ public class UserController {
      */
     @ApiOperation(value = "Get a list of all Users in the system", response = Iterable.class, tags = "user-controller")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "OK"),        
-        @ApiResponse(code = 404, message = "NOT FOUND")
+            @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 404, message = "NOT FOUND")
     })
     @GetMapping("/user")
     public @ResponseBody ResponseEntity<List<ApiUser>> getUserList(@RequestParam String token) {
@@ -83,9 +77,9 @@ public class UserController {
      */
     @ApiOperation(value = "Get a User by ID", response = ApiUser.class, tags = "user-controller")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "OK"),        
-        @ApiResponse(code = 403, message = "FORBIDDEN"),
-        @ApiResponse(code = 404, message = "NOT FOUND")
+            @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 403, message = "FORBIDDEN"),
+            @ApiResponse(code = 404, message = "NOT FOUND")
     })
     @GetMapping("/user/{id}")
     public @ResponseBody ResponseEntity<ApiUser> getUser(@PathVariable long id, @RequestParam String token) {
@@ -111,9 +105,9 @@ public class UserController {
      */
     @ApiOperation(value = "Get a User by email", response = ApiUser.class, tags = "user-controller")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "OK"),        
-        @ApiResponse(code = 403, message = "FORBIDDEN"),
-        @ApiResponse(code = 404, message = "NOT FOUND")
+            @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 403, message = "FORBIDDEN"),
+            @ApiResponse(code = 404, message = "NOT FOUND")
     })
     @GetMapping("/user/{email}")
     public @ResponseBody ResponseEntity<ApiUser> getUserByEmail(@PathVariable String email) {
@@ -137,9 +131,9 @@ public class UserController {
      */
     @ApiOperation(value = "Get a list of all Courses a User is associated with", response = Iterable.class, tags = "user-controller")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "OK"),        
-        @ApiResponse(code = 403, message = "FORBIDDEN"),
-        @ApiResponse(code = 404, message = "NOT FOUND")
+            @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 403, message = "FORBIDDEN"),
+            @ApiResponse(code = 404, message = "NOT FOUND")
     })
     @GetMapping("/user/{id}/courses")
     public @ResponseBody ResponseEntity<Set<ApiCourse>> getUserCourseList(@PathVariable long id, @RequestParam String token) {
@@ -174,9 +168,9 @@ public class UserController {
      */
     @ApiOperation(value = "Get a list of all Grades for a User", response = Iterable.class, tags = "user-controller")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "OK"),        
-        @ApiResponse(code = 403, message = "FORBIDDEN"),
-        @ApiResponse(code = 404, message = "NOT FOUND")
+            @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 403, message = "FORBIDDEN"),
+            @ApiResponse(code = 404, message = "NOT FOUND")
     })
     @GetMapping("/user/{id}/grades")
     public @ResponseBody ResponseEntity<Set<ApiGrade>> getUserGradeList(@PathVariable long id, @RequestParam String token) {
@@ -212,9 +206,9 @@ public class UserController {
      */
     @ApiOperation(value = "Get a User's grade on an Assignment", response = ApiGrade.class, tags = "user-controller")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "OK"),        
-        @ApiResponse(code = 403, message = "FORBIDDEN"),
-        @ApiResponse(code = 404, message = "NOT FOUND")
+            @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 403, message = "FORBIDDEN"),
+            @ApiResponse(code = 404, message = "NOT FOUND")
     })
     @GetMapping("/user/{userId}/assignment/{assignmentId}/grade")
     public @ResponseBody ResponseEntity<ApiGrade> getUserGrade(@PathVariable long userId, @PathVariable long assignmentId, @RequestParam String token) {
@@ -252,9 +246,9 @@ public class UserController {
      */
     @ApiOperation(value = "Create a new User", response = ApiUser.class, tags = "user-controller")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "OK"),        
-        @ApiResponse(code = 403, message = "FORBIDDEN"),
-        @ApiResponse(code = 404, message = "NOT FOUND")
+            @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 403, message = "FORBIDDEN"),
+            @ApiResponse(code = 404, message = "NOT FOUND")
     })
     @PostMapping("/user/create")
     public @ResponseBody ResponseEntity<ApiUser> createUser(@RequestBody ApiUser u, @RequestParam String token) {
@@ -283,9 +277,9 @@ public class UserController {
      */
     @ApiOperation(value = "Update an existing User", response = HttpStatus.class, tags = "user-controller")
     @ApiResponses(value = {
-        @ApiResponse(code = 202, message = "ACCEPTED"),        
-        @ApiResponse(code = 403, message = "FORBIDDEN"),
-        @ApiResponse(code = 404, message = "NOT FOUND")
+            @ApiResponse(code = 202, message = "ACCEPTED"),
+            @ApiResponse(code = 403, message = "FORBIDDEN"),
+            @ApiResponse(code = 404, message = "NOT FOUND")
     })
     @PutMapping("/user/{id}/update")
     public @ResponseBody HttpStatus updateUser(@PathVariable long id, @RequestBody ApiUser u, @RequestParam String token) {
@@ -298,12 +292,24 @@ public class UserController {
 
         User user = optional.get();
 
-        user.setUsername(u.getUsername());
-        user.setFirstName(u.getFirstName());
-        user.setLastName(u.getLastName());
-        user.setPassword(u.getPassword());
-        user.setEmail(u.getEmail());
-        user.setType(u.getType());
+        if (!Objects.equals(u.getUsername(), "")) {
+            user.setUsername(u.getUsername());
+        }
+        if (!Objects.equals(u.getFirstName(), "")) {
+            user.setFirstName(u.getFirstName());
+        }
+        if (!Objects.equals(u.getLastName(), "")) {
+            user.setLastName(u.getLastName());
+        }
+        if (!Objects.equals(u.getPassword(), "")) {
+            user.setPassword(u.getPassword());
+        }
+        if (!Objects.equals(u.getEmail(), "")) {
+            user.setEmail(u.getEmail());
+        }
+        if (!Objects.equals(u.getType(), "")) {
+            user.setType(u.getType());
+        }
 
         us.update(user);
 
@@ -323,9 +329,9 @@ public class UserController {
      */
     @ApiOperation(value = "Delete a User from the system", response = HttpStatus.class, tags = "user-controller")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "OK"),        
-        @ApiResponse(code = 403, message = "FORBIDDEN"),
-        @ApiResponse(code = 404, message = "NOT FOUND")
+            @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 403, message = "FORBIDDEN"),
+            @ApiResponse(code = 404, message = "NOT FOUND")
     })
     @DeleteMapping("/user/{id}/delete")
     public @ResponseBody HttpStatus deleteUser(@PathVariable long id, @RequestParam String token) {
