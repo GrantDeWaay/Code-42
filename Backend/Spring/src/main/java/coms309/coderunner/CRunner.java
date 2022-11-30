@@ -114,9 +114,11 @@ public class CRunner extends CodeRunner {
                 process.destroyForcibly();
             }
 
-            AssignmentUnitTestResult result = new AssignmentUnitTestResult(new ApiAssignmentUnitTest(aut), stdOutData, "", stdOutData.equals(aut.getExpectedOutput()));
-
+            AssignmentUnitTestResult result = new AssignmentUnitTestResult(new ApiAssignmentUnitTest(aut), stdOutData, stdErrData, stdOutData.equals(aut.getExpectedOutput()));
             results.add(result);
+
+            stdOutData = "";
+            stdErrData = "";
         }
 
         return results;
