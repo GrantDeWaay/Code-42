@@ -129,7 +129,7 @@ public class UserViewActivity extends BaseBack implements View.OnClickListener {
 
             setPreviousScreen(new Intent(UserViewActivity.this, DashboardActivity.class));
         }
-        viewState = false;
+        viewState = true;
         updateViewState();
 
         getUserDetails();
@@ -139,7 +139,7 @@ public class UserViewActivity extends BaseBack implements View.OnClickListener {
     protected void onRestart() {
         super.onRestart();
 
-        viewState = false;
+        viewState = true;
         updateViewState();
 
         getUserDetails();
@@ -220,6 +220,10 @@ public class UserViewActivity extends BaseBack implements View.OnClickListener {
             changePass.setVisibility(View.INVISIBLE);
 
             passView.setVisibility(View.INVISIBLE);
+
+            currentPass.setText("");
+            newPass.setText("");
+            confirmPass.setText("");
         }else{
             if(changePassword){
                 changePass.setVisibility(View.INVISIBLE);
@@ -302,51 +306,53 @@ public class UserViewActivity extends BaseBack implements View.OnClickListener {
         try {
             jsonBody = update();
 
-            if (viewType == 0) {
-                user.fromJson(jsonBody);
-            } else {
-                viewUser.fromJson(jsonBody);
+            if(jsonBody != null) {
+                if (viewType == 0) {
+                    user.fromJson(jsonBody);
+                } else {
+                    viewUser.fromJson(jsonBody);
+                }
+
+                JsonObjectRequest updateReq = new JsonObjectRequest(Request.Method.PUT, url,
+                        jsonBody, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        if(!error.toString().equals("com.android.volley.ParseError: org.json.JSONException: Value ACCEPTED of type java.lang.String cannot be converted to JSONObject")) {
+                            Log.e("Volley Course Update Error", error.toString());
+                            viewState = false;
+                            updateViewState();
+
+                            Toast.makeText(getApplicationContext(), "Error saving changes, try again",
+                                    Toast.LENGTH_LONG).show();
+                        }
+                    }
+                }) {
+
+                    @Override
+                    public Map<String, String> getHeaders() throws AuthFailureError {
+                        HashMap<String, String> headers = new HashMap<String, String>();
+                        headers.put("Content-Type", "application/json");
+                        return headers;
+                    }
+
+                    @Override
+                    protected Map<String, String> getParams() {
+                        Map<String, String> params = new HashMap<String, String>();
+
+                        return params;
+                    }
+                };
+
+                AppController.getInstance().addToRequestQueue(updateReq, "update_user_req");
             }
         }catch(JSONException e){
             e.printStackTrace();
         }
-
-        JsonObjectRequest updateReq = new JsonObjectRequest(Request.Method.PUT, url,
-                jsonBody, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                if(!error.toString().equals("com.android.volley.ParseError: org.json.JSONException: Value ACCEPTED of type java.lang.String cannot be converted to JSONObject")) {
-                    Log.e("Volley Course Update Error", error.toString());
-                    viewState = false;
-                    updateViewState();
-
-                    Toast.makeText(getApplicationContext(), "Error saving changes, try again",
-                            Toast.LENGTH_LONG).show();
-                }
-            }
-        }) {
-
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String, String> headers = new HashMap<String, String>();
-                headers.put("Content-Type", "application/json");
-                return headers;
-            }
-
-            @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<String, String>();
-
-                return params;
-            }
-        };
-
-        AppController.getInstance().addToRequestQueue(updateReq, "update_user_req");
     }
 
     private JSONObject update() throws JSONException {
@@ -359,15 +365,28 @@ public class UserViewActivity extends BaseBack implements View.OnClickListener {
                 if(!currentPass.getText().toString().isEmpty() &&
                         !newPass.getText().toString().isEmpty() &&
                         !confirmPass.getText().toString().isEmpty() &&
-                        currentPass.getText().toString().equals(user.getPassword()) &&
-                        newPass.getText().toString().equals(confirmPass.getText().toString())){
-                    object.put("password", newPass.getText().toString());
+                        currentPass.getText().toString().equals(user.getPassword())){
+                    if(newPass.getText().toString().equals(confirmPass.getText().toString())) {
+                        object.put("password", newPass.getText().toString());
+                    }else{
+                        Toast.makeText(getApplicationContext(), "New Password doesn't match confirmation, try again",
+                                Toast.LENGTH_LONG).show();
+                        return null;
+                    }
+                }else{
+                    Toast.makeText(getApplicationContext(), "Current Password does not match, try again",
+                            Toast.LENGTH_LONG).show();
+                    return null;
                 }
             }else{
                 if(!newPass.getText().toString().isEmpty() &&
                         !confirmPass.getText().toString().isEmpty() &&
                         newPass.getText().toString().equals(confirmPass.getText().toString())){
                     object.put("password", newPass.getText().toString());
+                }else{
+                    Toast.makeText(getApplicationContext(), "New Password doesn't match confirmation, try again",
+                            Toast.LENGTH_LONG).show();
+                    return null;
                 }
             }
         }

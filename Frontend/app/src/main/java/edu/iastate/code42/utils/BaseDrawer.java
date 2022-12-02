@@ -38,6 +38,7 @@ import edu.iastate.code42.DashboardActivity;
 import edu.iastate.code42.MainActivity;
 import edu.iastate.code42.R;
 import edu.iastate.code42.SettingsActivity;
+import edu.iastate.code42.UserViewActivity;
 import edu.iastate.code42.app.AppController;
 import edu.iastate.code42.objects.User;
 
@@ -48,7 +49,6 @@ import edu.iastate.code42.objects.User;
  * @author Andrew
  */
 public class BaseDrawer extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-
     DrawerLayout drawerLayout;
     TextView headerName;
     User user;
@@ -95,7 +95,8 @@ public class BaseDrawer extends AppCompatActivity implements NavigationView.OnNa
 
         switch (item.getItemId()){
             case R.id.nav_profile:
-
+                startActivity(new Intent(this, UserViewActivity.class));
+                overridePendingTransition(0,0);
                 break;
             case R.id.nav_dashboard:
                 startActivity(new Intent(this, DashboardActivity.class));

@@ -5,6 +5,8 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.action.ViewActions.typeText;
+import static android.support.test.espresso.assertion.PositionAssertions.isBelow;
+import static android.support.test.espresso.assertion.PositionAssertions.isCompletelyBelow;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
@@ -123,7 +125,7 @@ public class CourseTest {
     }
 
     @Test
-    public void courseViewFromList(){
+    public void courseFromList(){
         courseListActivityRule.launchActivity(new Intent());
 
         onView(withText("Test 101")).perform(click());
@@ -137,6 +139,85 @@ public class CourseTest {
         onView(withId(R.id.courseTitleHeader)).check(matches(withText("Test 101")));
         onView(withId(R.id.courseDescriptionView)).check(matches(withText("Test Description")));
         onView(withId(R.id.courseLanguagesView)).check(matches(withText("Python")));
+    }
+
+    @Test
+    public void courseUserAdd() {
+        courseListActivityRule.launchActivity(new Intent());
+
+        onView(withText("Test 101")).perform(click());
+
+        // Put thread to sleep to allow volley to handle the request
+        try {
+            Thread.sleep(SIMULATED_DELAY_MS);
+        } catch (InterruptedException e) {
+        }
+
+        onView(withId(R.id.addStudentButton)).perform(click());
+
+        try {
+            Thread.sleep(SIMULATED_DELAY_MS);
+        } catch (InterruptedException e) {
+        }
+
+        onView(withText("Steve Jackson")).perform(click());
+        onView(withText("John Doe")).perform(click());
+
+        onView(withId(R.id.addSelectButton)).perform(click());
+
+        try {
+            Thread.sleep(SIMULATED_DELAY_MS);
+        } catch (InterruptedException e) {
+        }
+
+        onView(withText("Steve Jackson")).check(isCompletelyBelow(withText("John Doe")));
+    }
+
+    @Test
+    @Ignore
+    public void courseUserEdit() {
+        courseListActivityRule.launchActivity(new Intent());
+
+        onView(withText("Test 101")).perform(click());
+
+        // Put thread to sleep to allow volley to handle the request
+        try {
+            Thread.sleep(SIMULATED_DELAY_MS);
+        } catch (InterruptedException e) {
+        }
+
+
+    }
+
+    @Test
+    public void courseUserUnadd() {
+        courseListActivityRule.launchActivity(new Intent());
+
+        onView(withText("Test 101")).perform(click());
+
+        // Put thread to sleep to allow volley to handle the request
+        try {
+            Thread.sleep(SIMULATED_DELAY_MS);
+        } catch (InterruptedException e) {
+        }
+
+        onView(withText("Steve Jackson")).perform(click());
+
+        // Put thread to sleep to allow volley to handle the request
+        try {
+            Thread.sleep(SIMULATED_DELAY_MS);
+        } catch (InterruptedException e) {
+        }
+
+        onView(withId(R.id.floatingEditUser)).perform(click());
+        onView(withId(R.id.removeMappingButton)).perform(click());
+
+        try {
+            Thread.sleep(SIMULATED_DELAY_MS);
+        } catch (InterruptedException e) {
+        }
+
+        onView(withText("Steve Jackson")).check(doesNotExist());
     }
 
     @Test
@@ -160,5 +241,4 @@ public class CourseTest {
         courseListActivityRule.launchActivity(new Intent());
         onView(withText("Test 101")).check(doesNotExist());
     }
-
 }

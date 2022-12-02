@@ -55,7 +55,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
         userSession = getSharedPreferences(getString(R.string.session_shared_pref), MODE_PRIVATE);
         appSetting = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
@@ -121,13 +120,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             };
 
             AppController.getInstance().addToRequestQueue(loginReq, "login_req");
+        }else {
+            setContentView(R.layout.activity_main);
+
+            login = findViewById(R.id.loginButton);
+            password = findViewById(R.id.loginPasswordEntryField);
+            username = findViewById(R.id.loginUsernameEntryField);
+
+            login.setOnClickListener(this);
         }
-
-        login = findViewById(R.id.loginButton);
-        password = findViewById(R.id.loginPasswordEntryField);
-        username = findViewById(R.id.loginUsernameEntryField);
-
-        login.setOnClickListener(this);
     }
 
     /**

@@ -278,8 +278,9 @@ public class CourseViewActivity extends BaseBack implements View.OnClickListener
      */
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        switch(view.getId()){
-            case R.id.assignmentList:
+
+        switch(adapterView.getId()){
+            case 2131296353:
                 Intent assignmentView = new Intent(this, AssignmentWorkActivity.class);
                 assignmentView.putExtra("id", assignments.get(i).getId());
                 assignmentView.putExtra("courseId", courseId);
@@ -287,7 +288,7 @@ public class CourseViewActivity extends BaseBack implements View.OnClickListener
                 startActivity(assignmentView);
                 break;
 
-            case R.id.teacherList:
+            case 2131296788:
                 Intent userView = new Intent(CourseViewActivity.this, UserViewActivity.class);
                 userView.putExtra("courseId", courseId);
                 userView.putExtra("type", 3);
@@ -296,7 +297,7 @@ public class CourseViewActivity extends BaseBack implements View.OnClickListener
                 startActivity(userView);
                 break;
 
-            case R.id.studentList:
+            case 2131296764:
                 Intent userView2 = new Intent(CourseViewActivity.this, UserViewActivity.class);
                 userView2.putExtra("courseId", courseId);
                 userView2.putExtra("type", 4);
