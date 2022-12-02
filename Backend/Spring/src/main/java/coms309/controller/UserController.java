@@ -292,22 +292,22 @@ public class UserController {
 
         User user = optional.get();
 
-        if (!Objects.equals(u.getUsername(), "")) {
+        if (!Objects.equals(u.getUsername(), "") && u.getUsername() != null) {
             user.setUsername(u.getUsername());
         }
-        if (!Objects.equals(u.getFirstName(), "")) {
+        if (!Objects.equals(u.getFirstName(), "") && u.getFirstName() != null) {
             user.setFirstName(u.getFirstName());
         }
-        if (!Objects.equals(u.getLastName(), "")) {
+        if (!Objects.equals(u.getLastName(), "") && u.getLastName() != null) {
             user.setLastName(u.getLastName());
         }
-        if (!Objects.equals(u.getPassword(), "")) {
+        if (!Objects.equals(u.getPassword(), "") && u.getPassword() != null) {
             user.setPassword(u.getPassword());
         }
-        if (!Objects.equals(u.getEmail(), "")) {
+        if (!Objects.equals(u.getEmail(), "") && u.getEmail() != null) {
             user.setEmail(u.getEmail());
         }
-        if (!Objects.equals(u.getType(), "")) {
+        if (!Objects.equals(u.getType(), "") && u.getType() != null) {
             user.setType(u.getType());
         }
 
