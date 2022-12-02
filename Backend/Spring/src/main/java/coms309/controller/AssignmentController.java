@@ -282,21 +282,13 @@ public class AssignmentController {
         return HttpStatus.ACCEPTED;
     }
 
-    @DeleteMapping("/assignment/{id}/unitTests")
-    @Transactional
+    @DeleteMapping("/unitTest/{id}")
     public @ResponseBody HttpStatus deleteUnitTests(@PathVariable long id, @RequestParam String token) {
         if (!UserTokens.isTeacher(token) && !UserTokens.isAdmin(token)) {
             return HttpStatus.FORBIDDEN;
         }
 
-        Optional<Assignment> a = as.findById(id);
-        if (!a.isPresent()) {
-            return HttpStatus.NOT_FOUND;
-        }
-
-        for(AssignmentUnitTest aut : a.get().getUnitTests()) {
-            auts.delete(aut.getId());
-        }
+        auts.delete(id);
 
         return HttpStatus.ACCEPTED;
     }
