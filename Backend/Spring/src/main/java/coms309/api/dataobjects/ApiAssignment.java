@@ -87,7 +87,7 @@ public class ApiAssignment {
         this.dueDate = a.getDueDate();
         this.template = a.getTemplate();
         this.expectedOutput = a.getExpectedOutput();
-        // Add language string to database
+        this.language = a.getLanguage();
     }
 
     /**
