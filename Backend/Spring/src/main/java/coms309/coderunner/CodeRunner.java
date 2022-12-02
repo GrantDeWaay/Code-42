@@ -3,6 +3,7 @@ package coms309.coderunner;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.List;
 
 import javax.transaction.NotSupportedException;
 
@@ -127,10 +128,10 @@ public abstract class CodeRunner {
     /**
      * Abstract method to be implemented by child class, runs the code and checks with supplied unit tests.
      * 
-     * @return an Iterable containing the results of all unit tests
+     * @return an List containing the results of all unit tests
      * @throws IOException if an IO error occurs during runtime
      */
-    public abstract Iterable<AssignmentUnitTestResult> run() throws IOException;
+    public abstract List<AssignmentUnitTestResult> run() throws IOException;
 
 
     /**

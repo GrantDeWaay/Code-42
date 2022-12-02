@@ -112,42 +112,39 @@ public class CodeRunnerController {
                 }
             }
 
-            Iterable<AssignmentUnitTestResult> results = runner.run();
+            List<AssignmentUnitTestResult> results = runner.run();
+
+            double testCount = (double) results.size();
+
+            double passCount = 0.0d;
+
+            for (AssignmentUnitTestResult autr : results) {
+                if(autr.isPassed()) passCount += 1.0d;
+            }
+
+            double finalGrade = (passCount / testCount) * 100.0d;
+
+            Grade g = gs.findByUserAndAssignment(studentId, assignmentId);
+
+            // if a grade for this assignment doesn't exist, create it
+            // otherwise update the grade with the new grade and set the update time to now
+            if(g == null) {
+                g = new Grade(finalGrade, Calendar.getInstance().getTime());
+                g.setAssignment(a.get());
+                a.get().getGrades().add(g);
+                g.setUser(u.get());
+                u.get().getGrades().add(g);
+
+                gs.create(g);
+            } else {
+                g.setGrade(finalGrade);
+                g.setUpdateDate(Calendar.getInstance().getTime());
+
+                gs.update(g);
+            }
 
             return new ResponseEntity<>(results, HttpStatus.ACCEPTED);
 
-            // if (!runner.getStdOutData().equals(a.get().getExpectedOutput())) {
-            //     Grade g = gs.findByUserAndAssignment(studentId, assignmentId);
-
-            //     if (g == null) {
-            //         g = new Grade(0.0, Calendar.getInstance().getTime());
-            //         g.setAssignment(a.get());
-            //         a.get().getGrades().add(g);
-            //         g.setUser(u.get());
-            //         u.get().getGrades().add(g);
-
-            //         gs.create(g);
-            //     }
-            //     return new ResponseEntity<>(new ApiCodeRunResult(false, "Expected output differs", a.get().getExpectedOutput(), runner.getStdOutData()), HttpStatus.ACCEPTED);
-            // }
-
-            // Grade g = gs.findByUserAndAssignment(studentId, assignmentId);
-
-            // if (g == null) {
-            //     g = new Grade(100.0, Calendar.getInstance().getTime());
-            //     g.setAssignment(a.get());
-            //     a.get().getGrades().add(g);
-            //     g.setUser(u.get());
-            //     u.get().getGrades().add(g);
-            // } else {
-            //     g.setGrade(100.0);
-            //     g.setUpdateDate(Calendar.getInstance().getTime());
-            // }
-
-            // gs.create(g);
-
-            // return new ResponseEntity<>(new ApiCodeRunResult(true, "Expected output matches", a.get().getExpectedOutput(), runner.getStdOutData()), HttpStatus.ACCEPTED);
-            // TODO make this better
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

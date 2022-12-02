@@ -77,7 +77,7 @@ public class CRunner extends CodeRunner {
      * @throws IOException
      */
     @Override
-    public Iterable<AssignmentUnitTestResult> run() throws IOException {
+    public List<AssignmentUnitTestResult> run() throws IOException {
         String executableName = mainName.substring(0, mainName.indexOf('.'));
 
         List<AssignmentUnitTestResult> results = new LinkedList<>();
