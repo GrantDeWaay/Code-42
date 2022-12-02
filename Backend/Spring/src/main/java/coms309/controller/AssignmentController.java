@@ -17,6 +17,7 @@ import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashSet;
@@ -282,6 +283,7 @@ public class AssignmentController {
     }
 
     @DeleteMapping("/assignment/{id}/unitTests")
+    @Transactional
     public @ResponseBody HttpStatus deleteUnitTests(@PathVariable long id, @RequestParam String token) {
         if (!UserTokens.isTeacher(token) && !UserTokens.isAdmin(token)) {
             return HttpStatus.FORBIDDEN;
