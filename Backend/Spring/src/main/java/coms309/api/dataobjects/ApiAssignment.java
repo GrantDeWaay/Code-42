@@ -61,6 +61,11 @@ public class ApiAssignment {
     private Date dueDate;
 
     /**
+     * Programming language of assignment
+     */
+    private String language;
+
+    /**
      * Default constructor, all fields initialize to null.
      */
     public ApiAssignment() {
@@ -82,6 +87,7 @@ public class ApiAssignment {
         this.dueDate = a.getDueDate();
         this.template = a.getTemplate();
         this.expectedOutput = a.getExpectedOutput();
+        // Add language string to database
     }
 
     /**
@@ -226,6 +232,24 @@ public class ApiAssignment {
      */
     public void setDueDate(Date dueDate) {
         this.dueDate = dueDate;
+    }
+
+    /**
+     * Get the language.
+     *
+     * @return the language
+     */
+    public String getLanguage() {
+        return language;
+    }
+
+    /**
+     * Set the language.
+     *
+     * @param language the language
+     */
+    public void setLanguage(String language) {
+        this.language = language;
     }
 
 }
