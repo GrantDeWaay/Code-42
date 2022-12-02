@@ -4,6 +4,7 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.replaceText;
+import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.PositionAssertions.isBelow;
 import static android.support.test.espresso.assertion.PositionAssertions.isCompletelyBelow;
@@ -142,7 +143,69 @@ public class CourseTest {
     }
 
     @Test
-    public void courseUserAdd() {
+    public void courseTeacherCreate() {
+        courseListActivityRule.launchActivity(new Intent());
+
+        onView(withText("Test 101")).perform(click());
+
+        // Put thread to sleep to allow volley to handle the request
+        try {
+            Thread.sleep(SIMULATED_DELAY_MS);
+        } catch (InterruptedException e) {
+        }
+        onView(withId(R.id.courseTitleHeader)).perform(closeSoftKeyboard());
+
+        onView(withId(R.id.addTeacherButton)).perform(scrollTo());
+        onView(withId(R.id.addTeacherButton)).perform(click());
+
+        try {
+            Thread.sleep(SIMULATED_DELAY_MS);
+        } catch (InterruptedException e) {
+        }
+
+        onView(withId(R.id.addUser)).perform(click());
+
+        try {
+            Thread.sleep(SIMULATED_DELAY_MS);
+        } catch (InterruptedException e) {
+        }
+
+        onView(withId(R.id.editUserPassword)).check(matches(withText("pass11")));
+
+        onView(withId(R.id.editUserFirstName))
+                .perform(typeText("Donald"), closeSoftKeyboard());
+        onView(withId(R.id.editUserLastName))
+                .perform(typeText("Duck"), closeSoftKeyboard());
+        onView(withId(R.id.editUserEmail))
+                .perform(typeText("duck@iastate.edu"), closeSoftKeyboard());
+        onView(withId(R.id.editUserUsername))
+                .perform(typeText("duck"), closeSoftKeyboard());
+
+        onView(withId(R.id.buttonUserCreate)).perform(click());
+
+        try {
+            Thread.sleep(SIMULATED_DELAY_MS);
+        } catch (InterruptedException e) {
+        }
+
+        onView(withId(R.id.buttonUserCreate)).check(doesNotExist());
+        onView(withText("testteacher")).check(doesNotExist());
+
+        onView(withText("duck")).perform(click());
+
+        try {
+            Thread.sleep(SIMULATED_DELAY_MS);
+        } catch (InterruptedException e) {
+        }
+
+        onView(withId(R.id.editUserFirstName))
+                .check(matches(withText("Donald")));
+        onView(withId(R.id.editUserLastName))
+                .check(matches(withText("Duck")));
+    }
+
+    @Test
+    public void courseTeacherDelete() {
         courseListActivityRule.launchActivity(new Intent());
 
         onView(withText("Test 101")).perform(click());
@@ -153,6 +216,61 @@ public class CourseTest {
         } catch (InterruptedException e) {
         }
 
+        onView(withId(R.id.addTeacherButton)).perform(scrollTo());
+        onView(withId(R.id.moreTeacherButton)).perform(click());
+
+        try {
+            Thread.sleep(SIMULATED_DELAY_MS);
+        } catch (InterruptedException e) {
+        }
+
+        onView(withText("duck")).perform(click());
+
+        try {
+            Thread.sleep(SIMULATED_DELAY_MS);
+        } catch (InterruptedException e) {
+        }
+
+        onView(withId(R.id.floatingEditUser)).perform(click());
+        onView(withId(R.id.deleteUserButton)).perform(click());
+
+        try {
+            Thread.sleep(SIMULATED_DELAY_MS);
+        } catch (InterruptedException e) {
+        }
+
+        onView(withId(R.id.moreTeacherButton)).perform(click());
+
+        try {
+            Thread.sleep(SIMULATED_DELAY_MS);
+        } catch (InterruptedException e) {
+        }
+
+        onView(withId(R.id.addUser)).perform(click());
+        onView(withText("duck")).check(doesNotExist());
+
+        try {
+            Thread.sleep(SIMULATED_DELAY_MS);
+        } catch (InterruptedException e) {
+        }
+
+        onView(withText("duck")).check(doesNotExist());
+    }
+
+    @Test
+    public void courseUserAdd() {
+        courseListActivityRule.launchActivity(new Intent());
+
+        onView(withText("Test 101")).perform(click());
+
+        // Put thread to sleep to allow volley to handle the request
+        try {
+            Thread.sleep(SIMULATED_DELAY_MS);
+        } catch (InterruptedException e) {
+        }
+        onView(withId(R.id.courseTitleHeader)).perform(closeSoftKeyboard());
+
+        onView(withId(R.id.addStudentButton)).perform(scrollTo());
         onView(withId(R.id.addStudentButton)).perform(click());
 
         try {
@@ -186,7 +304,35 @@ public class CourseTest {
         } catch (InterruptedException e) {
         }
 
+        onView(withText("Steve Jackson")).perform(click());
 
+        // Put thread to sleep to allow volley to handle the request
+        try {
+            Thread.sleep(SIMULATED_DELAY_MS);
+        } catch (InterruptedException e) {
+        }
+
+        onView(withId(R.id.floatingEditUser)).perform(click());
+
+        String t = courseListActivityRule.getActivity().userSession.getString("token", "").toString();
+        onView(withId(R.id.emailView)).perform(replaceText(t), closeSoftKeyboard());
+
+        onView(withId(R.id.changePasswordButton)).perform(click());
+        onView(withId(R.id.currentPassword)).check(doesNotExist());
+
+        onView(withId(R.id.newPassword)).perform(typeText("password"), closeSoftKeyboard());
+        onView(withId(R.id.confirmPassword)).perform(typeText("password"), closeSoftKeyboard());
+
+        onView(withId(R.id.floatingEditUser)).perform(click());
+
+        // Put thread to sleep to allow volley to handle the request
+        try {
+            Thread.sleep(SIMULATED_DELAY_MS);
+        } catch (InterruptedException e) {
+        }
+
+        onView(withId(R.id.removeMappingButton)).check(doesNotExist());
+        onView(withId(R.id.emailView)).check(matches(withText(t)));
     }
 
     @Test
