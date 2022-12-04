@@ -12,6 +12,8 @@ import javax.websocket.server.ServerEndpoint;
 
 import org.springframework.stereotype.Controller;
 
+import com.google.gson.*;
+
 import coms309.api.dataobjects.ApiCodeSubmission;
 
 @Controller
@@ -35,7 +37,13 @@ public class CodeRunnerWebSocketController {
 
     @OnMessage
     public void onMessage(Session session, String message) throws IOException {
-        
+        Gson g = new Gson();
+        ApiCodeSubmission submission = g.fromJson(message, ApiCodeSubmission.class);
+        sendMessage(session, submission.getName());
+    }
+
+    public void sendMessage(Session session, String message) throws IOException {
+        session.getBasicRemote().sendText(message);
     }
 
 }
