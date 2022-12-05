@@ -17,6 +17,8 @@ import javax.websocket.server.ServerEndpoint;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.google.gson.*;
 
@@ -81,6 +83,7 @@ public class CodeRunnerWebSocketController {
     }
 
     @OnMessage
+    @Transactional(propagation=Propagation.REQUIRED, readOnly=true, noRollbackFor=Exception.class)
     public void onMessage(Session session, String message) throws IOException {
         Gson g = new Gson();
         ApiCodeSubmission codeSubmission = g.fromJson(message, ApiCodeSubmission.class);
