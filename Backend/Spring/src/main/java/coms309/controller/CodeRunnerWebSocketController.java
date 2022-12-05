@@ -168,8 +168,6 @@ public class CodeRunnerWebSocketController {
 
             sendMessage(session, "grade submitted");
 
-            sendMessage(session, g.toJson(grade));
-
         } catch (Exception e) {
             e.printStackTrace();
             AssignmentUnitTestResult result = new AssignmentUnitTestResult(null, "", "Exception thrown: " + e.getMessage(), false);
