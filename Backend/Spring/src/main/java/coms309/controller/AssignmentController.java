@@ -199,6 +199,9 @@ public class AssignmentController {
         if (!Objects.equals(a.getExpectedOutput(), "") && a.getExpectedOutput() != null) {
             assignment.setExpectedOutput(a.getExpectedOutput());
         }
+        if (!Objects.equals(a.getLanguage(), "") && a.getLanguage() != null) {
+            assignment.setExpectedOutput(a.getLanguage());
+        }
 
         as.update(assignment);
 

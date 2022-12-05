@@ -26,6 +26,11 @@ public class ApiGrade {
     private Date updateDate;
 
     /**
+     * id of the assignment.
+     */
+    Long assignmentId;
+
+    /**
      * Default constructor.  All fields are initialized to null.
      */
     public ApiGrade() {
@@ -41,6 +46,7 @@ public class ApiGrade {
         this.id = g.getId();
         this.grade = g.getGrade();
         this.updateDate = g.getUpdateDate();
+        this.assignmentId = g.getAssignment().getId();
     }
 
     /**
