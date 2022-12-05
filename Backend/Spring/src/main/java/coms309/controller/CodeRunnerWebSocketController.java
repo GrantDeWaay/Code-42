@@ -81,7 +81,7 @@ public class CodeRunnerWebSocketController {
     @OnError
     public void onError(Session session, Throwable throwable) {
         try {
-            sendMessage(session, throwable.getMessage());
+            sendMessage(session, throwable.getMessage() + " @ " + throwable.getStackTrace().toString());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -95,7 +95,7 @@ public class CodeRunnerWebSocketController {
         sendMessage(session, "json parsed");
 
         if (!UserTokens.isStudent(token)) {
-            AssignmentUnitTestResult result = new AssignmentUnitTestResult(null, "", "Compilation failed", false);
+            AssignmentUnitTestResult result = new AssignmentUnitTestResult(null, "", "Token is not a student", false);
             sendMessage(session, g.toJson(result));
             return;
         }
