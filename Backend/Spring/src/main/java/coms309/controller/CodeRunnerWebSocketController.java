@@ -7,6 +7,7 @@ import java.util.Calendar;
 import java.util.Optional;
 import java.util.Set;
 
+import javax.persistence.TypedQuery;
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
 import javax.websocket.OnMessage;
@@ -81,12 +82,13 @@ public class CodeRunnerWebSocketController {
     @OnError
     public void onError(Session session, Throwable throwable) {
         try {
-            sendMessage(session, throwable.getMessage() + " @ " + throwable.getStackTrace().toString());
+            sendMessage(session, throwable.getMessage());
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    @Transactional
     @OnMessage
     public void onMessage(Session session, String message) throws IOException {
         Gson g = new Gson();
