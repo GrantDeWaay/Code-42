@@ -3,7 +3,9 @@ package coms309.coderunner;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import javax.transaction.NotSupportedException;
 
@@ -22,6 +24,9 @@ public abstract class CodeRunner {
 
     // collection of tests to evaluate the program with
     protected Iterable<AssignmentUnitTest> unitTests;
+
+    // current test, used for the runNext() method
+    protected Iterator<AssignmentUnitTest> curTest;
 
     protected InputStream stdout;
 
@@ -49,6 +54,7 @@ public abstract class CodeRunner {
         this.codeFolder = codeFolder;
         this.testFolder = testFolder;
         this.unitTests = unitTests;
+        this.curTest = unitTests.iterator();
         this.stdOutData = "";
         this.stdErrData = "";
         this.maxRuntime = 5000; // default to 5 seconds
@@ -132,6 +138,15 @@ public abstract class CodeRunner {
      * @throws IOException if an IO error occurs during runtime
      */
     public abstract List<AssignmentUnitTestResult> run() throws IOException;
+
+    /**
+     * Abstract method to be implemented by child class, runs a single unit test.
+     * 
+     * @return AssignmentUnitTestResult containing the result of the unit test run
+     * @throws IOException if an IO error occurs during runtime
+     * @throws NoSuchElementException if no next unit test exists
+     */
+    public abstract AssignmentUnitTestResult runNext() throws IOException, NoSuchElementException;
 
 
     /**

@@ -7,6 +7,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.concurrent.TimeUnit;
 
 import coms309.api.dataobjects.ApiAssignmentUnitTest;
@@ -67,6 +68,49 @@ public class CRunner extends CodeRunner {
         }
 
         return false;
+    }
+
+    /**
+     * Method inherited from CodeRunner.  Runs the compiled C program against the next unit test from the list, if available.
+     */
+    public AssignmentUnitTestResult runNext() throws IOException, NoSuchElementException {
+        if(!curTest.hasNext()) throw new NoSuchElementException("No more unit tests exist");
+
+        String executableName = mainName.substring(0, mainName.indexOf('.'));
+
+        Process process = Runtime.getRuntime().exec(testFolder + "/out/" + executableName);
+
+        stdin = process.getOutputStream();
+        stdout = process.getInputStream();
+        stderr = process.getErrorStream();
+
+        long startTime = System.currentTimeMillis();
+
+        byte[] buff = new byte[1024];
+
+        AssignmentUnitTest aut = curTest.next();
+
+        stdin.write(aut.getInput().getBytes());
+        stdin.flush();
+
+        // run while process is alive and we have not hit a timeout
+        while(process.isAlive() && System.currentTimeMillis() - startTime < maxRuntime) {
+            while(stdout.available() > 0) {
+                int n = stdout.read(buff);
+                stdOutData = stdOutData.concat(new String(buff, 0, n));
+            }
+
+            while(stderr.available() > 0) {
+                int n = stderr.read(buff);
+                stdErrData = stdErrData.concat(new String(buff, 0, n));
+            }
+        }
+
+        if(process.isAlive()){
+            process.destroyForcibly();
+        }
+
+        return new AssignmentUnitTestResult(new ApiAssignmentUnitTest(aut), stdOutData, stdErrData, stdOutData.equals(aut.getExpectedOutput()));
     }
 
     
