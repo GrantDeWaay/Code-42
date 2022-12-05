@@ -55,6 +55,9 @@ public class JavaRunner extends CodeRunner {
     public AssignmentUnitTestResult runNext() throws IOException, NoSuchElementException {
         if(!curTest.hasNext()) throw new NoSuchElementException("No more unit tests exist");
 
+        stdOutData = "";
+        stdErrData = "";
+
         String className = fileName.substring(0, fileName.indexOf('.'));
 
         Process process = Runtime.getRuntime().exec("java -cp " + testFolder + "/out " + className);

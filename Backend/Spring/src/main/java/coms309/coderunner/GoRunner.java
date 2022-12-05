@@ -55,6 +55,9 @@ public class GoRunner extends CodeRunner {
     public AssignmentUnitTestResult runNext() throws IOException, NoSuchElementException {
         if(!curTest.hasNext()) throw new NoSuchElementException("No more unit tests exist");
 
+        stdOutData = "";
+        stdErrData = "";
+
         String executableName = fileName.substring(0, fileName.indexOf('.'));
 
         Process process = Runtime.getRuntime().exec(testFolder + "/out/" + executableName);

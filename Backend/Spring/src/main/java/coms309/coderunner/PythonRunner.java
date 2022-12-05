@@ -55,6 +55,9 @@ public class PythonRunner extends CodeRunner {
     public AssignmentUnitTestResult runNext() throws IOException, NoSuchElementException {
         if(!curTest.hasNext()) throw new NoSuchElementException("No more unit tests exist");
 
+        stdOutData = "";
+        stdErrData = "";
+
         Process process = Runtime.getRuntime().exec("python " + testFolder + "/out/" + fileName);
 
         stdin = process.getOutputStream();

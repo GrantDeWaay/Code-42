@@ -76,6 +76,9 @@ public class CRunner extends CodeRunner {
     public AssignmentUnitTestResult runNext() throws IOException, NoSuchElementException {
         if(!curTest.hasNext()) throw new NoSuchElementException("No more unit tests exist");
 
+        stdOutData = "";
+        stdErrData = "";
+
         String executableName = mainName.substring(0, mainName.indexOf('.'));
 
         Process process = Runtime.getRuntime().exec(testFolder + "/out/" + executableName);
