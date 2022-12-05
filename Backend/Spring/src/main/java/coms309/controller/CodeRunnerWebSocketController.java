@@ -15,6 +15,7 @@ import javax.websocket.Session;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Propagation;
@@ -83,7 +84,6 @@ public class CodeRunnerWebSocketController {
     }
 
     @OnMessage
-    @Transactional(propagation=Propagation.REQUIRED, readOnly=true, noRollbackFor=Exception.class)
     public void onMessage(Session session, String message) throws IOException {
         Gson g = new Gson();
         ApiCodeSubmission codeSubmission = g.fromJson(message, ApiCodeSubmission.class);
@@ -114,6 +114,7 @@ public class CodeRunnerWebSocketController {
 
         AssignmentFile af = a.get().getAssignmentFile();
 
+        Hibernate.initialize(a.get().getUnitTests());
         Set<AssignmentUnitTest> unitTests = a.get().getUnitTests();
 
         sendMessage(session, "unit tests retrieved");
