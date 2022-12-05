@@ -80,7 +80,11 @@ public class CodeRunnerWebSocketController {
 
     @OnError
     public void onError(Session session, Throwable throwable) {
-        
+        try {
+            sendMessage(session, throwable.getMessage());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @OnMessage
