@@ -39,18 +39,30 @@ import coms309.database.services.UserService;
 @ServerEndpoint(value = "/run/assignment/{assignmentId}/{token}")
 public class CodeRunnerWebSocketController {
 
-    @Autowired
-    private AssignmentService as;
+    private static AssignmentService as;
 
-    @Autowired
-    private GradeService gs;
+    private static GradeService gs;
 
-    @Autowired
-    private UserService us;
+    private static UserService us;
 
     private Long assignmentId;
 
     private String token;
+
+    @Autowired
+    public void setAssignmentService(AssignmentService assignmentService) {
+        as = assignmentService;
+    }
+
+    @Autowired
+    public void setGradeService(GradeService gradeService) {
+        gs = gradeService;
+    }
+
+    @Autowired
+    public void setUserService(UserService userService) {
+        us = userService;
+    }
     
     @OnOpen
     public void onOpen(Session session, @PathParam("assignmentId") long assignmentId, @PathParam("token") String token) {
