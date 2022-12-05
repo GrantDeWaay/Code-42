@@ -46,7 +46,7 @@ public class Assignment {
     @OneToOne(mappedBy = "assignment", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private AssignmentFile assignmentFile;
 
-    @OneToMany(mappedBy = "assignment", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "assignment", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<AssignmentUnitTest> unitTests;
 
     public Assignment() {

@@ -88,7 +88,6 @@ public class CodeRunnerWebSocketController {
         }
     }
 
-    @Transactional
     @OnMessage
     public void onMessage(Session session, String message) throws IOException {
         Gson g = new Gson();
@@ -120,7 +119,7 @@ public class CodeRunnerWebSocketController {
 
         AssignmentFile af = a.get().getAssignmentFile();
 
-        Hibernate.initialize(a.get().getUnitTests());
+        // Hibernate.initialize(a.get().getUnitTests());
         Set<AssignmentUnitTest> unitTests = a.get().getUnitTests();
 
         sendMessage(session, "unit tests retrieved");
