@@ -350,9 +350,9 @@ public class UserListActivity extends BaseBack implements AdapterView.OnItemClic
                         }, new Response.ErrorListener() {
                             @Override
                             public void onErrorResponse(VolleyError error) {
-                                Log.e("Volley Login Auth Error:", error.toString());
+                                Log.e("User List Get Error", error.toString());
 
-                                Toast.makeText(getApplicationContext(), R.string.login_volley_error,
+                                Toast.makeText(getApplicationContext(), R.string.user_course_get_error,
                                         Toast.LENGTH_LONG).show();
                             }
                         }) {
@@ -376,9 +376,9 @@ public class UserListActivity extends BaseBack implements AdapterView.OnItemClic
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    Log.e("Volley Login Auth Error:", error.toString());
+                    Log.e("User List Get Error", error.toString());
 
-                    Toast.makeText(getApplicationContext(), R.string.login_volley_error,
+                    Toast.makeText(getApplicationContext(), R.string.user_course_get_error,
                             Toast.LENGTH_LONG).show();
                 }
             }) {
@@ -429,9 +429,9 @@ public class UserListActivity extends BaseBack implements AdapterView.OnItemClic
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    Log.e("Volley Login Auth Error:", error.toString());
+                    Log.e("User List Get Error", error.toString());
 
-                    Toast.makeText(getApplicationContext(), R.string.login_volley_error,
+                    Toast.makeText(getApplicationContext(), R.string.user_course_get_error,
                             Toast.LENGTH_LONG).show();
                 }
             }) {

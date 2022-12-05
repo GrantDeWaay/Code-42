@@ -16,6 +16,15 @@
     <string name="menu_drawer_open">Drawer Open</string>
     <string name="menu_drawer_close">Drawer Close</string>
     <string name="user_course_mapping_error">Error when mapping user to course, retry later</string>
+    <string name="assignment_course_mapping_error">Error when mapping assignment to course, retry later</string>
+    <string name="user_course_get_error">Error when getting users for course, retry later</string>
+    <string name="assignment_course_get_error">Error when getting assignments for course, retry later</string>
+    <string name="course_get_error">Error when getting course, retry later</string>
+    <string name="course_create_error">Error when creating course, retry later</string>
+    <string name="course_update_error">Error when updating course, retry later</string>
+    <string name="course_delete_error">Error when deleting course, retry later</string>
+    <string name="user_create_error">Error when creating user, retry later</string>
+    <string name="user_update_error">Error when updating user, retry later</string>
     <string name="title_activity_main2">MainActivity2</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>

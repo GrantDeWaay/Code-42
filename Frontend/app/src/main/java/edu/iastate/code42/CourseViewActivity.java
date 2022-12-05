@@ -357,7 +357,7 @@ public class CourseViewActivity extends BaseBack implements View.OnClickListener
             public void onErrorResponse(VolleyError error) {
                 Log.e("Volley Delete Course Error", error.toString());
 
-                Toast.makeText(getApplicationContext(), "Error saving changes, try again later",
+                Toast.makeText(getApplicationContext(), R.string.course_delete_error,
                         Toast.LENGTH_LONG).show();
             }
         }){
@@ -410,7 +410,7 @@ public class CourseViewActivity extends BaseBack implements View.OnClickListener
                     viewState = false;
                     updateViewState(viewState);
 
-                    Toast.makeText(getApplicationContext(), "Error saving changes, try again",
+                    Toast.makeText(getApplicationContext(), R.string.course_update_error,
                             Toast.LENGTH_LONG).show();
                 }
             }
@@ -452,10 +452,12 @@ public class CourseViewActivity extends BaseBack implements View.OnClickListener
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e("Volley Login Auth Error:", error.toString());
+                Log.e("Course GET Error", error.toString());
 
-                Toast.makeText(getApplicationContext(), R.string.login_volley_error,
+                Toast.makeText(getApplicationContext(), R.string.course_get_error,
                         Toast.LENGTH_LONG).show();
+                Intent courseList = new Intent(CourseViewActivity.this, CoursesActivity.class);
+                startActivity(courseList);
             }
         }){
             /**
@@ -501,9 +503,9 @@ public class CourseViewActivity extends BaseBack implements View.OnClickListener
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e("Volley Login Auth Error:", error.toString());
+                Log.e("Course Assignments GET Error", error.toString());
 
-                Toast.makeText(getApplicationContext(), R.string.login_volley_error,
+                Toast.makeText(getApplicationContext(), R.string.assignment_course_get_error,
                         Toast.LENGTH_LONG).show();
             }
         }){
@@ -548,9 +550,9 @@ public class CourseViewActivity extends BaseBack implements View.OnClickListener
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e("Volley Login Auth Error:", error.toString());
+                Log.e("Course User Get Error", error.toString());
 
-                Toast.makeText(getApplicationContext(), R.string.login_volley_error,
+                Toast.makeText(getApplicationContext(), R.string.user_course_get_error,
                         Toast.LENGTH_LONG).show();
             }
         }) {
@@ -594,9 +596,9 @@ public class CourseViewActivity extends BaseBack implements View.OnClickListener
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e("Volley Login Auth Error:", error.toString());
+                Log.e("Course User Get Error", error.toString());
 
-                Toast.makeText(getApplicationContext(), R.string.login_volley_error,
+                Toast.makeText(getApplicationContext(), R.string.user_course_get_error,
                         Toast.LENGTH_LONG).show();
             }
         }) {
