@@ -151,16 +151,20 @@ public class Assignment {
         return unitTests;
     }
 
-    public void setAssignmentFile(AssignmentFile assignmentFile) {
-        this.assignmentFile = assignmentFile;
-    }
-
     public String getLanguage() {
         return language;
     }
 
     public void setLanguage(String language) {
         this.language = language;
+    }
+
+    public AssignmentFile getAssignmentFile() {
+        return assignmentFile;
+    }
+
+    public void setAssignmentFile(AssignmentFile assignmentFile) {
+        this.assignmentFile = assignmentFile;
     }
 
 }
