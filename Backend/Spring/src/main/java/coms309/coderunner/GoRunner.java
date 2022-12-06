@@ -9,7 +9,6 @@ import java.io.*;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class GoRunner extends CodeRunner {
 
@@ -64,6 +63,8 @@ public class GoRunner extends CodeRunner {
      */
     @Override
     public List<AssignmentUnitTestResult> run() throws IOException {
+        String executableName = fileName.substring(0, fileName.indexOf('.'));
+
         List<AssignmentUnitTestResult> results = new LinkedList<>();
 
         for (AssignmentUnitTest aut : unitTests) {
