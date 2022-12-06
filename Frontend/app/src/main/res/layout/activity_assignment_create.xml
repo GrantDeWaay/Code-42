@@ -26,7 +26,7 @@
                 android:importantForAutofill="no"
                 android:inputType="textPersonName"
                 android:minHeight="48dp"
-                android:text="@string/assignment_name" />
+                android:hint="@string/assignment_name" />
 
             <Spinner
                 android:id="@+id/spinner"
@@ -42,7 +42,7 @@
                 android:ems="10"
                 android:gravity="start|top"
                 android:inputType="textMultiLine"
-                android:text="desc" />
+                android:hint="The description of the assignment" />
 
             <EditText
                 android:id="@+id/problemStatement"
@@ -52,13 +52,14 @@
                 android:gravity="start|top"
                 android:importantForAutofill="no"
                 android:inputType="textMultiLine"
-                android:text="statement" />
+                android:hint="The statement of the assignment" />
 
             <EditText
                 android:id="@+id/scoreNumber"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
+                android:hint="Number of points"
                 android:inputType="number" />
 
             <Button
