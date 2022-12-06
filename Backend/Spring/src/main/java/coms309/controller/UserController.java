@@ -100,31 +100,6 @@ public class UserController {
     }
 
     /**
-     * Get user data from email.
-     * <p>
-     * Client must be student, teacher or admin.
-     * <p>
-     * Get request, path "/user/{email}".
-     *
-     * @param email user's email
-     * @return HTTP response, user data
-     */
-    @ApiOperation(value = "Get a User by email", response = ApiUser.class, tags = "user-controller")
-    @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "OK"),        
-        @ApiResponse(code = 403, message = "FORBIDDEN"),
-        @ApiResponse(code = 404, message = "NOT FOUND")
-    })
-    @GetMapping("/user/{email}")
-    public @ResponseBody ResponseEntity<ApiUser> getUserByEmail(@PathVariable String email) {
-        Optional<User> u = us.findByEmail(email);
-
-        if (!u.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-
-        return new ResponseEntity<>(new ApiUser(u.get()), HttpStatus.OK);
-    }
-
-    /**
      * Get list of courses for a user.
      * <p>
      * Client must be student, teacher or admin.
