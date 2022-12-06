@@ -31,7 +31,7 @@ public class CodeRunTest {
         Response response = RestAssured.given().
                                         header("charset", "UTF-8").
                                         when().
-                                        get("/login/teststudent2/password");
+                                        get("/login/testadmin/password");
 
         Gson g = new Gson();
         ApiUserLogin user = g.fromJson(response.getBody().asString(), ApiUserLogin.class);
