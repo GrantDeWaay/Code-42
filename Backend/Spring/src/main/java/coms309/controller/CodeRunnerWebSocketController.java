@@ -7,7 +7,6 @@ import java.util.Calendar;
 import java.util.Optional;
 import java.util.Set;
 
-import javax.persistence.TypedQuery;
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
 import javax.websocket.OnMessage;
@@ -16,11 +15,8 @@ import javax.websocket.Session;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 
-import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.google.gson.*;
 
@@ -93,23 +89,17 @@ public class CodeRunnerWebSocketController {
         Gson g = new Gson();
         ApiCodeSubmission codeSubmission = g.fromJson(message, ApiCodeSubmission.class);
 
-        sendMessage(session, "json parsed");
-
         if (!UserTokens.isStudent(token)) {
             AssignmentUnitTestResult result = new AssignmentUnitTestResult(null, "", "Token is not a student", false);
             sendMessage(session, g.toJson(result));
             return;
         }
 
-        sendMessage(session, "token checked");
-
         Long studentId = UserTokens.getID(token);
 
         Optional<User> u = us.findById(studentId);
 
         Optional<Assignment> a = as.findById(assignmentId);
-
-        sendMessage(session, "database accessed");
 
         if (!a.isPresent()) {
             AssignmentUnitTestResult result = new AssignmentUnitTestResult(null, "", "Assignment not found", false);
@@ -122,8 +112,6 @@ public class CodeRunnerWebSocketController {
         // Hibernate.initialize(a.get().getUnitTests());
         Set<AssignmentUnitTest> unitTests = a.get().getUnitTests();
 
-        sendMessage(session, "unit tests retrieved");
-
         if (af == null) af = new AssignmentFile(); // initialize to empty
 
         // TODO move this stuff to a service of some kind??
@@ -134,8 +122,6 @@ public class CodeRunnerWebSocketController {
             CodeRunnerFactory factory = new CodeRunnerFactory();
             CodeRunner runner = factory.createCodeRunner(af, codeSubmission, tempFileManager, unitTests);
 
-            sendMessage(session, "code runner created");
-
             File codeFile = new File(tempFileManager.getAssignmentFolderPath() + "/" + codeSubmission.getName());
 
             FileWriter writer = new FileWriter(codeFile);
@@ -143,8 +129,6 @@ public class CodeRunnerWebSocketController {
             writer.write(codeSubmission.getContents());
 
             writer.close();
-
-            sendMessage(session, "file written");
 
             if (runner.isCompiledRunner()) {
                 if (!runner.compile()) {
@@ -154,17 +138,13 @@ public class CodeRunnerWebSocketController {
                 }
             }
 
-            sendMessage(session, "code compiled");
-
             double passCount = 0.0d;
 
             for(int i = 0; i < unitTests.size(); i++) {
                 AssignmentUnitTestResult result = runner.runNext();
-                if(result.isPassed()) passCount += 1.0d;
                 sendMessage(session, g.toJson(result));
+                if(result.isPassed()) passCount += 1.0d;
             }
-
-            sendMessage(session, "unit tests executed");
 
             double finalGrade = (passCount / (double) unitTests.size()) * 100.0d;
 
@@ -187,15 +167,11 @@ public class CodeRunnerWebSocketController {
                 gs.update(grade);
             }
 
-            sendMessage(session, "grade submitted");
-
         } catch (Exception e) {
             e.printStackTrace();
             AssignmentUnitTestResult result = new AssignmentUnitTestResult(null, "", "Exception thrown: " + e.getMessage(), false);
             sendMessage(session, g.toJson(result));
         }
-
-        sendMessage(session, "finished");
 
     }
 
