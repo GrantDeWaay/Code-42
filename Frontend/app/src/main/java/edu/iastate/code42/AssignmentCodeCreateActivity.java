@@ -1,10 +1,14 @@
 package edu.iastate.code42;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -18,7 +22,6 @@ import edu.iastate.code42.objects.User;
 public class AssignmentCodeCreateActivity extends AppCompatActivity {
     private Button goNext, AddUnitTest;
     private EditText baseCode;
-    private EditText newUnitTest;
     private UnitTestCustomAdapter mAppAdapter;
     private RecyclerView UnitTestRecyclerView;
 
@@ -41,7 +44,6 @@ public class AssignmentCodeCreateActivity extends AppCompatActivity {
         goNext = findViewById(R.id.goNext);
         AddUnitTest = findViewById(R.id.AddUnitTest);
         baseCode = findViewById(R.id.baseCode);
-        newUnitTest = findViewById(R.id.unitTestText);
         user = User.get(getApplicationContext());
         userSession = getSharedPreferences(getString(R.string.session_shared_pref), MODE_PRIVATE);
         String className = AssignmentCreationDataHolder.getName()
@@ -55,7 +57,7 @@ public class AssignmentCodeCreateActivity extends AppCompatActivity {
                                 "\tpublic static void main(String[] args) {\n" +
                                 "\t\tScanner myObj = new Scanner(System.in);\n" +
                                 "\t\tint x = myObj.nextInt();\n" +
-                                "\t\tSystem.out.println(\"Value: \" + x)\n" +
+                                "\t\tSystem.out.println(\"Value: \" + x);\n" +
                                 "\t}\n" +
                                 "}";
                 baseCode.setText(startingCode);
@@ -90,13 +92,18 @@ public class AssignmentCodeCreateActivity extends AppCompatActivity {
 
         goNext.setOnClickListener(view -> {
             //Multiple unit tests implementation
-            //AssignmentCreationDataHolder.setExpectedOut(mAppAdapter.getUnitTests().toString());
-            AssignmentCreationDataHolder.setExpectedOut(newUnitTest.getText().toString());
+            AssignmentCreationDataHolder.setExpectedOut(mAppAdapter.getUnitTests().toString());
             AssignmentCreationDataHolder.setCode(baseCode.getText().toString());
             AssignmentCreationDataHolder.sendAssignment(getApplicationContext(),userSession.getString("token", ""), courseId);
             finish();
         });
 
         AddUnitTest.setOnClickListener(view -> mAppAdapter.add(""));
+    }
+
+    public void onBackPressed()
+    {
+        Toast.makeText(getApplicationContext(), "Aborted assignment creation", Toast.LENGTH_LONG).show();
+        super.onBackPressed();  // optional depending on your needs
     }
 }

@@ -34,6 +34,7 @@ import java.net.URISyntaxException;
 import java.util.Locale;
 
 import edu.iastate.code42.app.AppController;
+import edu.iastate.code42.objects.AssignmentCreationDataHolder;
 import edu.iastate.code42.objects.User;
 import edu.iastate.code42.utils.Const;
 
@@ -119,11 +120,11 @@ public class AssignmentWorkActivity extends AppCompatActivity implements View.On
             String loadingString = "Performing Tests...";
 
             results.setText(loadingString);
-
-
             progressBar.setVisibility(View.VISIBLE);
             String urlRun = String.format(Const.RUN_CODE, id, userSession.getString("token", ""));
             JSONObject obj = new JSONObject();
+            String className = AssignmentCreationDataHolder.getName()
+                    .replaceAll(" ", "_").toLowerCase();
             try {
                 obj.put("name", "name" + ".java");
                 obj.put("contents", ide.getText().toString().replaceAll("\"", ("\\" + "\"")));
@@ -131,7 +132,8 @@ public class AssignmentWorkActivity extends AppCompatActivity implements View.On
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            /**
+            Log.i("", obj.toString());
+            /*
              * I want it to start listening to the web socket once it sends over the
              * code we want to test, and I want it to close once we get a message
              * from the server saying it sent all of the tests over or something
@@ -207,6 +209,7 @@ public class AssignmentWorkActivity extends AppCompatActivity implements View.On
         Draft[] drafts = {
                 new Draft_6455()
         };
+        Log.d("WS", "Attempting Contact...");
         try{
             cc = new WebSocketClient(new URI(webs), drafts[0]) {
                 @Override
@@ -223,7 +226,15 @@ public class AssignmentWorkActivity extends AppCompatActivity implements View.On
                 @Override
                 public void onOpen(ServerHandshake handshake) {
                     Log.d("OPEN", "run() returned: " + "is connecting");
-                    sendMessage("Hey there!");
+                    JSONObject obj2 = new JSONObject();
+                    try {
+                        obj2.put("name", "name" + ".java");
+                        obj2.put("contents", ide.getText().toString().replaceAll("\"", ("\\" + "\"")));
+                        obj2.put("language", "Java");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    sendMessage(obj2.toString());
                 }
 
                 @Override
@@ -243,9 +254,6 @@ public class AssignmentWorkActivity extends AppCompatActivity implements View.On
         }
         cc.connect();
     }
-
-
-
     public void sendMessage(String msg){
         try {
             cc.send(msg);
