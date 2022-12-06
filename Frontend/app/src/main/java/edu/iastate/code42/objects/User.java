@@ -3,6 +3,8 @@ package edu.iastate.code42.objects;
 import android.app.Application;
 import android.content.Context;
 
+import com.android.volley.toolbox.JsonArrayRequest;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -19,7 +21,7 @@ import java.util.Objects;
  * @author Andrew
  */
 public class User extends Application {
-    private Long id;
+    private int id;
 
     // username associated with user
     private String username;
@@ -36,12 +38,22 @@ public class User extends Application {
     // type of user (admin, teacher, etc)
     private String type;
 
+    // user's password for comparison
+    private String password;
+
     // time of user creation
     private Date creationDate;
 
     private static User sUser;
 
     private final Context mAppContext;
+
+    /**
+     * Create new User object with no values; Default Constructor
+     */
+    public User(){
+        mAppContext = null;
+    }
 
     /**
      * Create new User object with context
@@ -59,12 +71,27 @@ public class User extends Application {
     public User(JSONObject response) throws JSONException {
         mAppContext = null;
 
-        this.id = response.getLong("id");
-        this.username = response.getString("username");
-        this.firstName = response.getString("firstName");
-        this.lastName = response.getString("lastName");
-        this.email = response.getString("email");
-        this.type = response.getString("type");
+        if(response.has("id")){
+            this.id = response.getInt("id");
+        }
+        if(response.has("username")){
+            this.username = response.getString("username");
+        }
+        if(response.has("firstName")){
+            this.firstName = response.getString("firstName");
+        }
+        if(response.has("lastName")){
+            this.lastName = response.getString("lastName");
+        }
+        if(response.has("email")){
+            this.email = response.getString("email");
+        }
+        if(response.has("type")){
+            this.type = response.getString("type");
+        }
+        if(response.has("password")){
+            this.password = response.getString("password");
+        }
     }
 
     /**
@@ -85,12 +112,27 @@ public class User extends Application {
      * @throws JSONException
      */
     public void fromJson(JSONObject response) throws JSONException{
-        this.id = response.getLong("id");
-        this.username = response.getString("username");
-        this.firstName = response.getString("firstName");
-        this.lastName = response.getString("lastName");
-        this.email = response.getString("email");
-        this.type = response.getString("type");
+        if(response.has("id")){
+            this.id = response.getInt("id");
+        }
+        if(response.has("username")){
+            this.username = response.getString("username");
+        }
+        if(response.has("firstName")){
+            this.firstName = response.getString("firstName");
+        }
+        if(response.has("lastName")){
+            this.lastName = response.getString("lastName");
+        }
+        if(response.has("email")){
+            this.email = response.getString("email");
+        }
+        if(response.has("type")){
+            this.type = response.getString("type");
+        }
+        if(response.has("password")){
+            this.password = response.getString("password");
+        }
     }
 
     /**
@@ -98,13 +140,14 @@ public class User extends Application {
      */
     public void logout(){
         sUser = null;
-        this.id = null;
+        this.id = -1;
         this.username = null;
         this.firstName = null;
         this.lastName = null;
         this.email = null;
         this.type = null;
         this.creationDate = null;
+        this.password = null;
     }
 
     /**
@@ -119,7 +162,7 @@ public class User extends Application {
      * Get value of id and return it
      * @return value of Long <code>id</code>
      */
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
@@ -127,7 +170,7 @@ public class User extends Application {
      * Change the id instance variable
      * @param id New user id as long
      */
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -196,6 +239,22 @@ public class User extends Application {
     }
 
     /**
+     * Get value of password and return it
+     * @return value of String <code>password</code>
+     */
+    public String getPassword() {
+        return password;
+    }
+
+    /**
+     * Change the password instance variable
+     * @param password New user password as String
+     */
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    /**
      * Get value of type and return it
      * @return value of String <code>type</code>
      */
@@ -212,6 +271,20 @@ public class User extends Application {
     }
 
     /**
+     * Generate JSONObject of the user
+     * @return JSONObject with user data stored in key pairs
+     */
+    public JSONObject getJson() throws JSONException {
+        JSONObject body = new JSONObject();
+
+        body.put("id", this.id);
+        body.put("firstName", this.firstName);
+        body.put("lastName", this.lastName);
+
+        return body;
+    }
+
+    /**
      * Override equals to compare User objects based on id, username, and user type,
      * used by Comparator and contains()
      * @param o Object to compare with
@@ -222,7 +295,7 @@ public class User extends Application {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return id.equals(user.id) && username.equals(user.username) && type.equals(user.type);
+        return id == user.id && username.equals(user.username) && type.equals(user.type);
     }
 
     /**

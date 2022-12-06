@@ -48,6 +48,12 @@ public class Assignment {
     @OneToOne(mappedBy = "assignment", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private AssignmentFile assignmentFile;
 
+    // TODO change this back to LAZY
+    // I (Nathan) couldn't find a way to get this to work with websockets, so I changed it to EAGER as a workaround
+    // it has to do with a lazy initialization exception because of how hibernate manages database transactions
+    @OneToMany(mappedBy = "assignment", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private Set<AssignmentUnitTest> unitTests;
+
     public Assignment() {
 
     }
@@ -141,8 +147,8 @@ public class Assignment {
         return grades;
     }
 
-    public AssignmentFile getAssignmentFile() {
-        return assignmentFile;
+    public Set<AssignmentUnitTest> getUnitTests() {
+        return unitTests;
     }
 
     public void setAssignmentFile(AssignmentFile assignmentFile) {

@@ -106,9 +106,6 @@ public class CourseCreationActivity extends BaseBack implements View.OnClickList
                     jsonBody, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
-                    Toast.makeText(getApplicationContext(), response.toString(),
-                            Toast.LENGTH_LONG).show();
-
                     Intent view = new Intent(CourseCreationActivity.this, CourseViewActivity.class);
                     try {
                         view.putExtra("courseId", response.getInt("id"));
@@ -120,9 +117,9 @@ public class CourseCreationActivity extends BaseBack implements View.OnClickList
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    Log.e("Volley Login Auth Error:", error.toString());
+                    Log.e("Course Creation Error", error.toString());
 
-                    Toast.makeText(getApplicationContext(), R.string.login_volley_error,
+                    Toast.makeText(getApplicationContext(), R.string.course_create_error,
                             Toast.LENGTH_LONG).show();
                 }
             }) {
