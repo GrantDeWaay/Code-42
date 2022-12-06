@@ -22,8 +22,8 @@ import com.google.gson.*;
 @RunWith(SpringRunner.class)
 public class CodeRunTest {
     
-    @LocalServerPort
-    int port;
+    // TODO figure out what's wrong with this, this will work for now
+    int port = 8080;
 
     String token;
 
