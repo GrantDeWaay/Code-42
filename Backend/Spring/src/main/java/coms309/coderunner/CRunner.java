@@ -5,9 +5,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import coms309.api.dataobjects.ApiAssignmentUnitTest;
 import coms309.api.dataobjects.ApiCodeSubmission;
@@ -46,25 +46,30 @@ public class CRunner extends CodeRunner {
     @Override
     public boolean compile() throws IOException {
 
-        Process process;
+        ProcessBuilder processBuilder;
         
         if(codeFolder.equals("")) {
             // no compile script, just compile a single file
             String executableName = mainName.substring(0, mainName.indexOf('.'));
             File outDir = new File(testFolder + "/out/");
             outDir.mkdirs();
-            process = Runtime.getRuntime().exec("gcc " + testFolder + "/" + mainName + " -o " + testFolder + "/out/" + executableName);
+            processBuilder = new ProcessBuilder("gcc", testFolder + "/" + mainName, "-o", testFolder + "/out/" + executableName);
         } else {
-            process = Runtime.getRuntime().exec(testFolder + "/compile.sh " + mainName);
+            processBuilder = new ProcessBuilder(testFolder + "/compile.sh" + mainName);
         }
-        
-        try {
-            if(process.waitFor(5, TimeUnit.SECONDS)) {
-                return process.exitValue() == 0;
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+
+        ProcessManager processManager = new ProcessManager(processBuilder);
+
+        if(processManager.runForTime(5000)) {
+            stdOutData = processManager.getOutputData();
+            stdErrData = processManager.getErrorData();
+            return processManager.getExitValue() == 0;
         }
+    
+        processManager.terminateProcess();
+
+        stdOutData = processManager.getOutputData();
+        stdErrData = processManager.getErrorData();
 
         return false;
     }
