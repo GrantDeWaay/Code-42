@@ -1,12 +1,15 @@
 package coms309.controller;
 
 import coms309.api.dataobjects.ApiAssignment;
+import coms309.api.dataobjects.ApiAssignmentUnitTest;
 import coms309.api.dataobjects.ApiCourse;
 import coms309.api.dataobjects.ApiGrade;
 import coms309.controller.token.UserTokens;
 import coms309.database.dataobjects.Assignment;
+import coms309.database.dataobjects.AssignmentUnitTest;
 import coms309.database.dataobjects.Grade;
 import coms309.database.services.AssignmentService;
+import coms309.database.services.AssignmentUnitTestService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -14,6 +17,7 @@ import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -30,6 +34,9 @@ public class AssignmentController {
 
     @Autowired
     private AssignmentService as;
+
+    @Autowired
+    private AssignmentUnitTestService auts;
 
     /**
      * Get an assignment from its id.
@@ -237,6 +244,63 @@ public class AssignmentController {
         } else {
             return HttpStatus.NOT_FOUND;
         }
+    }
+
+    @GetMapping("/assignment/{id}/unitTests")
+    public @ResponseBody ResponseEntity<Iterable<ApiAssignmentUnitTest>> getUnitTests(@PathVariable long id, @RequestParam String token) {
+        if (!UserTokens.isTeacher(token) && !UserTokens.isAdmin(token)) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+
+        Optional<Assignment> a = as.findById(id);
+
+        if(!a.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        Set<ApiAssignmentUnitTest> unitTests = new HashSet<>();
+
+        for(AssignmentUnitTest aut : a.get().getUnitTests()) {
+            unitTests.add(new ApiAssignmentUnitTest(aut));
+        }
+
+        return new ResponseEntity<>(unitTests, HttpStatus.OK);
+    }
+
+    @PostMapping("/assignment/{id}/unitTests")
+    public @ResponseBody HttpStatus addUnitTests(@PathVariable long id, @RequestBody Iterable<ApiAssignmentUnitTest> unitTests, @RequestParam String token) {
+        if (!UserTokens.isTeacher(token) && !UserTokens.isAdmin(token)) {
+            return HttpStatus.FORBIDDEN;
+        }
+
+        Optional<Assignment> a = as.findById(id);
+        if (!a.isPresent()) {
+            return HttpStatus.NOT_FOUND;
+        }
+
+        for(ApiAssignmentUnitTest aaut : unitTests) {
+            AssignmentUnitTest aut = new AssignmentUnitTest(aaut);
+
+            aut.setAssignment(a.get());
+            a.get().getUnitTests().add(aut);
+
+            auts.create(aut);
+        }
+
+        as.update(a.get());
+
+        return HttpStatus.ACCEPTED;
+    }
+
+    @DeleteMapping("/unitTest/{id}")
+    public @ResponseBody HttpStatus deleteUnitTests(@PathVariable long id, @RequestParam String token) {
+        if (!UserTokens.isTeacher(token) && !UserTokens.isAdmin(token)) {
+            return HttpStatus.FORBIDDEN;
+        }
+
+        auts.delete(id);
+
+        return HttpStatus.ACCEPTED;
     }
 
 }

@@ -131,7 +131,6 @@ public class CoursesActivity extends BaseDrawer implements AdapterView.OnItemCli
             url = String.format(Const.GET_COURSES_FOR_USER, user.getId(), userSession.getString("token", ""));
         }
 
-
         JsonArrayRequest courseListReq = new JsonArrayRequest(Request.Method.GET, url,
                 null, new Response.Listener<JSONArray>() {
             @Override
@@ -150,10 +149,7 @@ public class CoursesActivity extends BaseDrawer implements AdapterView.OnItemCli
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e("Volley Login Auth Error:", error.toString());
-
-                Toast.makeText(getApplicationContext(), url,
-                        Toast.LENGTH_LONG).show();
+                Log.e("GET Courses Error", error.toString());
             }
         }){
             /**
