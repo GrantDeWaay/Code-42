@@ -10,8 +10,7 @@ package edu.iastate.code42.utils;
  */
 public class Const {
 	public static final String SOURCE = "http://coms-309-028.class.las.iastate.edu:8080/";
-	//public static final String SOURCE = "https://a6629e8b-03c4-4b87-882c-d92549b52f9e.mock.pstmn.io/";
-
+	public static final String WS_SOURCE = "ws://coms-309-028.class.las.iastate.edu:8080/";
 	public static final String TOKEN = "?token=%s";
 
 	public static final String LOGIN = SOURCE + "login/%s/%s";
@@ -40,6 +39,8 @@ public class Const {
 	public static final String CREATE_ASSIGNMENT = SOURCE + "assignment/create" + TOKEN;
 
 	public static final String RUN_CODE = SOURCE + "run/%s" + TOKEN;
+	public static final String UNIT_TEST_UPLOAD = SOURCE + "assignment/%d/unitTests" + TOKEN;
+	public static final String WS_RUN = WS_SOURCE + "run/assignment/%d/%s"; //assignment id
 
 	public static final String PURPLE_COLOR = "#673AB7";
 	public static final String GREEN_COLOR = "#008000";

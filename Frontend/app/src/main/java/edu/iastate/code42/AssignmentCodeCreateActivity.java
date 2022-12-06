@@ -14,6 +14,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.Request;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
+
+import org.json.JSONException;
+
 import java.util.Arrays;
 
 import edu.iastate.code42.objects.AssignmentCreationDataHolder;
@@ -53,7 +59,7 @@ public class AssignmentCodeCreateActivity extends AppCompatActivity {
         switch (lang) {
             case "Java":
                 startingCode = "import java.util.Scanner;\n\n" +
-                                className + " {\n" +
+                                "class" + className + " {\n" +
                                 "\tpublic static void main(String[] args) {\n" +
                                 "\t\tScanner myObj = new Scanner(System.in);\n" +
                                 "\t\tint x = myObj.nextInt();\n" +
@@ -93,8 +99,12 @@ public class AssignmentCodeCreateActivity extends AppCompatActivity {
         goNext.setOnClickListener(view -> {
             //Multiple unit tests implementation
             AssignmentCreationDataHolder.setExpectedOut(mAppAdapter.getUnitTests().toString());
-            AssignmentCreationDataHolder.setCode(baseCode.getText().toString());
-            AssignmentCreationDataHolder.sendAssignment(getApplicationContext(),userSession.getString("token", ""), courseId);
+            AssignmentCreationDataHolder.setCode(baseCode.getText().toString().replaceAll("\"", ("\\" + "\"")));
+            try {
+                AssignmentCreationDataHolder.sendAssignment(getApplicationContext(),userSession.getString("token", ""), courseId, mAppAdapter.getJSONUnitTests());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
             finish();
         });
 
