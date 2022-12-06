@@ -1,9 +1,13 @@
 package coms309.coderunner;
 
+import coms309.api.dataobjects.ApiAssignmentUnitTest;
 import coms309.api.dataobjects.ApiCodeSubmission;
 import coms309.database.dataobjects.AssignmentFile;
+import coms309.database.dataobjects.AssignmentUnitTest;
 
 import java.io.*;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class PythonRunner extends CodeRunner {
@@ -18,8 +22,8 @@ public class PythonRunner extends CodeRunner {
      * @param tfm TempFileManager object to manage temporary directory for executing file
      * @throws FileNotFoundException
      */
-    public PythonRunner(AssignmentFile af, ApiCodeSubmission acs, TempFileManager tfm) throws FileNotFoundException {
-        super(af.getCodeFolder(), tfm.getAssignmentFolderPath());
+    public PythonRunner(AssignmentFile af, ApiCodeSubmission acs, TempFileManager tfm, Iterable<AssignmentUnitTest> unitTests) throws FileNotFoundException {
+        super(af.getCodeFolder(), tfm.getAssignmentFolderPath(), unitTests);
         compiledRunner = true;
         this.fileName = acs.getName();
     }
@@ -52,36 +56,49 @@ public class PythonRunner extends CodeRunner {
      * @throws IOException
      */
     @Override
-    public boolean run() throws IOException {
-        //String executableName = fileName.substring(0, fileName.indexOf('.'));
-        Process process = Runtime.getRuntime().exec("python " + testFolder + "/out/" + fileName);
+    public List<AssignmentUnitTestResult> run() throws IOException {
+        List<AssignmentUnitTestResult> results = new LinkedList<>();
 
-        stdout = process.getInputStream();
-        stderr = process.getErrorStream();
+        for (AssignmentUnitTest aut : unitTests) {
 
-        long startTime = System.currentTimeMillis();
+            Process process = Runtime.getRuntime().exec("python " + testFolder + "/out/" + fileName);
 
-        byte[] buff = new byte[1024];
+            stdin = process.getOutputStream();
+            stdout = process.getInputStream();
+            stderr = process.getErrorStream();
 
-        while(process.isAlive() && System.currentTimeMillis() - startTime < maxRuntime) {
-            while(stdout.available() > 0) {
-                int n = stdout.read(buff);
-                stdOutData = stdOutData.concat(new String(buff, 0, n));
+            long startTime = System.currentTimeMillis();
+
+            byte[] buff = new byte[1024];
+
+            stdin.write(aut.getInput().getBytes());
+            stdin.flush();
+
+            // run while process is alive and we have not hit a timeout
+            while(process.isAlive() && System.currentTimeMillis() - startTime < maxRuntime) {
+                while(stdout.available() > 0) {
+                    int n = stdout.read(buff);
+                    stdOutData = stdOutData.concat(new String(buff, 0, n));
+                }
+
+                while(stderr.available() > 0) {
+                    int n = stderr.read(buff);
+                    stdErrData = stdErrData.concat(new String(buff, 0, n));
+                }
             }
 
-            while(stderr.available() > 0) {
-                int n = stderr.read(buff);
-                stdErrData = stdErrData.concat(new String(buff, 0, n));
+            if(process.isAlive()){
+                process.destroyForcibly();
             }
+
+            AssignmentUnitTestResult result = new AssignmentUnitTestResult(new ApiAssignmentUnitTest(aut), stdOutData, stdErrData, stdOutData.equals(aut.getExpectedOutput()));
+            results.add(result);
+
+            stdOutData = "";
+            stdErrData = "";
         }
 
-
-        if(process.isAlive()){
-            process.destroyForcibly();
-            return false;
-        }
-
-        return true;
+        return results;
     }
 
 }
