@@ -10,6 +10,12 @@ public class UserTokens {
 
     public static HashMap<String, Long> adminTokens = new HashMap<String, Long>(); // (Key: Token, Value: ID)
 
+    /**
+     * Check to see if token belongs to a student.
+     *
+     * @param token user's token
+     * @return is a student
+     */
     public static boolean isStudent(String token) {
         // Built in token for testing purpose
         // Should remove in final build
@@ -19,6 +25,12 @@ public class UserTokens {
         return studentTokens.containsKey(token);
     }
 
+    /**
+     * Check to see if token belongs to teacher.
+     *
+     * @param token user's token
+     * @return is a teacher
+     */
     public static boolean isTeacher(String token) {
         // Built in token for testing purpose
         // Should remove in final build
@@ -28,6 +40,12 @@ public class UserTokens {
         return teacherTokens.containsKey(token);
     }
 
+    /**
+     * Check to see if token belongs to admin
+     *
+     * @param token user's token
+     * @return is a admin
+     */
     public static boolean isAdmin(String token) {
         // Built in token for testing purpose
         // Should remove in final build
@@ -37,10 +55,22 @@ public class UserTokens {
         return adminTokens.containsKey(token);
     }
 
+    /**
+     * Check to see if token is life (User has is logged in).
+     *
+     * @param token user's token
+     * @return is an active token
+     */
     public static boolean isLiveToken(String token) {
         return isStudent(token) || isTeacher(token) || isAdmin(token);
     }
 
+    /**
+     * Deactivates token.
+     *
+     * @param token user's token
+     * @return successful removal
+     */
     public static boolean removeToken(String token) {
         if (studentTokens.containsKey(token)) {
             studentTokens.remove(token);
@@ -57,6 +87,12 @@ public class UserTokens {
         return false;
     }
 
+    /**
+     * Gets user id from token
+     *
+     * @param token user's token
+     * @return user's id
+     */
     public static long getID(String token) {
         if (studentTokens.containsKey(token)) {
             return studentTokens.get(token);

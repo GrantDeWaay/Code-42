@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/College/ComS309/2_an_4/Frontend/app/src/main/res/drawable/ic_person_background.xml" value="0.2545" />
+        <entry key="..\:/College/ComS309/2_an_4/Frontend/app/src/main/res/drawable/ic_person_foreground.xml" value="0.2545" />
+        <entry key="..\:/College/ComS309/2_an_4/Frontend/app/src/main/res/layout/activity_assignment_create.xml" value="0.23596014492753623" />
+        <entry key="..\:/College/ComS309/2_an_4/Frontend/app/src/main/res/layout/activity_assignment_list.xml" value="0.15989583333333332" />
+        <entry key="..\:/College/ComS309/2_an_4/Frontend/app/src/main/res/layout/activity_base_back.xml" value="0.245018115942029" />
+        <entry key="..\:/College/ComS309/2_an_4/Frontend/app/src/main/res/layout/activity_base_drawer.xml" value="0.25416666666666665" />
+        <entry key="..\:/College/ComS309/2_an_4/Frontend/app/src/main/res/layout/activity_course_creation.xml" value="0.25416666666666665" />
+        <entry key="..\:/College/ComS309/2_an_4/Frontend/app/src/main/res/layout/activity_course_view.xml" value="0.2" />
+        <entry key="..\:/College/ComS309/2_an_4/Frontend/app/src/main/res/layout/activity_courses.xml" value="0.2" />
+        <entry key="..\:/College/ComS309/2_an_4/Frontend/app/src/main/res/layout/activity_dashboard.xml" value="0.20471014492753623" />
+        <entry key="..\:/College/ComS309/2_an_4/Frontend/app/src/main/res/layout/activity_main.xml" value="0.2" />
+        <entry key="..\:/College/ComS309/2_an_4/Frontend/app/src/main/res/layout/activity_user_creation.xml" value="0.24230072463768115" />
+        <entry key="..\:/College/ComS309/2_an_4/Frontend/app/src/main/res/layout/activity_user_list.xml" value="0.2" />
+        <entry key="..\:/College/ComS309/2_an_4/Frontend/app/src/main/res/layout/content_layout.xml" value="0.25416666666666665" />
+        <entry key="..\:/College/ComS309/2_an_4/Frontend/app/src/main/res/layout/main_drawer_header.xml" value="0.20471014492753623" />
+        <entry key="..\:/College/ComS309/2_an_4/Frontend/app/src/main/res/layout/popup_window.xml" value="0.264" />
+        <entry key="..\:/College/ComS309/2_an_4/Frontend/app/src/main/res/layout/popup_window_info.xml" value="0.245018115942029" />
+        <entry key="..\:/College/ComS309/2_an_4/Frontend/app/src/main/res/layout/popup_window_save.xml" value="0.245018115942029" />
+        <entry key="..\:/College/ComS309/2_an_4/Frontend/app/src/main/res/layout/row_assignment.xml" value="0.18984375" />
+        <entry key="..\:/College/ComS309/2_an_4/Frontend/app/src/main/res/layout/row_course.xml" value="0.22592592592592592" />
+        <entry key="..\:/College/ComS309/2_an_4/Frontend/app/src/main/res/layout/row_grade.xml" value="0.25416666666666665" />
+        <entry key="..\:/College/ComS309/2_an_4/Frontend/app/src/main/res/layout/row_student.xml" value="0.253125" />
+        <entry key="..\:/College/ComS309/2_an_4/Frontend/app/src/main/res/layout/row_user.xml" value="0.25416666666666665" />
+        <entry key="..\:/College/ComS309/2_an_4/Frontend/app/src/main/res/menu/main_drawer_menu.xml" value="0.152" />
+      </map>
+    </option>
+  </component>
+  <component name="JavadocGenerationManager">
+    <option name="OUTPUT_DIRECTORY" value="$PROJECT_DIR$/../Documents/Frontend" />
+  </component>
+<<<<<<< HEAD
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+=======
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+>>>>>>> ac067857a4a00f82ddce7dbd1e18b4b8d0683122
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>

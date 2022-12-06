@@ -46,6 +46,9 @@ public class Assignment {
     @OneToOne(mappedBy = "assignment", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private AssignmentFile assignmentFile;
 
+    @OneToMany(mappedBy = "assignment", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<AssignmentUnitTest> unitTests;
+
     public Assignment() {
 
     }
@@ -137,6 +140,10 @@ public class Assignment {
 
     public Set<Grade> getGrades() {
         return grades;
+    }
+
+    public Set<AssignmentUnitTest> getUnitTests() {
+        return unitTests;
     }
 
     public void setAssignmentFile(AssignmentFile assignmentFile) {

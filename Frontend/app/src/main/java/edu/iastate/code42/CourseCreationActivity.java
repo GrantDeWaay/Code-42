@@ -1,6 +1,8 @@
 package edu.iastate.code42;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -24,10 +26,22 @@ import java.util.HashMap;
 import java.util.Map;
 
 import edu.iastate.code42.app.AppController;
+import edu.iastate.code42.databinding.ActivityCourseCreationBinding;
+import edu.iastate.code42.databinding.ActivityCoursesBinding;
 import edu.iastate.code42.objects.User;
+import edu.iastate.code42.utils.BaseBack;
 import edu.iastate.code42.utils.Const;
 
-public class CourseCreationActivity extends AppCompatActivity implements View.OnClickListener {
+
+/**
+ * CourseCreationActivity class
+ * Create course screen
+ * Layout: activity_course_creation
+ * @author Andrew
+ */
+
+public class CourseCreationActivity extends BaseBack implements View.OnClickListener {
+    ActivityCourseCreationBinding activityBaseBackBinding;
 
     Button create;
     EditText title;
@@ -37,15 +51,25 @@ public class CourseCreationActivity extends AppCompatActivity implements View.On
     User user;
     SharedPreferences userSession;
 
+    /**
+     * Creates and draws the view; initializes the objects
+     * @param savedInstanceState Application Bundle
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_course_creation);
 
-        create = findViewById(R.id.createCourse);
-        title = findViewById(R.id.editCourseTitle);
-        description = findViewById(R.id.courseDescriptionView);
-        language = findViewById(R.id.courseLanguagesView);
+        activityBaseBackBinding = ActivityCourseCreationBinding.inflate(getLayoutInflater());
+        setContentView(activityBaseBackBinding.getRoot());
+        allocateActivityTitle("");
+
+        setPreviousScreen(new Intent(this, CoursesActivity.class));
+        setSave(true);
+
+        create = activityBaseBackBinding.getRoot().findViewById(R.id.createCourse);
+        title = activityBaseBackBinding.getRoot().findViewById(R.id.editCourseTitle);
+        description = activityBaseBackBinding.getRoot().findViewById(R.id.courseDescriptionView);
+        language = activityBaseBackBinding.getRoot().findViewById(R.id.courseLanguagesView);
 
         user = User.get(getApplicationContext());
         userSession = getSharedPreferences(getString(R.string.session_shared_pref), MODE_PRIVATE);
@@ -58,6 +82,10 @@ public class CourseCreationActivity extends AppCompatActivity implements View.On
         create.setOnClickListener(this);
     }
 
+    /**
+     * Event handler for when Create button pressed; Performs CREATE_COURSE HTTP Request
+     * @param view Button View that is Pressed
+     */
     @Override
     public void onClick(View view) {
         if (title.getText() != null && !(title.getText().toString().isEmpty()) &&
@@ -78,9 +106,6 @@ public class CourseCreationActivity extends AppCompatActivity implements View.On
                     jsonBody, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
-                    Toast.makeText(getApplicationContext(), response.toString(),
-                            Toast.LENGTH_LONG).show();
-
                     Intent view = new Intent(CourseCreationActivity.this, CourseViewActivity.class);
                     try {
                         view.putExtra("courseId", response.getInt("id"));
@@ -92,9 +117,9 @@ public class CourseCreationActivity extends AppCompatActivity implements View.On
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    Log.e("Volley Login Auth Error:", error.toString());
+                    Log.e("Course Creation Error", error.toString());
 
-                    Toast.makeText(getApplicationContext(), R.string.login_volley_error,
+                    Toast.makeText(getApplicationContext(), R.string.course_create_error,
                             Toast.LENGTH_LONG).show();
                 }
             }) {

@@ -2,6 +2,7 @@ package edu.iastate.code42;
 
 import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -11,6 +12,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,40 +24,42 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import org.java_websocket.client.WebSocketClient;
+import org.java_websocket.drafts.Draft;
+import org.java_websocket.drafts.Draft_6455;
+import org.java_websocket.handshake.ServerHandshake;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Locale;
+
 import edu.iastate.code42.app.AppController;
 import edu.iastate.code42.objects.User;
 import edu.iastate.code42.utils.Const;
 
-public class AssignmentWorkActivity extends AppCompatActivity implements View.OnClickListener{
-    private Button submit;
-    private Button info;
-    private Button loadDefault;
+public class AssignmentWorkActivity extends AppCompatActivity implements View.OnClickListener {
+    private Button submit, info, loadDefault;
     private EditText ide;
-    private TextView statementTextView;
-    private TextView description;
-    private TextView results;
-    private PopupWindow testPopup;
-    private PopupWindow infoPopup;
-    private View testPUV;
-    private View infoPUV;
-    private TextView assignmentName;
-    private TextView assignmentNamePopupText;
+    TextView statementTextView, description, results, testingCodeTitleStatusTextView,
+            assignmentName, assignmentNamePopupText;
+    private PopupWindow testPopup, infoPopup;
+    private View testPUV, infoPUV;
     private JSONObject assignmentData;
-    private String descText;
-    private String baseCode;
-
+    private String descText, baseCode;
+    private RelativeLayout popupRelativeLayout;
+    private ProgressBar progressBar;
     User user;
     SharedPreferences userSession;
-
+    private WebSocketClient cc;
+    private final String webs = "wss://socketsbay.com/wss/v2/1/demo/";
     int id;
+
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         int width = LinearLayout.LayoutParams.WRAP_CONTENT;
         int height = LinearLayout.LayoutParams.WRAP_CONTENT;
-
-
         setContentView(R.layout.activity_assignment_take);
 
         ide = findViewById(R.id.codeEditText);
@@ -67,26 +72,123 @@ public class AssignmentWorkActivity extends AppCompatActivity implements View.On
         assignmentNamePopupText = infoPUV.findViewById(R.id.assignmentNamePopupText);
         infoPopup = new PopupWindow(infoPUV, width, height, true);
 
-        testPUV = inflater.inflate(R.layout.popup_window, null);
+        testPUV = inflater.inflate(R.layout.popup_window_submission_tests, null);
+
+        testingCodeTitleStatusTextView = testPUV.findViewById(R.id.testingCodeTitleStatusTextView);
+        popupRelativeLayout = testPUV.findViewById(R.id.popupRelativeLayout);
         results = testPUV.findViewById(R.id.testResultsTextView);
+        progressBar = testPUV.findViewById(R.id.progressBar);
 
         user = User.get(getApplicationContext());
         userSession = getSharedPreferences(getString(R.string.session_shared_pref), MODE_PRIVATE);
 
-
         testPopup = new PopupWindow(testPUV, width, height, true);
+
+        info = findViewById(R.id.infoButton);
+        submit = findViewById(R.id.submitButton);
+        loadDefault = findViewById(R.id.loadDefaultButton);
+        loadDefault.setOnClickListener(view -> {
+            ide.setText(baseCode);
+        });
+
+        info.setOnClickListener(this);
+        submit.setOnClickListener(this);
+
+        getAssignment();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        getAssignment();
+    }
+
+    @Override
+    public void onClick(View view) {
+
+        if (view.getId() == info.getId()) {
+            infoPopup.showAtLocation(view, Gravity.CENTER, 0, 0);
+            infoPUV.setOnTouchListener((v, event) -> {
+                v.performClick();
+                infoPopup.dismiss();
+                return true;
+            });
+        } else if (view.getId() == submit.getId()) {
+
+            popupRelativeLayout.setBackgroundColor(Color.parseColor(Const.PURPLE_COLOR));
+            String loadingString = "Performing Tests...";
+
+            results.setText(loadingString);
+
+
+            progressBar.setVisibility(View.VISIBLE);
+            String urlRun = String.format(Const.RUN_CODE, id, userSession.getString("token", ""));
+            JSONObject obj = new JSONObject();
+            try {
+                obj.put("name", "name" + ".java");
+                obj.put("contents", ide.getText().toString().replaceAll("\"", ("\\" + "\"")));
+                obj.put("language", "Java");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            /**
+             * I want it to start listening to the web socket once it sends over the
+             * code we want to test, and I want it to close once we get a message
+             * from the server saying it sent all of the tests over or something
+             */
+            JsonObjectRequest req = new JsonObjectRequest(Request.Method.PUT, urlRun, obj,
+                    res -> {
+                        progressBar.setVisibility(View.INVISIBLE);
+                        try {
+                            String message;
+                            if (res.getBoolean("pass")) {
+                                testingCodeTitleStatusTextView.setText("PASSED");
+                                popupRelativeLayout.setBackgroundColor(Color.parseColor(Const.GREEN_COLOR));
+                                message = "Expected : " + res.getString("expectedOutput") + " " +
+                                        "Actual : " + res.getString("actualOutput");
+                            } else if (res.getString("message").equals("Compilation failed")) {
+                                popupRelativeLayout.setBackgroundColor(Color.parseColor(Const.RED_COLOR));
+                                message = "Compile Error!";
+                            } else {
+                                testingCodeTitleStatusTextView.setText("FAIL");
+                                popupRelativeLayout.setBackgroundColor(Color.parseColor(Const.RED_COLOR));
+                                message = "Expected : " + res.getString("expectedOutput") + " " +
+                                        "Actual : " + res.getString("actualOutput");
+                            }
+                            results.setText(message);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }, err -> {
+                testingCodeTitleStatusTextView.setText("FAIL");
+                popupRelativeLayout.setBackgroundColor(Color.parseColor(Const.RED_COLOR));
+                results.setText("That didn't work!");
+                progressBar.setVisibility(View.INVISIBLE);
+            });
+
+            AppController.getInstance().addToRequestQueue(req);
+            testPopup.setTouchable(true);
+            testPopup.setFocusable(true);
+            testPopup.setOnDismissListener(() -> {
+                if (cc.isOpen()){
+                    cc.close();
+                }});
+            testPopup.showAtLocation(view, Gravity.CENTER, 0, 0);
+            startTests();
+        }
+    }
+
+    private void getAssignment() {
         id = getIntent().getIntExtra("id", -1);
 
-        String url = String.format(Const.GET_ASSIGNMENT, id, userSession.getString("token", ""));
-        JsonObjectRequest req = new JsonObjectRequest(Request.Method.GET, url,null,
+        String url = String.format(Locale.ENGLISH, Const.GET_ASSIGNMENT, id, userSession.getString("token", ""));
+        JsonObjectRequest req = new JsonObjectRequest(Request.Method.GET, url, null,
                 response -> {
                     assignmentData = response;
                     try {
                         assignmentName.setText(assignmentData.getString("title"));
                         statementTextView.setText(assignmentData.getString("problemStatement"));
                         descText = assignmentData.getString("description");
-                        Log.i("testing", descText);
-                        results.setText("Loadin' doot doot doot datt...");
                         description.setText(descText);
                         assignmentNamePopupText.setText(assignmentData.getString("title"));
                         ide.setText(assignmentData.getString("template"));
@@ -99,56 +201,56 @@ public class AssignmentWorkActivity extends AppCompatActivity implements View.On
             Log.i("resp", error.toString());
         });
         AppController.getInstance().addToRequestQueue(req);
-        info = findViewById(R.id.infoButton);
-        submit = findViewById(R.id.submitButton);
-        loadDefault = findViewById(R.id.loadDefaultButton);
-        loadDefault.setOnClickListener(view -> {
-            ide.setText(baseCode);
-        });
-
-        info.setOnClickListener(this);
-        submit.setOnClickListener(this);
     }
-    @Override
-    public void onClick(View view){
-        int infoId = info.getId();
-        int submitId = submit.getId();
-        if (view.getId() == infoId) {
-            infoPopup.showAtLocation(view, Gravity.CENTER, 0, 0);
-            infoPUV.setOnTouchListener((v, event) -> {
-                v.performClick();
-                infoPopup.dismiss();
-                return true;
-            });
-        }
-        else if (view.getId() == submitId) {
-            Log.i("ok",userSession.getString("token", ""));
-            String urlw = String.format(Const.SOURCE + "run/%s" + Const.TOKEN, id, userSession.getString("token", ""));
-            Log.i("url", urlw);
-            JSONObject obj = new JSONObject();
-            try {
-                obj.put("name", "name" + ".java");
-                obj.put("contents", ide.getText().toString().replaceAll("\"", ("\\" + "\"")));
-                obj.put("language", "Java");
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            Log.i("json", obj.toString());
-            JsonObjectRequest req = new JsonObjectRequest(Request.Method.PUT, urlw,obj,
-                    response -> {
-                        results.setText(response.toString());
-                        Log.i("result", response.toString());
-                    }, error -> {
-                results.setText(error.toString());
-            });
 
-            AppController.getInstance().addToRequestQueue(req);
-            testPopup.showAtLocation(view, Gravity.CENTER, 0, 0);
-            testPUV.setOnTouchListener((v, event) -> {
-                v.performClick();
-                testPopup.dismiss();
-                return true;
-            });
+    public void startTests(){
+        Draft[] drafts = {
+                new Draft_6455()
+        };
+        try{
+            cc = new WebSocketClient(new URI(webs), drafts[0]) {
+                @Override
+                public void onMessage(String message) {
+                    Log.d("", "run() returned: " + message);
+                    runOnUiThread(() -> {
+                        String s = results.getText().toString();
+                        results.setText(s + "\nServer:" + message);
+                        // This code will always run on the UI thread, therefore is safe to modify UI elements.
+                    });
+
+                }
+
+                @Override
+                public void onOpen(ServerHandshake handshake) {
+                    Log.d("OPEN", "run() returned: " + "is connecting");
+                    sendMessage("Hey there!");
+                }
+
+                @Override
+                public void onClose(int code, String reason, boolean remote) {
+                    Log.d("CLOSE", "onClose() returned: " + reason);
+                }
+
+                @Override
+                public void onError(Exception e) {
+                    Log.d("Exception:", e.toString());
+                }
+            };
+        }
+        catch (URISyntaxException e) {
+            Log.d("Exception:", e.getMessage());
+            e.printStackTrace();
+        }
+        cc.connect();
+    }
+
+
+
+    public void sendMessage(String msg){
+        try {
+            cc.send(msg);
+        } catch (Exception e) {
+            Log.d("ExceptionSendMessage:", ""+e.getMessage());
         }
     }
 }

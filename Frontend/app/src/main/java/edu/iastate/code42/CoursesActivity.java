@@ -1,7 +1,5 @@
 package edu.iastate.code42;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -27,15 +25,18 @@ import java.util.Map;
 
 import edu.iastate.code42.app.AppController;
 import edu.iastate.code42.databinding.ActivityCoursesBinding;
-import edu.iastate.code42.databinding.ActivityDashboardBinding;
-import edu.iastate.code42.objects.Assignment;
 import edu.iastate.code42.objects.Course;
 import edu.iastate.code42.objects.User;
-import edu.iastate.code42.utils.AssignmentListAdapter;
 import edu.iastate.code42.utils.BaseDrawer;
 import edu.iastate.code42.utils.Const;
 import edu.iastate.code42.utils.CourseListAdapter;
 
+/**
+ * CoursesActivity class
+ * View with a list of Courses for that User
+ * Layout: activity_courses
+ * @author Andrew
+ */
 public class CoursesActivity extends BaseDrawer implements AdapterView.OnItemClickListener, View.OnClickListener {
 
     ActivityCoursesBinding activityBaseDrawerBinding;
@@ -47,6 +48,11 @@ public class CoursesActivity extends BaseDrawer implements AdapterView.OnItemCli
     ArrayList<Course> courses;
     CourseListAdapter courseAdapter;
 
+    /**
+     * Creates and draws the view; initializes the objects
+     * Performs GET_COURSES and GET_COURSES_FOR_USER HTTP Requests
+     * @param savedInstanceState Application Bundle
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,14 +82,54 @@ public class CoursesActivity extends BaseDrawer implements AdapterView.OnItemCli
         }
 
         courses = new ArrayList<>();
+
+        courseAdapter = new CourseListAdapter(getApplicationContext(), courses);
+        courseList.setAdapter(courseAdapter);
+
+        getCourseList();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+
+        getCourseList();
+    }
+
+    /**
+     * Event Handler for when item in the ListView selected; Opens CourseViewActivity for selected Course
+     * @param adapterView AdaperView for ListView
+     * @param view ListView of item selected
+     * @param i Position of item selected
+     * @param l
+     */
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        Intent viewCourse = new Intent(CoursesActivity.this, CourseViewActivity.class);
+        viewCourse.putExtra("courseId", courses.get(i).getId());
+
+        startActivity(viewCourse);
+    }
+
+    /**
+     * Event handler for when Add button pressed; Opens CourseCreationActivity
+     * @param view Button View that is Pressed
+     */
+    @Override
+    public void onClick(View view) {
+        Intent creation = new Intent(CoursesActivity.this, CourseCreationActivity.class);
+        startActivity(creation);
+    }
+
+    private void getCourseList(){
+        courses.clear();
         String url;
 
         if(user.getType().equals("admin")){
             url = String.format(Const.GET_COURSES, userSession.getString("token", ""));
         }else{
-           url = String.format(Const.GET_COURSES_FOR_USER, user.getId(), userSession.getString("token", ""));
+            url = String.format(Const.GET_COURSES_FOR_USER, user.getId(), userSession.getString("token", ""));
         }
-
 
         JsonArrayRequest courseListReq = new JsonArrayRequest(Request.Method.GET, url,
                 null, new Response.Listener<JSONArray>() {
@@ -97,17 +143,13 @@ public class CoursesActivity extends BaseDrawer implements AdapterView.OnItemCli
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    courseAdapter = new CourseListAdapter(getApplicationContext(), courses);
-                    courseList.setAdapter(courseAdapter);
+                    courseAdapter.notifyDataSetChanged();
                 }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e("Volley Login Auth Error:", error.toString());
-
-                Toast.makeText(getApplicationContext(), url,
-                        Toast.LENGTH_LONG).show();
+                Log.e("GET Courses Error", error.toString());
             }
         }){
             /**
@@ -129,19 +171,5 @@ public class CoursesActivity extends BaseDrawer implements AdapterView.OnItemCli
         };
 
         AppController.getInstance().addToRequestQueue(courseListReq, "course_get_course");
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        Intent viewCourse = new Intent(CoursesActivity.this, CourseViewActivity.class);
-        viewCourse.putExtra("courseId", courses.get(i).getId());
-
-        startActivity(viewCourse);
-    }
-
-    @Override
-    public void onClick(View view) {
-        Intent creation = new Intent(CoursesActivity.this, CourseCreationActivity.class);
-        startActivity(creation);
     }
 }
