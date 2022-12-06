@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -15,6 +16,8 @@ import coms309.api.dataobjects.ApiAssignment;
 import coms309.api.dataobjects.ApiUserLogin;
 
 import com.google.gson.*;
+
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 
 @RunWith(SpringRunner.class)
 public class CodeRunTest {
