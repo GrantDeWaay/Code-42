@@ -10,13 +10,6 @@
         android:layout_height="match_parent"
         android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/textView4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="&quot;x&quot; equals" />
-
         <EditText
             android:id="@+id/UnitTestValEditText"
             android:layout_width="100dp"

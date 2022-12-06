@@ -6,6 +6,7 @@ import coms309.database.dataobjects.AssignmentFile;
 import coms309.database.dataobjects.AssignmentUnitTest;
 
 import java.io.*;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -38,14 +39,20 @@ public class JavaRunner extends CodeRunner {
      */
     @Override
     public boolean compile() throws IOException {
-        Process process = Runtime.getRuntime().exec("javac " + testFolder + "/" + fileName + " -d " + testFolder + "/out");
-        try {
-            if (process.waitFor(5, TimeUnit.SECONDS)) {
-                return process.exitValue() == 0;
-            }
-        } catch (InterruptedException e) {
-            return false;
+        ProcessBuilder processBuilder = new ProcessBuilder("javac", testFolder + "/" + fileName, "-d", testFolder + "/out");
+
+        ProcessManager processManager = new ProcessManager(processBuilder);
+        if(processManager.runForTime(5000)) {
+            stdOutData = processManager.getOutputData();
+            stdErrData = processManager.getErrorData();
+            return processManager.getExitValue() == 0;
         }
+        
+        processManager.terminateProcess();
+        
+        stdOutData = processManager.getOutputData();
+        stdErrData = processManager.getErrorData();
+
         return false;
     }
 
