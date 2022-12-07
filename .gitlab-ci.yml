@@ -1,5 +1,6 @@
 stages:
   - maventry
+  - maventest
   - mavendeploy
 
 
@@ -11,6 +12,15 @@ maven-build:
     - cd Backend
     - cd Spring
     - mvn clean package
+
+maven-test:
+  stage: maventest
+  tags:
+    - springboot_tag
+  script:
+    - cd Backend
+    - cd Spring
+    - mvn test
 
 maven-deploy:
   stage: mavendeploy
