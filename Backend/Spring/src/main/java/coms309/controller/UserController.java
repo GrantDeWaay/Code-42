@@ -102,7 +102,7 @@ public class UserController {
         if (!u.isPresent()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(new ApiUser(), HttpStatus.OK);
+        return new ResponseEntity<>(new ApiUser(u.get()), HttpStatus.OK);
     }
 
     /**
