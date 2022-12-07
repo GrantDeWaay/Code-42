@@ -100,15 +100,9 @@ public class AssignmentCreateTest {
         // We shouldnt get to the next screen, as the points havent been set
         onView(withText("Enter code that student will start with:")).check(doesNotExist());
         try {Thread.sleep(SIMULATED_DELAY_MS);} catch (InterruptedException e) {}
-        onView(withId(R.id.scoreNumber))
-                .perform(typeText("420"), closeSoftKeyboard());
-        onView(withId(R.id.nextButton)).perform(click());
-        // now we should
-        try {Thread.sleep(SIMULATED_DELAY_MS);} catch (InterruptedException e) {}
-        onView(withText("Enter code that student will start with:")).check(matches(isDisplayed()));
     }
     @Test
-    public void assignmentCodeCreate(){
+    public void assignmentCreateCorrect(){
         AssignmentCreateActivityRule.launchActivity(new Intent());
 
         onView(withId(R.id.assignmentNameEnter))
@@ -126,6 +120,47 @@ public class AssignmentCreateTest {
         // now we should
         try {Thread.sleep(SIMULATED_DELAY_MS);} catch (InterruptedException e) {}
         onView(withText("Enter code that student will start with:")).check(matches(isDisplayed()));
+
+    }
+    @Test
+    public void assignmentCreateIncorrect2(){
+        AssignmentCreateActivityRule.launchActivity(new Intent());
+
+        onView(withId(R.id.assignmentNameEnter))
+                .perform(typeText(""), closeSoftKeyboard());
+        onView(withId(R.id.description))
+                .perform(typeText("Test Description"), closeSoftKeyboard());
+        onView(withId(R.id.problemStatement))
+                .perform(typeText("Test Problem Statement"), closeSoftKeyboard());
+        onView(withId(R.id.spinner)).perform(click());
+        onView(withText("Python")).perform(click());
+        onView(withId(R.id.scoreNumber))
+                .perform(typeText(""), closeSoftKeyboard());
+
+        onView(withId(R.id.nextButton)).perform(click());
+        // now we should
+        try {Thread.sleep(SIMULATED_DELAY_MS);} catch (InterruptedException e) {}
+        onView(withText("Enter code that student will start with:")).check(doesNotExist());
+
+    }
+    public void assignmentCreateIncorrect3(){
+        AssignmentCreateActivityRule.launchActivity(new Intent());
+
+        onView(withId(R.id.assignmentNameEnter))
+                .perform(typeText("Test Assignment Name"), closeSoftKeyboard());
+        onView(withId(R.id.description))
+                .perform(typeText("T"), closeSoftKeyboard());
+        onView(withId(R.id.problemStatement))
+                .perform(typeText("Test Problem Statement"), closeSoftKeyboard());
+        onView(withId(R.id.spinner)).perform(click());
+        onView(withText("C")).perform(click());
+        onView(withId(R.id.scoreNumber))
+                .perform(typeText(""), closeSoftKeyboard());
+
+        onView(withId(R.id.nextButton)).perform(click());
+        // now we should
+        try {Thread.sleep(SIMULATED_DELAY_MS);} catch (InterruptedException e) {}
+        onView(withText("Enter code that student will start with:")).check(doesNotExist());
 
     }
 }
