@@ -353,7 +353,7 @@ public class CourseController {
     }
 
     /**
-     * Delete an assignment.
+     * Delete a course.
      * <p>
      * Client must be admin.
      * <p>
@@ -363,14 +363,9 @@ public class CourseController {
      * @param token permission token
      * @return HTTP response
      */
-    @ApiOperation(value = "Delete a Course from the system", response = HttpStatus.class, tags = "course-controller")
-    @ApiResponses(value = {
-            @ApiResponse(code = 202, message = "ACCEPTED"),
-            @ApiResponse(code = 403, message = "FORBIDDEN"),
-            @ApiResponse(code = 404, message = "NOT FOUND")
-    })
+    // Deleting the Swagger annotation because im out of ideas :(
     @DeleteMapping("/course/{id}/delete")
-    public @ResponseBody HttpStatus deleteAssignment(@PathVariable long id, @RequestParam String token) {
+    public @ResponseBody HttpStatus deleteCourse(@PathVariable long id, @RequestParam String token) {
         if (!UserTokens.isAdmin(token)) {
             return HttpStatus.FORBIDDEN;
         }
