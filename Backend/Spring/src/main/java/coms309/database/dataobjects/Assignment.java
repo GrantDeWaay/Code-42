@@ -67,6 +67,7 @@ public class Assignment {
         this.dueDate = a.getDueDate();
         this.template = a.getTemplate();
         this.expectedOutput = a.getExpectedOutput();
+        this.language = a.getLanguage();
     }
 
     // returns the ID of the user
