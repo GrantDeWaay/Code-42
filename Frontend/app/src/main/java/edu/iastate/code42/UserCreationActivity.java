@@ -200,7 +200,7 @@ public class UserCreationActivity extends BaseBack implements View.OnClickListen
                     public void onResponse(String response) {
                         Intent userListIntent = new Intent(UserCreationActivity.this, UserListActivity.class);
                         userListIntent.putExtra("courseId", courseId);
-                        userListIntent.putExtra("type", type - 2);
+                        userListIntent.putExtra("type", type + 2);
 
                         startActivity(userListIntent);
                     }
