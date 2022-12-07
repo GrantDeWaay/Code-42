@@ -21,6 +21,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.android.volley.Request;
 import com.android.volley.toolbox.JsonObjectRequest;
 
+import org.intellij.lang.annotations.Language;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -54,6 +55,7 @@ public class AssignmentWorkActivity extends AppCompatActivity implements View.On
     private WebSocketClient cc;
     private String WS_URL;
     private int id;
+    private String language;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -187,6 +189,7 @@ public class AssignmentWorkActivity extends AppCompatActivity implements View.On
         JsonObjectRequest req = new JsonObjectRequest(Request.Method.GET, url, null,
                 response -> {
                     assignmentData = response;
+                    Log.i("DATA", assignmentData.toString());
                     try {
                         assignmentName.setText(assignmentData.getString("title"));
                         statementTextView.setText(assignmentData.getString("problemStatement"));
@@ -195,6 +198,7 @@ public class AssignmentWorkActivity extends AppCompatActivity implements View.On
                         assignmentNamePopupText.setText(assignmentData.getString("title"));
                         ide.setText(assignmentData.getString("template"));
                         baseCode = assignmentData.getString("template");
+                        language = assignmentData.getString("language");
 
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -214,6 +218,7 @@ public class AssignmentWorkActivity extends AppCompatActivity implements View.On
         testPopup.setOnDismissListener(() -> {
             if (cc.isOpen()){
                 cc.close();
+
             }});
         testPopup.showAtLocation(view, Gravity.CENTER, 0, 0);
         Log.d("WS", "Attempting Contact...");
@@ -263,10 +268,29 @@ public class AssignmentWorkActivity extends AppCompatActivity implements View.On
                     Log.d("OPEN", "run() returned: " + "is connecting");
                     runOnUiThread(() -> results.setText("Starting tests..."));
                     JSONObject obj2 = new JSONObject();
+                    String ext = "";
+                    switch (language){
+                        case "Java":
+                            ext = "CodeJava.java";
+                            break;
+                        case "Python":
+                            ext = "CodePython.py";
+                            break;
+                        case "C":
+                            ext = "CodeC.c";
+                            break;
+                        case "Go":
+                            ext = "CodeGo.go";
+                            break;
+                        default:
+                            Log.i("no lang","nah");
+                            ext = "CodeJava.java";
+                            break;
+                    }
                     try {
-                        obj2.put("name", "name" + ".c");
+                        obj2.put("name", ext);
                         obj2.put("contents", ide.getText().toString().replaceAll("\"", ("\\" + "\"")));
-                        obj2.put("language", "C");
+                        obj2.put("language", language);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

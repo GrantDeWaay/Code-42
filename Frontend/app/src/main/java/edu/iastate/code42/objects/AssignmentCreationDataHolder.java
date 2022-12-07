@@ -178,7 +178,7 @@ public class AssignmentCreationDataHolder {
             obj.put("title", name);
             obj.put("description", description);
             obj.put("problemStatement", statement);
-            obj.put("lang", lang);
+            obj.put("language", lang);
             obj.put("template", code);
             obj.put("expectedOutput", expectedOut);
         } catch (JSONException e) {

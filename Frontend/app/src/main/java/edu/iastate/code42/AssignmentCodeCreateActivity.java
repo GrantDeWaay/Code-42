@@ -59,7 +59,7 @@ public class AssignmentCodeCreateActivity extends AppCompatActivity {
         switch (lang) {
             case "Java":
                 startingCode = "import java.util.Scanner;\n\n" +
-                                "class" + className + " {\n" +
+                                "class CodeJava {\n" +
                                 "\tpublic static void main(String[] args) {\n" +
                                 "\t\tScanner myObj = new Scanner(System.in);\n" +
                                 "\t\tint x = myObj.nextInt();\n" +
