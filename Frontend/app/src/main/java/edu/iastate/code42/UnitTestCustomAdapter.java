@@ -72,6 +72,7 @@ public class UnitTestCustomAdapter extends RecyclerView.Adapter<UnitTestCustomAd
      */
     public UnitTestCustomAdapter(String[] dataSet) {
         localDataSet = dataSet;
+        UnitTestCustomAdapter.UnitTests.clear();
     }
 
     // Create new views (invoked by the layout manager)
