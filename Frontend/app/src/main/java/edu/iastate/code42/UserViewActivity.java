@@ -224,6 +224,7 @@ public class UserViewActivity extends BaseBack implements View.OnClickListener {
             currentPass.setText("");
             newPass.setText("");
             confirmPass.setText("");
+            changePassword = false;
         }else{
             if(changePassword){
                 changePass.setVisibility(View.INVISIBLE);

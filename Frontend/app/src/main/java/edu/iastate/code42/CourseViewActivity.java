@@ -278,33 +278,26 @@ public class CourseViewActivity extends BaseBack implements View.OnClickListener
      */
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        if(adapterView.toString().contains("app:id/assignmentList")){
+            Intent assignmentView = new Intent(this, AssignmentWorkActivity.class);
+            assignmentView.putExtra("id", assignments.get(i).getId());
+            assignmentView.putExtra("courseId", courseId);
 
-        switch(adapterView.getId()){
-            case 2131296353:
-                Intent assignmentView = new Intent(this, AssignmentWorkActivity.class);
-                assignmentView.putExtra("id", assignments.get(i).getId());
-                assignmentView.putExtra("courseId", courseId);
+            startActivity(assignmentView);
+        }else if(adapterView.toString().contains("app:id/studentList")){
+            Intent userView2 = new Intent(CourseViewActivity.this, UserViewActivity.class);
+            userView2.putExtra("courseId", courseId);
+            userView2.putExtra("type", 4);
+            userView2.putExtra("userId", students.get(i).getId());
 
-                startActivity(assignmentView);
-                break;
+            startActivity(userView2);
+        }else if(adapterView.toString().contains("app:id/teacherList")){
+            Intent userView = new Intent(CourseViewActivity.this, UserViewActivity.class);
+            userView.putExtra("courseId", courseId);
+            userView.putExtra("type", 3);
+            userView.putExtra("userId", teachers.get(i).getId());
 
-            case 2131296788:
-                Intent userView = new Intent(CourseViewActivity.this, UserViewActivity.class);
-                userView.putExtra("courseId", courseId);
-                userView.putExtra("type", 3);
-                userView.putExtra("userId", teachers.get(i).getId());
-
-                startActivity(userView);
-                break;
-
-            case 2131296764:
-                Intent userView2 = new Intent(CourseViewActivity.this, UserViewActivity.class);
-                userView2.putExtra("courseId", courseId);
-                userView2.putExtra("type", 4);
-                userView2.putExtra("userId", students.get(i).getId());
-
-                startActivity(userView2);
-                break;
+            startActivity(userView);
         }
     }
 

@@ -19,7 +19,7 @@ public class Const {
 
 	public static final String GET_USERS = SOURCE + "user" + TOKEN;
 	public static final String CREATE_USER = SOURCE + "user/create" + TOKEN;
-	public static final String GET_USER = SOURCE + "user/%d" + TOKEN;
+	public static final String GET_USER = SOURCE + "user/get/%d" + TOKEN;
 	public static final String UPDATE_USER = SOURCE + "user/%d/update" + TOKEN;
 	public static final String DELETE_USER = SOURCE + "user/%d/delete" + TOKEN;
 	public static final String GET_COURSES_FOR_USER = SOURCE + "user/%d/courses" + TOKEN;

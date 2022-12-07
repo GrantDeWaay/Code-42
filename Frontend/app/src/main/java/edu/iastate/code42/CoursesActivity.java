@@ -145,6 +145,12 @@ public class CoursesActivity extends BaseDrawer implements AdapterView.OnItemCli
                     }
                     courseAdapter.notifyDataSetChanged();
                 }
+
+                courses.add(courses.get(0));
+                courses.set(0, courses.get(courses.size() - 2));
+                courses.remove(courses.size() - 2);
+
+                courseAdapter.notifyDataSetChanged();
             }
         }, new Response.ErrorListener() {
             @Override

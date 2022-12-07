@@ -4,6 +4,7 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.replaceText;
+import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.PositionAssertions.isCompletelyBelow;
 import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
@@ -32,7 +33,7 @@ public class UserTest {
     private static final int SIMULATED_DELAY_MS = 1000;
 
     @Rule
-    ActivityTestRule<UserViewActivity> userViewActivityRule = new ActivityTestRule<>(UserViewActivity.class);
+    public ActivityTestRule<UserViewActivity> userViewActivityRule = new ActivityTestRule<>(UserViewActivity.class);
 
     @BeforeClass
     public static void setup(){
@@ -40,7 +41,7 @@ public class UserTest {
         mainActivityRule.launchActivity(new Intent());
 
         onView(withId(R.id.loginUsernameEntryField))
-                .perform(typeText("testadmin"), closeSoftKeyboard());
+                .perform(typeText("teststudent3"), closeSoftKeyboard());
         onView(withId(R.id.loginPasswordEntryField))
                 .perform(typeText("password"), closeSoftKeyboard());
         onView(withId(R.id.loginButton)).perform(click());
@@ -50,6 +51,8 @@ public class UserTest {
             Thread.sleep(SIMULATED_DELAY_MS);
         } catch (InterruptedException e) {
         }
+
+        onView(withId(R.id.helloMessage)).check(matches(withText("Hello, Jane!")));
     }
 
     @AfterClass
@@ -73,9 +76,9 @@ public class UserTest {
         } catch (InterruptedException e) {
         }
 
-        onView(withId(R.id.firstNameView)).check(matches(withText("John")));
-        onView(withId(R.id.lastNameView)).check(matches(withText("Smith")));
-        onView(withId(R.id.usernameView)).check(matches(withText("testadmin")));
+        onView(withId(R.id.firstNameView)).check(matches(withText("Jane")));
+        onView(withId(R.id.lastNameView)).check(matches(withText("Doe")));
+        onView(withId(R.id.usernameView)).check(matches(withText("teststudent3")));
     }
 
     @Test
@@ -88,9 +91,9 @@ public class UserTest {
         }
 
         onView(withId(R.id.floatingEditUser)).perform(click());
-        onView(withId(R.id.currentPassword)).check(doesNotExist());
 
         String t = userViewActivityRule.getActivity().userSession.getString("token", "").toString();
+
         onView(withId(R.id.emailView)).perform(replaceText(t), closeSoftKeyboard());
         onView(withId(R.id.floatingEditUser)).perform(click());
 
@@ -114,9 +117,9 @@ public class UserTest {
         onView(withId(R.id.floatingEditUser)).perform(click());
         onView(withId(R.id.changePasswordButton)).perform(click());
 
-        onView(withId(R.id.currentPassword)).perform(replaceText("password"), closeSoftKeyboard());
-        onView(withId(R.id.newPassword)).perform(replaceText("helloWorld"), closeSoftKeyboard());
-        onView(withId(R.id.confirmPassword)).perform(replaceText("helloWorld"), closeSoftKeyboard());
+        onView(withId(R.id.currentPassword)).perform(typeText("password"), closeSoftKeyboard());
+        onView(withId(R.id.newPassword)).perform(typeText("helloWorld"), closeSoftKeyboard());
+        onView(withId(R.id.confirmPassword)).perform(typeText("helloWorld"), closeSoftKeyboard());
 
         onView(withId(R.id.floatingEditUser)).perform(click());
 
@@ -135,7 +138,7 @@ public class UserTest {
         }
 
         onView(withId(R.id.loginUsernameEntryField))
-                .perform(typeText("testadmin"), closeSoftKeyboard());
+                .perform(typeText("teststudent3"), closeSoftKeyboard());
         onView(withId(R.id.loginPasswordEntryField))
                 .perform(typeText("helloWorld"), closeSoftKeyboard());
         onView(withId(R.id.loginButton)).perform(click());
@@ -144,7 +147,7 @@ public class UserTest {
             Thread.sleep(SIMULATED_DELAY_MS);
         } catch (InterruptedException e) {
         }
-        onView(withId(R.id.helloMessage)).check(matches(withText("Hello, John!")));
+        onView(withId(R.id.helloMessage)).check(matches(withText("Hello, Jane!")));
 
         userViewActivityRule.launchActivity(new Intent());
 
@@ -156,9 +159,9 @@ public class UserTest {
         onView(withId(R.id.floatingEditUser)).perform(click());
         onView(withId(R.id.changePasswordButton)).perform(click());
 
-        onView(withId(R.id.currentPassword)).perform(replaceText("helloWorld"), closeSoftKeyboard());
-        onView(withId(R.id.newPassword)).perform(replaceText("password"), closeSoftKeyboard());
-        onView(withId(R.id.confirmPassword)).perform(replaceText("password"), closeSoftKeyboard());
+        onView(withId(R.id.currentPassword)).perform(typeText("helloWorld"), closeSoftKeyboard());
+        onView(withId(R.id.newPassword)).perform(typeText("password"), closeSoftKeyboard());
+        onView(withId(R.id.confirmPassword)).perform(typeText("password"), closeSoftKeyboard());
 
         onView(withId(R.id.floatingEditUser)).perform(click());
     }
