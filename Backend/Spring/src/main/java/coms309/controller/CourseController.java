@@ -353,7 +353,7 @@ public class CourseController {
     }
 
     /**
-     * Delete an assignment.
+     * Delete a course.
      * <p>
      * Client must be admin.
      * <p>
@@ -370,7 +370,7 @@ public class CourseController {
             @ApiResponse(code = 404, message = "NOT FOUND")
     })
     @DeleteMapping("/course/{id}/delete")
-    public @ResponseBody HttpStatus deleteAssignment(@PathVariable long id, @RequestParam String token) {
+    public @ResponseBody HttpStatus deleteCourse(@PathVariable long id, @RequestParam String token) {
         if (!UserTokens.isAdmin(token)) {
             return HttpStatus.FORBIDDEN;
         }
