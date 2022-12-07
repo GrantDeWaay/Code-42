@@ -10,6 +10,7 @@ import static android.support.test.espresso.assertion.PositionAssertions.isBelow
 import static android.support.test.espresso.assertion.PositionAssertions.isCompletelyBelow;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.junit.Assert.assertEquals;
@@ -60,6 +61,13 @@ public class CourseTest {
             Thread.sleep(SIMULATED_DELAY_MS);
         } catch (InterruptedException e) {
         }
+
+        ActivityTestRule<SettingsActivity> settingsActivity = new ActivityTestRule<>(SettingsActivity.class);
+        settingsActivity.launchActivity(new Intent());
+
+        settingsActivity.getActivity().settingEditor.putBoolean("is_auto_add", true);
+        settingsActivity.getActivity().settingEditor.putBoolean("is_default_pass", true);
+        settingsActivity.getActivity().settingEditor.putString("default_pass", "pass11");
     }
 
     @AfterClass

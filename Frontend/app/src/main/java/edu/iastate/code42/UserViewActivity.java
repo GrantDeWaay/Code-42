@@ -300,7 +300,7 @@ public class UserViewActivity extends BaseBack implements View.OnClickListener {
     }
 
     private void updateUserDetails(){
-        String url = String.format(Const.UPDATE_USER,userId, userSession.getString("token", ""));
+        String url = String.format(Const.UPDATE_USER, userId, userSession.getString("token", ""));
         JSONObject jsonBody = null;
 
         try {
