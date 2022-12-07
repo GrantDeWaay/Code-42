@@ -42,7 +42,7 @@ public class Assignment {
     private Course course;
 
     // grades for everyone that did the assignment
-    @OneToMany(mappedBy = "assignment", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "assignment", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<Grade> grades = new HashSet<>();
 
     @OneToOne(mappedBy = "assignment", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
