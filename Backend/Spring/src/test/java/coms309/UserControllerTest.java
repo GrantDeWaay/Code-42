@@ -40,7 +40,31 @@ public class UserControllerTest {
     }
 
     @Test
-    @Order(1)
+    public void userCreateRestAssured() {
+        ApiUser apiUser = new ApiUser();
+        apiUser.setUsername("nbrown3");
+        apiUser.setEmail("nbrown3@iastate.edu");
+
+        Gson g = new Gson();
+
+        Response response1 = RestAssured.given().
+                header("Content-Type", "application/json").
+                header("charset", "UTF-8").
+                body(g.toJson(apiUser)).
+                queryParam("token", "test").
+                when().
+                post("/user/create");
+
+        assertEquals(200, response1.getStatusCode());
+
+        ApiUser returned = g.fromJson(response1.getBody().asString(), ApiUser.class);
+
+        assertEquals("nbrown3",returned.getUsername());
+        assertNotNull(returned.getId());
+
+    }
+
+    @Test
     public void userCreateDelete() {
         ApiUser u = new ApiUser(null, null, "Joe", "Shoe", null, "UniqueEmail@gmail.com", "student");
         ResponseEntity<ApiUser> response = uc.createUser(u, "test");
@@ -51,7 +75,6 @@ public class UserControllerTest {
     }
 
     @Test
-    @Order(2)
     public void userCreateUpdateDelete() {
         ApiUser u = new ApiUser(null, null, "Doe", "Brew", null, "NotUniqueEmail@gmail.com", "teacher");
 
