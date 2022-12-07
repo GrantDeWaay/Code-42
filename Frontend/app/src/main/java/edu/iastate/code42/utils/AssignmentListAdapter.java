@@ -28,6 +28,7 @@ public class AssignmentListAdapter extends ArrayAdapter<Assignment> {
 
     private ArrayList<Assignment> assignments;
     Context mContext;
+    private boolean spinner;
 
     /**
      * Helper class to store the elements of the view
@@ -45,6 +46,13 @@ public class AssignmentListAdapter extends ArrayAdapter<Assignment> {
         super(context, R.layout.row_assignment, objects);
         this.assignments = (ArrayList<Assignment>) objects;
         this.mContext = context;
+    }
+
+    public AssignmentListAdapter(@NonNull Context context, int resource, @NonNull List<Assignment> objects) {
+        super(context, resource, objects);
+        this.assignments = (ArrayList<Assignment>) objects;
+        this.mContext = context;
+        spinner = true;
     }
 
     private int lastPosition = -1;
@@ -80,8 +88,10 @@ public class AssignmentListAdapter extends ArrayAdapter<Assignment> {
             result=convertView;
         }
 
-        Animation animation = AnimationUtils.loadAnimation(mContext, (position > lastPosition) ? R.anim.up_from_bottom : R.anim.down_from_top);
-        result.startAnimation(animation);
+        if(!spinner){
+            Animation animation = AnimationUtils.loadAnimation(mContext, (position > lastPosition) ? R.anim.up_from_bottom : R.anim.down_from_top);
+            result.startAnimation(animation);
+        }
         lastPosition = position;
 
         viewHolder.title.setText(a.getAssignmentName());

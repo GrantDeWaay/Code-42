@@ -26,6 +26,7 @@ public class CourseListAdapter extends ArrayAdapter<Course> {
 
     private ArrayList<Course> courses;
     Context mContext;
+    private boolean spinner;
 
     /**
      * Helper class to store the elements of the view
@@ -44,6 +45,11 @@ public class CourseListAdapter extends ArrayAdapter<Course> {
         super(context, R.layout.row_course, objects);
         this.courses = (ArrayList<Course>) objects;
         this.mContext = context;
+    }
+
+    public CourseListAdapter(@NonNull Context context,int resource, @NonNull List<Course> objects) {
+        super(context, resource, objects);
+        spinner = true;
     }
 
     private int lastPosition = -1;
@@ -80,8 +86,11 @@ public class CourseListAdapter extends ArrayAdapter<Course> {
             result=convertView;
         }
 
-        Animation animation = AnimationUtils.loadAnimation(mContext, (position > lastPosition) ? R.anim.up_from_bottom : R.anim.down_from_top);
-        result.startAnimation(animation);
+        if(!spinner){
+            Animation animation = AnimationUtils.loadAnimation(mContext, (position > lastPosition) ? R.anim.up_from_bottom : R.anim.down_from_top);
+            result.startAnimation(animation);
+        }
+
         lastPosition = position;
 
         viewHolder.title.setText(c.getTitle());
