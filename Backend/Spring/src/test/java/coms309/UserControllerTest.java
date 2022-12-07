@@ -1,16 +1,17 @@
 package coms309;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
+import com.google.gson.Gson;
 import coms309.api.dataobjects.ApiUser;
-import org.json.JSONArray;
+import coms309.controller.UserController;
 import org.json.JSONException;
-import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.Order;
 import org.junit.runner.RunWith;
-import org.springframework.data.web.JsonPath;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import io.restassured.RestAssured;
@@ -18,6 +19,8 @@ import io.restassured.response.Response;
 
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -27,28 +30,44 @@ public class UserControllerTest {
     @LocalServerPort
     int port;
 
+    @Autowired
+    UserController uc;
+
     @Before
     public void setUp() {
-        RestAssured.port = port;
+        RestAssured.port = 8080;
         RestAssured.baseURI = "http://localhost";
     }
 
     @Test
-    public void createUser() {
-        String body = "{\"username\": \"UnitTestA\",\"firstName\": \"Hello\",\"lastName\": \"World\"," +
-                "\"password\": \"Hair\",\"email\":,\"bmn@umn.edu\",\"type\": \"student\"}";
-        Response response = RestAssured.given().
-                header("Content-Type", "text/plain").
-                header("charset", "utf-8").
-                body(body).
-                pathParams("token", "test").
-                when().
-                get("/capitalize");
+    @Order(1)
+    public void userCreateDelete() {
+        ApiUser u = new ApiUser(null, null, "Joe", "Shoe", null, "UniqueEmail@gmail.com", "student");
+        ResponseEntity<ApiUser> response = uc.createUser(u, "test");
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody().getId());
+        uc.deleteUser(response.getBody().getId(), "test");
+        assertEquals(HttpStatus.NOT_FOUND, uc.getUserByEmail("UniqueEmail@gmail.com").getStatusCode());
+    }
 
-        int statusCode = response.getStatusCode();
-        assertEquals(200, statusCode);
-        String json = response.getBody().asString();
-        assertTrue(json.contains("UnitTestA"));
+    @Test
+    @Order(2)
+    public void userCreateUpdateDelete() {
+        ApiUser u = new ApiUser(null, null, "Doe", "Brew", null, "NotUniqueEmail@gmail.com", "teacher");
+
+        ResponseEntity<ApiUser> response1 = uc.createUser(u, "test");
+        assertEquals(HttpStatus.OK, response1.getStatusCode());
+        assertNotNull(response1.getBody().getId());
+
+        u.setPassword("fish-tacos123");
+        HttpStatus response2 = uc.updateUser(response1.getBody().getId(), u, "test");
+        assertEquals(HttpStatus.ACCEPTED, response2);
+
+        ResponseEntity<ApiUser> response3 = uc.getUserById(response1.getBody().getId(), "test");
+        assertEquals("fish-tacos123", response3.getBody().getPassword());
+
+        uc.deleteUser(response1.getBody().getId(), "test");
+        assertEquals(HttpStatus.NOT_FOUND, uc.getUserByEmail("NotUniqueEmail@gmail.com").getStatusCode());
     }
 
 
