@@ -1,5 +1,6 @@
 package edu.iastate.code42.objects;
 
+import android.util.Log;
 import android.widget.EditText;
 
 public class UnitTestPair {
@@ -14,8 +15,14 @@ public class UnitTestPair {
     public String getValueIn(){return valueIn.getText().toString();}
     public String getExpectedOut(){return expectedOut.getText().toString();}
     public String toString(){
-        return String.format("{\"value\": \"%s\", \"expectedOut\": \"%s\"}",
+        return String.format("{\"input\": \"%s\", \"expectedOutput\": \"%s\"}",
                 valueIn.getText().toString(),
                 expectedOut.getText().toString());
+    }
+    public String JSONtoString(char comma){
+        return String.format("{\"input\": \"%s\\n\", \"expectedOutput\": \"%s\\n\"}%c",
+                valueIn.getText().toString(),
+                expectedOut.getText().toString(),
+                comma);
     }
 }

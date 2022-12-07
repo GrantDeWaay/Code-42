@@ -2,8 +2,14 @@ package coms309.coderunner;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Iterator;
+import java.util.List;
+import java.util.NoSuchElementException;
 
 import javax.transaction.NotSupportedException;
+
+import coms309.database.dataobjects.AssignmentUnitTest;
 
 public abstract class CodeRunner {
 
@@ -16,6 +22,12 @@ public abstract class CodeRunner {
     // folder that the code will be run in
     protected String testFolder;
 
+    // collection of tests to evaluate the program with
+    protected Iterable<AssignmentUnitTest> unitTests;
+
+    // current test, used for the runNext() method
+    protected Iterator<AssignmentUnitTest> curTest;
+
     protected InputStream stdout;
 
     protected InputStream stderr;
@@ -26,6 +38,9 @@ public abstract class CodeRunner {
     // all data written to stderr during program execution
     protected String stdErrData;
 
+    // input stream to the process
+    protected OutputStream stdin;
+
     // maximum time that a program can run for, in milliseconds
     protected long maxRuntime;
 
@@ -35,9 +50,11 @@ public abstract class CodeRunner {
      * @param codeFolder folder where code templates are stored (can be blank)
      * @param testFolder folder where code will be run (and maybe compiled)
      */
-    protected CodeRunner(String codeFolder, String testFolder) {
+    protected CodeRunner(String codeFolder, String testFolder, Iterable<AssignmentUnitTest> unitTests) {
         this.codeFolder = codeFolder;
         this.testFolder = testFolder;
+        this.unitTests = unitTests;
+        this.curTest = unitTests.iterator();
         this.stdOutData = "";
         this.stdErrData = "";
         this.maxRuntime = 5000; // default to 5 seconds
@@ -115,12 +132,21 @@ public abstract class CodeRunner {
     }
 
     /**
-     * Abstract method to be implemented by child class, runs the code.
+     * Abstract method to be implemented by child class, runs the code and checks with supplied unit tests.
      * 
-     * @return true if the process exits with code 0 in the allotted run time
+     * @return an List containing the results of all unit tests
      * @throws IOException if an IO error occurs during runtime
      */
-    public abstract boolean run() throws IOException;
+    public abstract List<AssignmentUnitTestResult> run() throws IOException;
+
+    /**
+     * Abstract method to be implemented by child class, runs a single unit test.
+     * 
+     * @return AssignmentUnitTestResult containing the result of the unit test run
+     * @throws IOException if an IO error occurs during runtime
+     * @throws NoSuchElementException if no next unit test exists
+     */
+    public abstract AssignmentUnitTestResult runNext() throws IOException, NoSuchElementException;
 
 
     /**

@@ -9,6 +9,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import edu.iastate.code42.objects.AssignmentCreationDataHolder;
@@ -37,11 +38,12 @@ public class AssignmentCreateActivity extends AppCompatActivity {
 
         String[] langText = new String[]{"Python", "C", "Java", "Go"};
 
-        Integer[] langIcons = new Integer[]{R.drawable.py_lang_logo,
-                R.drawable.c_lang_logo, R.drawable.java_lang_logo, R.drawable.go_lang_logo};
-
-
-
+        Integer[] langIcons = new Integer[]{
+                R.drawable.py_lang_logo,
+                R.drawable.c_lang_logo,
+                R.drawable.java_lang_logo,
+                R.drawable.go_lang_logo};
+        
         ArrayAdapter<String> adapter = new LanguageSpinnerAdapter(this, langText, langIcons);
 
         langSpin.setAdapter(adapter);
@@ -69,6 +71,7 @@ public class AssignmentCreateActivity extends AppCompatActivity {
                 AssignmentCreationDataHolder.setLang(langText[langSpin.getSelectedItemPosition()]);
 
                 i.putExtra("courseId", getIntent().getIntExtra("courseId", -1));
+
                 startActivity(i);
                 finish();
             }

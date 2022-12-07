@@ -1,18 +1,24 @@
 package edu.iastate.code42;
 
+import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.replaceText;
+import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.action.ViewActions.typeText;
+import static android.support.test.espresso.assertion.PositionAssertions.isBelow;
+import static android.support.test.espresso.assertion.PositionAssertions.isCompletelyBelow;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 import android.content.Intent;
+import android.support.test.espresso.ViewAssertion;
 import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -32,6 +38,7 @@ import org.junit.runners.MethodSorters;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class CourseTest {
     private static final int SIMULATED_DELAY_MS = 1000;
+    private static final int SIMULATED_DELAY_SMALL = 100;
 
     @Rule
     public ActivityTestRule<CourseCreationActivity> courseCreationActivityRule = new
@@ -57,6 +64,14 @@ public class CourseTest {
             Thread.sleep(SIMULATED_DELAY_MS);
         } catch (InterruptedException e) {
         }
+
+        ActivityTestRule<SettingsActivity> settingsActivity = new ActivityTestRule<>(SettingsActivity.class);
+        settingsActivity.launchActivity(new Intent());
+
+        settingsActivity.getActivity().settingEditor.putBoolean("is_auto_add", true);
+        settingsActivity.getActivity().settingEditor.putBoolean("is_default_pass", true);
+        settingsActivity.getActivity().settingEditor.putString("default_pass", "pass11");
+        settingsActivity.getActivity().settingEditor.commit();
     }
 
     @AfterClass
@@ -97,6 +112,11 @@ public class CourseTest {
     @Test
     public void courseEdit(){
         courseListActivityRule.launchActivity(new Intent());
+        try {
+            Thread.sleep(SIMULATED_DELAY_SMALL);
+        } catch (InterruptedException e) {
+        }
+
         onView(withText("Test Title")).perform(click());
         // Put thread to sleep to allow volley to handle the request
         try {
@@ -123,8 +143,13 @@ public class CourseTest {
     }
 
     @Test
-    public void courseViewFromList(){
+    public void courseFromList(){
         courseListActivityRule.launchActivity(new Intent());
+
+        try {
+            Thread.sleep(SIMULATED_DELAY_SMALL);
+        } catch (InterruptedException e) {
+        }
 
         onView(withText("Test 101")).perform(click());
 
@@ -140,16 +165,316 @@ public class CourseTest {
     }
 
     @Test
-    public void deleteCourse(){
+    public void courseTeacherCreate() {
         courseListActivityRule.launchActivity(new Intent());
+
+        try {
+            Thread.sleep(SIMULATED_DELAY_SMALL);
+        } catch (InterruptedException e) {
+        }
+
         onView(withText("Test 101")).perform(click());
+
+        // Put thread to sleep to allow volley to handle the request
+        try {
+            Thread.sleep(SIMULATED_DELAY_MS);
+        } catch (InterruptedException e) {
+        }
+        onView(withId(R.id.courseTitleHeader)).perform(closeSoftKeyboard());
+
+        onView(withId(R.id.addTeacherButton)).perform(scrollTo());
+        onView(withId(R.id.addTeacherButton)).perform(click());
+
+        try {
+            Thread.sleep(SIMULATED_DELAY_MS);
+        } catch (InterruptedException e) {
+        }
+
+        onView(withId(R.id.addUser)).perform(click());
+
+        try {
+            Thread.sleep(SIMULATED_DELAY_MS);
+        } catch (InterruptedException e) {
+        }
+
+        onView(withId(R.id.editUserPassword)).check(matches(withText("pass11")));
+
+        onView(withId(R.id.editUserFirstName))
+                .perform(typeText("Donald"), closeSoftKeyboard());
+        onView(withId(R.id.editUserLastName))
+                .perform(typeText("Duck"), closeSoftKeyboard());
+        onView(withId(R.id.editUserEmail))
+                .perform(typeText("duck@iastate.edu"), closeSoftKeyboard());
+        onView(withId(R.id.editUserUsername))
+                .perform(typeText("duck"), closeSoftKeyboard());
+
+        onView(withId(R.id.buttonUserCreate)).perform(click());
+
+        try {
+            Thread.sleep(SIMULATED_DELAY_MS);
+        } catch (InterruptedException e) {
+        }
+
+        onView(withText("duck")).perform(click());
+
+        try {
+            Thread.sleep(SIMULATED_DELAY_MS);
+        } catch (InterruptedException e) {
+        }
+
+        onView(withId(R.id.firstNameView))
+                .check(matches(withText("Donald")));
+        onView(withId(R.id.lastNameView))
+                .check(matches(withText("Duck")));
+    }
+
+    @Test
+    public void courseTeacherDelete() {
+        courseListActivityRule.launchActivity(new Intent());
+
+        try {
+            Thread.sleep(SIMULATED_DELAY_SMALL);
+        } catch (InterruptedException e) {
+        }
+
+        onView(withText("Test 101")).perform(click());
+
         // Put thread to sleep to allow volley to handle the request
         try {
             Thread.sleep(SIMULATED_DELAY_MS);
         } catch (InterruptedException e) {
         }
 
+        onView(withId(R.id.courseTitleHeader)).perform(closeSoftKeyboard());
+        onView(withId(R.id.addTeacherButton)).perform(scrollTo());
+
+        try {
+            Thread.sleep(SIMULATED_DELAY_SMALL);
+        } catch (InterruptedException e) {
+        }
+        onView(withId(R.id.moreTeacherButton)).perform(click());
+
+        try {
+            Thread.sleep(SIMULATED_DELAY_MS);
+        } catch (InterruptedException e) {
+        }
+
+        onView(withText("duck")).perform(click());
+
+        try {
+            Thread.sleep(SIMULATED_DELAY_MS);
+        } catch (InterruptedException e) {
+        }
+
+        onView(withId(R.id.floatingEditUser)).perform(click());
+        onView(withId(R.id.firstNameView)).perform(closeSoftKeyboard());
+
+        //onView(withId(R.id.deleteUserButton)).perform(scrollTo());
+        onView(withId(R.id.deleteUserButton)).perform(click());
+
+        try {
+            Thread.sleep(SIMULATED_DELAY_MS);
+        } catch (InterruptedException e) {
+        }
+        onView(withId(R.id.courseTitleHeader)).perform(closeSoftKeyboard());
+        onView(withId(R.id.addTeacherButton)).perform(scrollTo());
+
+        onView(withId(R.id.moreTeacherButton)).perform(click());
+
+        try {
+            Thread.sleep(SIMULATED_DELAY_MS);
+        } catch (InterruptedException e) {
+        }
+
+        onView(withText("duck")).check(doesNotExist());
+        onView(withId(R.id.addUser)).perform(click());
+
+        try {
+            Thread.sleep(SIMULATED_DELAY_MS);
+        } catch (InterruptedException e) {
+        }
+
+        onView(withText("duck")).check(doesNotExist());
+    }
+
+    @Test
+    public void courseUserAdd() {
+        courseListActivityRule.launchActivity(new Intent());
+
+        try {
+            Thread.sleep(SIMULATED_DELAY_SMALL);
+        } catch (InterruptedException e) {
+        }
+
+        onView(withText("Test 101")).perform(click());
+
+        // Put thread to sleep to allow volley to handle the request
+        try {
+            Thread.sleep(SIMULATED_DELAY_MS);
+        } catch (InterruptedException e) {
+        }
+        onView(withId(R.id.courseTitleHeader)).perform(closeSoftKeyboard());
+
+        onView(withId(R.id.addStudentButton)).perform(scrollTo());
+        onView(withId(R.id.addStudentButton)).perform(click());
+
+        try {
+            Thread.sleep(SIMULATED_DELAY_MS);
+        } catch (InterruptedException e) {
+        }
+
+        onView(withText("Steve Jackson")).perform(click());
+        onView(withText("John Doe")).perform(click());
+
+        onView(withId(R.id.addSelectButton)).perform(click());
+
+        try {
+            Thread.sleep(SIMULATED_DELAY_MS);
+        } catch (InterruptedException e) {
+        }
+
+        onView(withId(R.id.addUser)).perform(click());
+
+        try {
+            Thread.sleep(SIMULATED_DELAY_MS);
+        } catch (InterruptedException e) {
+        }
+
+        onView(withText("Steve Jackson")).check(doesNotExist());
+        onView(withText("John Doe")).check(doesNotExist());
+    }
+
+    @Test
+    public void courseUserEdit() {
+        courseListActivityRule.launchActivity(new Intent());
+
+        try {
+            Thread.sleep(SIMULATED_DELAY_SMALL);
+        } catch (InterruptedException e) {
+        }
+
+        onView(withText("Test 101")).perform(click());
+
+        // Put thread to sleep to allow volley to handle the request
+        try {
+            Thread.sleep(SIMULATED_DELAY_MS);
+        } catch (InterruptedException e) {
+        }
+        onView(withId(R.id.courseTitleHeader)).perform(closeSoftKeyboard());
+        onView(withId(R.id.addStudentButton)).perform(scrollTo());
+        onView(withId(R.id.moreStudentButton)).perform(click());
+
+        try {
+            Thread.sleep(SIMULATED_DELAY_MS);
+        } catch (InterruptedException e) {
+        }
+
+        onView(withText("Steve Jackson")).perform(click());
+
+        // Put thread to sleep to allow volley to handle the request
+        try {
+            Thread.sleep(SIMULATED_DELAY_MS);
+        } catch (InterruptedException e) {
+        }
+
+        onView(withId(R.id.floatingEditUser)).perform(click());
+
+        String t = courseListActivityRule.getActivity().userSession.getString("token", "").toString();
+        onView(withId(R.id.emailView)).perform(replaceText(t), closeSoftKeyboard());
+
+        onView(withId(R.id.changePasswordButton)).perform(click());
+
+        onView(withId(R.id.newPassword)).perform(typeText("password"), closeSoftKeyboard());
+        onView(withId(R.id.confirmPassword)).perform(typeText("password"), closeSoftKeyboard());
+
+        onView(withId(R.id.floatingEditUser)).perform(click());
+
+        // Put thread to sleep to allow volley to handle the request
+        try {
+            Thread.sleep(SIMULATED_DELAY_MS);
+        } catch (InterruptedException e) {
+        }
+
+        onView(withId(R.id.emailView)).check(matches(withText(t)));
+    }
+
+    @Test
+    public void courseUserUnadd() {
+        courseListActivityRule.launchActivity(new Intent());
+
+        try {
+            Thread.sleep(SIMULATED_DELAY_SMALL);
+        } catch (InterruptedException e) {
+        }
+
+        onView(withText("Test 101")).perform(click());
+
+        // Put thread to sleep to allow volley to handle the request
+        try {
+            Thread.sleep(SIMULATED_DELAY_MS);
+        } catch (InterruptedException e) {
+        }
+        onView(withId(R.id.courseTitleHeader)).perform(closeSoftKeyboard());
+
+        onView(withId(R.id.addStudentButton)).perform(scrollTo());
+        onView(withId(R.id.moreStudentButton)).perform(click());
+
+        try {
+            Thread.sleep(SIMULATED_DELAY_MS);
+        } catch (InterruptedException e) {
+        }
+        onView(withText("Steve Jackson")).perform(click());
+
+        // Put thread to sleep to allow volley to handle the request
+        try {
+            Thread.sleep(SIMULATED_DELAY_MS);
+        } catch (InterruptedException e) {
+        }
+
+        onView(withId(R.id.floatingEditUser)).perform(click());
+        onView(withId(R.id.firstNameView)).perform(closeSoftKeyboard());
+
+        //onView(withId(R.id.removeMappingButton)).perform(scrollTo());
+        onView(withId(R.id.removeMappingButton)).perform(click());
+
+        try {
+            Thread.sleep(SIMULATED_DELAY_MS);
+        } catch (InterruptedException e) {
+        }
+        onView(withId(R.id.courseTitleHeader)).perform(closeSoftKeyboard());
+
+        onView(withId(R.id.addStudentButton)).perform(scrollTo());
+        onView(withId(R.id.moreStudentButton)).perform(click());
+
+        try {
+            Thread.sleep(SIMULATED_DELAY_MS);
+        } catch (InterruptedException e) {
+        }
+
+        onView(withText("Steve Jackson")).check(doesNotExist());
+    }
+
+    @Test
+    @Ignore
+    public void deleteCourse(){
+        courseListActivityRule.launchActivity(new Intent());
+
+        try {
+            Thread.sleep(SIMULATED_DELAY_SMALL);
+        } catch (InterruptedException e) {
+        }
+
+        onView(withText("Test 101")).perform(click());
+        // Put thread to sleep to allow volley to handle the request
+        try {
+            Thread.sleep(SIMULATED_DELAY_MS);
+        } catch (InterruptedException e) {
+        }
+        onView(withId(R.id.courseTitleHeader)).perform(closeSoftKeyboard());
+
         onView(withId(R.id.floatingEditCourse)).perform(click());
+
+        onView(withId(R.id.courseDelete)).perform(scrollTo());
         onView(withId(R.id.courseDelete)).perform(click());
 
         try {
@@ -160,5 +485,4 @@ public class CourseTest {
         courseListActivityRule.launchActivity(new Intent());
         onView(withText("Test 101")).check(doesNotExist());
     }
-
 }

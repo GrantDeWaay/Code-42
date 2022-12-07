@@ -14,7 +14,7 @@
             android:id="@+id/textView6"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Enter Code that Student Will Start With:" />
+            android:text="Enter code that student will start with:" />
 
         <TableRow
             android:layout_width="match_parent"
@@ -23,24 +23,17 @@
         <EditText
             android:id="@+id/baseCode"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="wrap_content"
             android:ems="10"
             android:gravity="start|top"
-            android:inputType="textMultiLine" />
+            android:inputType="textMultiLine|textNoSuggestions"
+            android:minHeight="48dp" />
 
         <TextView
             android:id="@+id/textView3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Enter the expected out:" />
-
-        <EditText
-            android:id="@+id/unitTestText"
-            android:layout_width="match_parent"
-            android:layout_height="137dp"
-            android:ems="10"
-            android:gravity="start|top"
-            android:inputType="textMultiLine" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/UnitTestRecyclerView"
@@ -51,11 +44,11 @@
             android:id="@+id/AddUnitTest"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="New Unit Test" />
+            android:text="Add Unit Test" />
 
         <Button
             android:id="@+id/goNext"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="finish" />
 

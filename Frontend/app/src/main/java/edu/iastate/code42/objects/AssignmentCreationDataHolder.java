@@ -6,9 +6,11 @@ import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -107,12 +109,24 @@ public class AssignmentCreationDataHolder {
      * @param token
      * @param courseId
      */
-    public static void sendAssignment(Context screen, String token, int courseId) {
+    public static void sendAssignment(Context screen, String token, int courseId, JSONArray unitTest) {
         String url = String.format(Const.CREATE_ASSIGNMENT, token);
         JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST, url, formatJSON(),
                 response1 -> {
                     Log.i("resp", response1.toString());
-
+                    String UnitTestURL = "";
+                    try {
+                        UnitTestURL = String.format(Const.UNIT_TEST_UPLOAD,response1.getInt("id"),token);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    JsonArrayRequest setUnitTests = new JsonArrayRequest(Request.Method.POST, UnitTestURL, unitTest,
+                            response -> {
+                        Log.i("Added", "YEP");
+                    }, error -> {
+                        Log.i("Uh", error.toString());
+                    });
+                    AppController.getInstance().addToRequestQueue(setUnitTests);
                     String addAssignmentURL = "";
                     try {
                         addAssignmentURL = String.format(Locale.ENGLISH,Const.ADD_ASSIGNMENT_TO_COURSE, courseId,
@@ -164,7 +178,7 @@ public class AssignmentCreationDataHolder {
             obj.put("title", name);
             obj.put("description", description);
             obj.put("problemStatement", statement);
-            obj.put("lang", lang);
+            obj.put("language", lang);
             obj.put("template", code);
             obj.put("expectedOutput", expectedOut);
         } catch (JSONException e) {
