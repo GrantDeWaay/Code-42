@@ -69,8 +69,8 @@ public class GradeListAdapter extends ArrayAdapter<Grade> {
         lastPosition = position;
 
         viewHolder.title.setText(g.getA().getAssignmentName());
-        viewHolder.grade.setText(String.format("%lf", g.getGrade()));
-        viewHolder.gradeTotal.setText(String.format("%lf", g.getGradeTotal()));
+        viewHolder.grade.setText(String.format("%2.2f", g.getGrade()));
+        viewHolder.gradeTotal.setText(String.format("%2.2f", g.getGradeTotal()));
 
         // Return the completed view to render on screen
         return convertView;

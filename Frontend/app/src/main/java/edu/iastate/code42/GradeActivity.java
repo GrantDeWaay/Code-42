@@ -242,11 +242,11 @@ public class GradeActivity extends BaseDrawer implements AdapterView.OnItemSelec
                                 for (int k = 0; k < response.length(); k++) {
                                     try {
                                         Grade g = new Grade(response.getJSONObject(k).getInt("id"),
-                                                assignments.get(j), response.getJSONObject(k).getDouble("grade"),
+                                                assignments.get(j - 1), response.getJSONObject(k).getDouble("grade"),
                                                 100.0);
 
                                         if (userGrades.contains(g)) {
-                                            Grade grade = new Grade(g.getId(), assignments.get(j), user,
+                                            Grade grade = new Grade(g.getId(), assignments.get(j - 1), user,
                                                     g.getGrade(), g.getGradeTotal());
                                             grades.add(grade);
                                             gradeAdapter.notifyDataSetChanged();

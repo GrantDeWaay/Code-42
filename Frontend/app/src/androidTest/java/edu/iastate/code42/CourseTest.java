@@ -33,6 +33,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 
+/**
+ * @author Andrew
+ */
 @RunWith(AndroidJUnit4.class)
 @LargeTest
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -455,7 +458,6 @@ public class CourseTest {
     }
 
     @Test
-    @Ignore
     public void deleteCourse(){
         courseListActivityRule.launchActivity(new Intent());
 
