@@ -39,6 +39,9 @@ public class Const {
 	public static final String GET_ASSIGNMENT = SOURCE + "assignment/%d" + TOKEN;
 	public static final String CREATE_ASSIGNMENT = SOURCE + "assignment/create" + TOKEN;
 
+	public static final String GET_GRADES_FOR_USER = SOURCE + "user/%d/grades" + TOKEN;
+	public static final String GET_GRADES_FOR_ASSIGNMENT = SOURCE + "assignment/%d/grades" + TOKEN;
+
 	public static final String RUN_CODE = SOURCE + "run/%s" + TOKEN;
 
 	public static final String PURPLE_COLOR = "#673AB7";
