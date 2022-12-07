@@ -35,6 +35,7 @@ import java.util.Map;
 
 import edu.iastate.code42.CoursesActivity;
 import edu.iastate.code42.DashboardActivity;
+import edu.iastate.code42.GradeActivity;
 import edu.iastate.code42.MainActivity;
 import edu.iastate.code42.R;
 import edu.iastate.code42.SettingsActivity;
@@ -107,7 +108,8 @@ public class BaseDrawer extends AppCompatActivity implements NavigationView.OnNa
                 overridePendingTransition(0,0);
                 break;
             case R.id.nav_grades:
-
+                startActivity(new Intent(this, GradeActivity.class));
+                overridePendingTransition(0,0);
                 break;
             case R.id.nav_settings:
                 startActivity(new Intent(this, SettingsActivity.class));
