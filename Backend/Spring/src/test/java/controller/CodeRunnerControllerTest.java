@@ -71,6 +71,39 @@ public class CodeRunnerControllerTest {
         }
 
     }
+    
+    @Test
+    public void testAssignmentSubmissionFailure() throws JSONException {
+
+        ApiCodeSubmission submission = new ApiCodeSubmission();
+        submission.setName("testassignment.c");
+        submission.setLanguage("C");
+        submission.setContents("#include <stdio.h>\nint main(void) {\nint nums[] = {0, 0, 0, 0, 0};\nscanf(\"%d %d %d %d %d\", &nums[0], &nums[1], &nums[2], &nums[3], &nums[4]);\nint min = nums[0];\nfor(int i = 1; i < 5; i++) {\nif(nums[i] < min) min = nums[i];\n}\nprintf(\"%d\\n\", 2);\nreturn 0;\n}");
+
+        Gson g = new Gson();
+        
+        Response response = RestAssured.given().
+                                        header("Content-Type", "application/json").
+                                        header("charset", "UTF-8").
+                                        body(g.toJson(submission)).
+                                        queryParam("token", token).
+                                        pathParam("id", 117).
+                                        when().
+                                        put("/run/{id}");
+
+        assertEquals(202, response.getStatusCode());
+
+        JSONArray arr = new JSONArray(response.getBody().asString());
+
+        boolean allPassed = true;
+
+        for(int i = 0; i < arr.length(); i++) {
+            if(!arr.getJSONObject(i).getBoolean("passed")) allPassed = false;
+        }
+
+        assertEquals(false, allPassed);
+
+    }
 
 
 }
