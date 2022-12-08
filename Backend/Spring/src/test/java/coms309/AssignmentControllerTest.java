@@ -1,4 +1,4 @@
-package controller;
+package coms309;
 
 import com.google.gson.Gson;
 import coms309.api.dataobjects.ApiAssignment;
