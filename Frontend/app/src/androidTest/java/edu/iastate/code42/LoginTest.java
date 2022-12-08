@@ -22,6 +22,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+/**
+ * @author Andrew
+ */
 @RunWith(AndroidJUnit4.class)
 @LargeTest
 public class LoginTest {
@@ -45,26 +48,6 @@ public class LoginTest {
         }
 
         assertEquals(true,mainActivityRule.getActivity().userSession.contains("token"));
-    }
-
-    @Test
-    public void loginFail(){
-        mainActivityRule.getActivity().userSessionEditor.clear();
-        mainActivityRule.getActivity().userSessionEditor.commit();
-
-        onView(withId(R.id.loginUsernameEntryField))
-                .perform(typeText("testadmin"), closeSoftKeyboard());
-        onView(withId(R.id.loginPasswordEntryField))
-                .perform(typeText("asdf"), closeSoftKeyboard());
-        onView(withId(R.id.loginButton)).perform(click());
-
-        // Put thread to sleep to allow volley to handle the request
-        try {
-            Thread.sleep(SIMULATED_DELAY_MS);
-        } catch (InterruptedException e) {
-        }
-
-        assertEquals(false,mainActivityRule.getActivity().userSession.contains("token"));
     }
 
     @Test

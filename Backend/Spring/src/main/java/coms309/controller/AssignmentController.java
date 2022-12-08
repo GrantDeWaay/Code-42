@@ -19,10 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Controller for assignment endpoints <p>
@@ -53,9 +50,9 @@ public class AssignmentController {
      */
     @ApiOperation(value = "Get an Assignment by ID", response = ApiAssignment.class, tags = "assignment-controller")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "OK"),
-        @ApiResponse(code = 403, message = "FORBIDDEN"),
-        @ApiResponse(code = 404, message = "NOT FOUND")
+            @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 403, message = "FORBIDDEN"),
+            @ApiResponse(code = 404, message = "NOT FOUND")
     })
     @GetMapping("/assignment/{id}")
     public @ResponseBody ResponseEntity<ApiAssignment> getAssignment(@PathVariable long id, @RequestParam String token) {
@@ -82,9 +79,9 @@ public class AssignmentController {
      */
     @ApiOperation(value = "Get the Grades for an Assignment", response = Iterable.class, tags = "assignment-controller")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "OK"),
-        @ApiResponse(code = 403, message = "FORBIDDEN"),
-        @ApiResponse(code = 404, message = "NOT FOUND")
+            @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 403, message = "FORBIDDEN"),
+            @ApiResponse(code = 404, message = "NOT FOUND")
     })
     @GetMapping("/assignment/{id}/grades")
     public @ResponseBody ResponseEntity<Set<ApiGrade>> getAssignmentGradeList(@PathVariable long id, @RequestParam String token) {
@@ -119,9 +116,9 @@ public class AssignmentController {
      */
     @ApiOperation(value = "Get the Course an Assignment belongs to", response = ApiCourse.class, tags = "assignment-controller")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "OK"),
-        @ApiResponse(code = 403, message = "FORBIDDEN"),
-        @ApiResponse(code = 404, message = "NOT FOUND")
+            @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 403, message = "FORBIDDEN"),
+            @ApiResponse(code = 404, message = "NOT FOUND")
     })
     @GetMapping("/assignment/{id}/course")
     public @ResponseBody ResponseEntity<ApiCourse> getAssignmentCourse(@PathVariable long id, @RequestParam String token) {
@@ -149,8 +146,8 @@ public class AssignmentController {
      */
     @ApiOperation(value = "Create a new Assignment and add it to the system", response = ApiAssignment.class, tags = "assignment-controller")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "OK"),
-        @ApiResponse(code = 403, message = "FORBIDDEN")
+            @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 403, message = "FORBIDDEN")
     })
     @PostMapping("/assignment/create")
     public @ResponseBody ResponseEntity<ApiAssignment> createAssignment(@RequestBody ApiAssignment a, @RequestParam String token) {
@@ -178,9 +175,9 @@ public class AssignmentController {
      */
     @ApiOperation(value = "Update an existing assignment", response = HttpStatus.class, tags = "assignment-controller")
     @ApiResponses(value = {
-        @ApiResponse(code = 202, message = "ACCEPTED"),
-        @ApiResponse(code = 403, message = "FORBIDDEN"),
-        @ApiResponse(code = 404, message = "NOT FOUND"),
+            @ApiResponse(code = 202, message = "ACCEPTED"),
+            @ApiResponse(code = 403, message = "FORBIDDEN"),
+            @ApiResponse(code = 404, message = "NOT FOUND"),
     })
     @PutMapping("/assignment/{id}/update")
     public @ResponseBody HttpStatus updateAssignment(@PathVariable long id, @RequestBody ApiAssignment a, @RequestParam String token) {
@@ -193,11 +190,24 @@ public class AssignmentController {
 
         Assignment assignment = optional.get();
 
-        assignment.setTitle(a.getTitle());
-        assignment.setDescription(a.getDescription());
-        assignment.setProblemStatement(a.getProblemStatement());
-        assignment.setTemplate(a.getTemplate());
-        assignment.setExpectedOutput(a.getExpectedOutput());
+        if (!Objects.equals(a.getTitle(), "") && a.getTitle() != null) {
+            assignment.setTitle(a.getTitle());
+        }
+        if (!Objects.equals(a.getDescription(), "") && a.getDescription() != null) {
+            assignment.setDescription(a.getDescription());
+        }
+        if (!Objects.equals(a.getProblemStatement(), "") && a.getProblemStatement() != null) {
+            assignment.setProblemStatement(a.getProblemStatement());
+        }
+        if (!Objects.equals(a.getTemplate(), "") && a.getTemplate() != null) {
+            assignment.setTemplate(a.getTemplate());
+        }
+        if (!Objects.equals(a.getExpectedOutput(), "") && a.getExpectedOutput() != null) {
+            assignment.setExpectedOutput(a.getExpectedOutput());
+        }
+        if (!Objects.equals(a.getLanguage(), "") && a.getLanguage() != null) {
+            assignment.setExpectedOutput(a.getLanguage());
+        }
 
         as.update(assignment);
 
@@ -217,9 +227,9 @@ public class AssignmentController {
      */
     @ApiOperation(value = "Delete an assignment from the system", response = HttpStatus.class, tags = "assignment-controller")
     @ApiResponses(value = {
-        @ApiResponse(code = 202, message = "ACCEPTED"),
-        @ApiResponse(code = 403, message = "FORBIDDEN"),
-        @ApiResponse(code = 404, message = "NOT FOUND"),
+            @ApiResponse(code = 202, message = "ACCEPTED"),
+            @ApiResponse(code = 403, message = "FORBIDDEN"),
+            @ApiResponse(code = 404, message = "NOT FOUND"),
     })
     @DeleteMapping("/assignment/{id}/delete")
     public @ResponseBody HttpStatus deleteAssignment(@PathVariable long id, @RequestParam String token) {

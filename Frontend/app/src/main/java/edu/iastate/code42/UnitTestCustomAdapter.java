@@ -4,6 +4,7 @@ package edu.iastate.code42;
 import android.annotation.SuppressLint;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -67,6 +72,7 @@ public class UnitTestCustomAdapter extends RecyclerView.Adapter<UnitTestCustomAd
      */
     public UnitTestCustomAdapter(String[] dataSet) {
         localDataSet = dataSet;
+        UnitTestCustomAdapter.UnitTests.clear();
     }
 
     // Create new views (invoked by the layout manager)
@@ -94,5 +100,21 @@ public class UnitTestCustomAdapter extends RecyclerView.Adapter<UnitTestCustomAd
             UnitTestsReturn[i] = UnitTests.get(i).toString();
         }
         return UnitTestsReturn;
+    }
+    public static JSONArray getJSONUnitTests() throws JSONException {
+
+        String lol = "[";
+        for(int i = 0; i < UnitTests.size(); i++){
+            if (i == UnitTests.size()-1){
+                lol = lol + UnitTests.get(i).JSONtoString(' ');
+            }
+            else {
+                lol = lol + UnitTests.get(i).JSONtoString(',');
+            }
+        }
+        lol = lol + "]";
+        JSONArray objT = new JSONArray(lol);
+        Log.i("ohh", objT.toString());
+        return objT;
     }
 }

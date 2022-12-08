@@ -224,6 +224,7 @@ public class UserViewActivity extends BaseBack implements View.OnClickListener {
             currentPass.setText("");
             newPass.setText("");
             confirmPass.setText("");
+            changePassword = false;
         }else{
             if(changePassword){
                 changePass.setVisibility(View.INVISIBLE);
@@ -300,7 +301,7 @@ public class UserViewActivity extends BaseBack implements View.OnClickListener {
     }
 
     private void updateUserDetails(){
-        String url = String.format(Const.UPDATE_USER,userId, userSession.getString("token", ""));
+        String url = String.format(Const.UPDATE_USER, userId, userSession.getString("token", ""));
         JSONObject jsonBody = null;
 
         try {

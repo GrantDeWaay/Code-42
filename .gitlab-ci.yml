@@ -2,6 +2,7 @@
 stages:
   - maventry
   - mavendeploy
+  - maventest
   - androidtry
   - androidbuild
   - androidtest
@@ -25,6 +26,14 @@ maven-deploy:
     - sudo mv target/*.jar /target/code42.jar
     - sudo systemctl stop system-code42
     - sudo systemctl start system-code42
+    
+maven-test:
+    stage: maventest
+    tags:
+      - springboot_tag 
+    script:
+      - cd Backend/Spring
+      - mvn test
     
 android-build:
   image: gjandres/android-ci:latest
