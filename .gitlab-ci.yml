@@ -1,23 +1,63 @@
+# Example  .gitlab-ci.yml file
 stages:
   - maventry
-  - maventest
   - mavendeploy
+  - maventest
+  - androidtry
+  - androidbuild
+  - androidtest
 
-
-maven-build:
+maven-build:   #this is a JOB
   stage: maventry
   tags:
-    - springboot_tag 
+    - springboot_tag  					# this is LINK to the shell runner on the remote-server 
   script:
     - cd Backend
-    - cd Spring
-    - mvn clean package
+    - cd Spring #change directory to where you have your springboot application
+    - mvn package
 
-maven-test:
-  stage: maventest
+maven-deploy:
+  stage: mavendeploy
   tags:
     - springboot_tag
   script:
-    - cd Backend
-    - cd Spring
-    - mvn test
+    - cd Backend/Spring
+    - mvn package
+    - sudo mv target/*.jar /target/code42.jar
+    - sudo systemctl stop system-code42
+    - sudo systemctl start system-code42
+    
+maven-test:
+    stage: maventest
+    tags:
+      - springboot_tag 
+    script:
+      - cd Backend/Spring
+      - mvn test
+    
+android-build:
+  image: gjandres/android-ci:latest
+  stage: androidbuild
+  before_script:
+    - export GRADLE_USER_HOME=`pwd`/.gradle
+    - chmod +x ./Frontend/gradlew
+  tags:
+   - android_tag
+  script:
+    - cd Frontend
+    - ./gradlew build
+  artifacts:
+    paths:
+    - Android_test/app/build/outputs/
+
+android-test:
+  image: gjandres/android-ci:latest
+  stage: androidtest
+  before_script:
+    - export GRADLE_USER_HOME=`pwd`/.gradle
+    - chmod +x ./Frontend/gradlew
+  tags:
+   - andrew_android_tag
+  script:
+    - cd Frontend
+    - ./gradlew test
