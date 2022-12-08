@@ -81,18 +81,6 @@ public class UserController {
             @ApiResponse(code = 403, message = "FORBIDDEN"),
             @ApiResponse(code = 404, message = "NOT FOUND")
     })
-    @GetMapping("/user/{id}")
-    public @ResponseBody ResponseEntity<ApiUser> getUser(@PathVariable long id, @RequestParam String token) {
-        if (!UserTokens.isLiveToken(token)) {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-        }
-        Optional<User> u = us.findById(id);
-
-        if (!u.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-
-        return new ResponseEntity<>(new ApiUser(u.get()), HttpStatus.OK);
-    }
-
     @GetMapping("/user/get/{id}")
     public @ResponseBody ResponseEntity<ApiUser> getUserById(@PathVariable long id, @RequestParam String token) {
         if (!UserTokens.isLiveToken(token)) {

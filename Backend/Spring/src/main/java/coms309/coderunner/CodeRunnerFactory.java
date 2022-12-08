@@ -28,6 +28,8 @@ public class CodeRunnerFactory {
                     return new JavaRunner(af, acs, tfm, unitTests);
                 case "Go":
                     return new GoRunner(af, acs, tfm, unitTests);
+                case "Python":
+                    return new PythonRunner(af,acs,tfm,unitTests);
 
                 default:
                     return null;
