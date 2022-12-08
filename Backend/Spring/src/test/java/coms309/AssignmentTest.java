@@ -9,6 +9,9 @@ import org.junit.Test;
 
 import coms309.database.dataobjects.*;
 
+/**
+ * Author: Nathan
+ */
 public class AssignmentTest {
 
 	@Test
