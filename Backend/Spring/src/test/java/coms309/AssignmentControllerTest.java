@@ -1,41 +1,38 @@
 package controller;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
+import com.google.gson.Gson;
+import coms309.api.dataobjects.ApiAssignment;
+import coms309.api.dataobjects.ApiAssignmentUnitTest;
+import coms309.api.dataobjects.ApiUserLogin;
+import coms309.controller.AssignmentController;
+import io.restassured.RestAssured;
+import io.restassured.response.Response;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import io.restassured.RestAssured;
-import io.restassured.response.Response;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import coms309.api.dataobjects.ApiAssignment;
-import coms309.api.dataobjects.ApiAssignmentUnitTest;
-import coms309.api.dataobjects.ApiUserLogin;
-
-import com.google.gson.*;
-
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @RunWith(SpringRunner.class)
 public class AssignmentControllerTest {
-    
-    // TODO figure out what's wrong with this, this will work for now
-    int port = 8080;
+
+    @LocalServerPort
+    int port;
 
     String token;
 
     @Before
     public void init() {
         RestAssured.port = port;
-        // RestAssured.baseURI = "http://localhost";
-        RestAssured.baseURI = "http://coms-309-028.class.las.iastate.edu";
+        RestAssured.baseURI = "http://localhost";
 
-        Response response = RestAssured.given().
-                                        header("charset", "UTF-8").
-                                        when().
-                                        get("/login/testadmin/password");
+        Response response = RestAssured.given().header("charset", "UTF-8").when().get("/login/testadmin/password");
 
         Gson g = new Gson();
         ApiUserLogin user = g.fromJson(response.getBody().asString(), ApiUserLogin.class);
@@ -54,13 +51,7 @@ public class AssignmentControllerTest {
 
         Gson g = new Gson();
 
-        Response createResponse = RestAssured.given().
-                                        header("Content-Type", "application/json").
-                                        header("charset", "UTF-8").
-                                        body(g.toJson(cAssignment)).
-                                        queryParam("token", token).
-                                        when().
-                                        post("/assignment/create");
+        Response createResponse = RestAssured.given().header("Content-Type", "application/json").header("charset", "UTF-8").body(g.toJson(cAssignment)).queryParam("token", token).when().post("/assignment/create");
 
         assertEquals(200, createResponse.getStatusCode());
 
@@ -75,23 +66,11 @@ public class AssignmentControllerTest {
         cAssignment.setProblemStatement("This is a new problem statement!");
         cAssignment.setTemplate("This is a new template!");
 
-        Response updateResponse = RestAssured.given().
-                               header("Content-Type", "application/json").
-                               header("charset", "UTF-8").
-                               body(g.toJson(cAssignment)).
-                               queryParam("token", token).
-                               pathParam("id", responseAssignment.getId()).
-                               when().
-                               put("assignment/{id}/update");
+        Response updateResponse = RestAssured.given().header("Content-Type", "application/json").header("charset", "UTF-8").body(g.toJson(cAssignment)).queryParam("token", token).pathParam("id", responseAssignment.getId()).when().put("assignment/{id}/update");
 
         assertEquals(200, updateResponse.getStatusCode());
 
-        Response getResponse = RestAssured.given().
-                               header("charset", "UTF-8").
-                               queryParam("token", token).
-                               pathParam("id", responseAssignment.getId()).
-                               when().
-                               get("/assignment/{id}");
+        Response getResponse = RestAssured.given().header("charset", "UTF-8").queryParam("token", token).pathParam("id", responseAssignment.getId()).when().get("/assignment/{id}");
 
         assertEquals(200, getResponse.getStatusCode());
 
@@ -101,17 +80,12 @@ public class AssignmentControllerTest {
         assertEquals("This is a new problem statement!", responseAssignment.getProblemStatement());
         assertEquals("This is a new template!", responseAssignment.getTemplate());
 
-        Response deleteResponse = RestAssured.given().
-                               header("charset", "UTF-8").
-                               queryParam("token", token).
-                               pathParam("id", responseAssignment.getId()).
-                               when().
-                               delete("/assignment/{id}/delete");
+        Response deleteResponse = RestAssured.given().header("charset", "UTF-8").queryParam("token", token).pathParam("id", responseAssignment.getId()).when().delete("/assignment/{id}/delete");
 
         assertEquals(200, deleteResponse.getStatusCode());
 
     }
-    
+
     @Test
     public void testUnitTests() throws JSONException {
         ApiAssignment cAssignment = new ApiAssignment();
@@ -123,13 +97,7 @@ public class AssignmentControllerTest {
 
         Gson g = new Gson();
 
-        Response createResponse = RestAssured.given().
-                                        header("Content-Type", "application/json").
-                                        header("charset", "UTF-8").
-                                        body(g.toJson(cAssignment)).
-                                        queryParam("token", token).
-                                        when().
-                                        post("/assignment/create");
+        Response createResponse = RestAssured.given().header("Content-Type", "application/json").header("charset", "UTF-8").body(g.toJson(cAssignment)).queryParam("token", token).when().post("/assignment/create");
 
         assertEquals(200, createResponse.getStatusCode());
 
@@ -142,24 +110,12 @@ public class AssignmentControllerTest {
         ApiAssignmentUnitTest unitTest = new ApiAssignmentUnitTest();
         unitTest.setExpectedOutput("expected output");
         unitTest.setInput("input");
-        
-        Response unitTestCreateResponse = RestAssured.given().
-        											  header("Content-Type", "application/json").
-        											  header("charset", "UTF-8").
-        											  body("[" + g.toJson(unitTest) + "]").
-                                                      queryParam("token", token).
-                                                      pathParam("id", responseAssignment.getId()).
-                                                      when().
-                                                      post("/assignment/{id}/unitTests");
+
+        Response unitTestCreateResponse = RestAssured.given().header("Content-Type", "application/json").header("charset", "UTF-8").body("[" + g.toJson(unitTest) + "]").queryParam("token", token).pathParam("id", responseAssignment.getId()).when().post("/assignment/{id}/unitTests");
 
         assertEquals(200, unitTestCreateResponse.getStatusCode());
 
-        Response unitTestGetResponse = RestAssured.given().
-                                                   header("charset", "UTF-8").
-                                                   queryParam("token", token).
-                                                   pathParam("id", responseAssignment.getId()).
-                                                   when().
-                                                   get("/assignment/{id}/unitTests");
+        Response unitTestGetResponse = RestAssured.given().header("charset", "UTF-8").queryParam("token", token).pathParam("id", responseAssignment.getId()).when().get("/assignment/{id}/unitTests");
 
         System.out.println("\n\n\n\n" + unitTestGetResponse.body().asString() + "\n\n\n\n");
 
